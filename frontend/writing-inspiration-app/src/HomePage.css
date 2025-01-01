@@ -1,0 +1,31 @@
+
+body {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+    background-color: rgb(222, 219, 178);
+    margin: 0 !important;
+    padding: 0 !important ;
+    box-sizing: border-box !important ;
+}
+
+nav {
+    position: fixed; /* Keeps the nav bar fixed at the top */
+    top: 0;          /* Aligns it to the top of the viewport */
+    left: 0;         /* Aligns it to the left */
+    width: 100%;     /* Makes the nav span the full width of the screen */
+    background-color: rgb(255, 98, 0); /* Background color */
+    padding: 10px 20px; /* Adds padding */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+/*
+nav a {
+    text-decoration: none; 
+    color: white; 
+    margin: 0 15px; 
+    font-size: 16px;
+}
+nav a:hover {
+    color: lightblue; 
+}
+
