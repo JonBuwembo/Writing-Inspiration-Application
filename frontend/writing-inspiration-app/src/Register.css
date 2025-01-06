@@ -18,8 +18,8 @@ body {
 }
 
 .registration {
-   margin-top: 270px; /*padding for space above and below form */
-   margin-bottom: 180px; 
+   margin-top: 320px; /*padding for space above and below form */
+   margin-bottom: 150px; 
    border:none;
    
 }
@@ -27,7 +27,7 @@ body {
    background: none;
    padding: 20px;
    width: 480px;
-   min-height: 700px !important;
+   min-height: 750px !important;
    background: rgb(246, 249, 247);
    border-radius: 8px;
    box-shadow: 2px 6px 14px rgba(0, 0, 0, 0.1), 2px 6px 14px rgba(0, 0, 0, 0.1);
@@ -115,4 +115,9 @@ form fieldset button {
    left:0;
    font-size: 12px;
    margin: 0;
+}
+
+.sign-up-instead{
+   padding-top: 30px;
+   font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

@@ -146,6 +146,12 @@ function Register() {
                    
                 </fieldset>
                 <button type="submit"> Register</button>
+
+                <p className='sign-up-instead'> 
+                   
+                    Already have an account? <a className='sign-up-instead' href="/login"> Sign Up </a>
+
+                </p>
                 
                 
                 

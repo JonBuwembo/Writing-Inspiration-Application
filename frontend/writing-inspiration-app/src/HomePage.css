@@ -1,31 +1,100 @@
 
 body {
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
-    background-color: rgb(222, 219, 178);
+    background-color: rgb(227, 236, 191);;
     margin: 0 !important;
     padding: 0 !important ;
     box-sizing: border-box !important ;
 }
 
-nav {
+.top-menu {
     position: fixed; /* Keeps the nav bar fixed at the top */
     top: 0;          /* Aligns it to the top of the viewport */
     left: 0;         /* Aligns it to the left */
     width: 100%;     /* Makes the nav span the full width of the screen */
-    background-color: rgb(255, 98, 0); /* Background color */
+    background-color: rgb(73, 53, 40); /* Background color */
     padding: 10px 20px; /* Adds padding */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
     z-index: 1000; /* Ensures it stays above other elements */
+    height: 65px;
+    gap: 4rem;
+    align-items: center; 
+    justify-content: right;
+    display: flex;
 }
 
-/*
-nav a {
-    text-decoration: none; 
-    color: white; 
-    margin: 0 15px; 
-    font-size: 16px;
+.top-menu a{
+   
+/*Some code */
 }
-nav a:hover {
-    color: lightblue; 
+
+.searchBox {
+    display: flex;
+    width: 8px;
+    max-width: 100%;
+    width: 480px;
+    max-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1px;
+    background: #eff3f2;
+    border-radius: 50px;
+    position: relative;
+  }
+  
+  .search-button {
+    display: flex;
+    padding: 0;
+    position: relative;
+    right: 5px;
+    width: 33px;
+    height: 33px;
+   
+    border-radius: 50%; 
+    background: var(--gradient-2, linear-gradient(90deg, #f5712a 0%, #fdec00 100%, #f5712a));
+    border: 0;
+    display: inline-block;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+  }
+  /*hover effect*/
+  button:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 10px 20px;
+    transform: translateY(-3px);
+  }
+  /*button pressing effect*/
+  button:active {
+    box-shadow: none;
+    transform: translateY(0);
+  }
+  
+  .searchInput {
+    border: none;
+    background: none;
+    outline: none;
+    color: rgb(45, 38, 38);
+    font-size: 15px;
+    padding: 24px 46px 24px 26px;
+  }
+  
+
+.side-panel {
+    background-color:rgb(53, 56, 39);
+    height: 100%; /*Full height top to bottom */
+    width: 160px;
+    position: fixed; /* makes side bar stay in place on a scroll*/
+    z-index: 1; /* stay on top of page */
+    top: 65px;
+    left: 0;
+    overflow-x: hidden; /* no horizontal scrolling */
+}
+
+.side-panel a {
+    padding: 6px 8px 6px 16px;
+    font-size: 25px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: block;
+    color: white;
 }
 
