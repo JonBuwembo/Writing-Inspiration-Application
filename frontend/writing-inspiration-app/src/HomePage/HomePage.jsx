@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import './HomePage.css'
-import './App.css'
-import './Register.jsx'
-import './Register.css'
-import './LoginPage.jsx'
+import '../App.css'
+import '../Register.jsx'
+import '../Register.css'
+import '../LoginPage.jsx'
 function HomePage() {
 
     return (
