@@ -11,7 +11,7 @@ const TopNav = () => {
       {/* Top Navigation */}
       <header className="top-nav">
         <div className="search-container">
-          <input type="text" placeholder="Search Your Dashboard ..." />
+          <input type="text" placeholder=" Search Your Dashboard ...      " />
         </div>
         <div className="user-info">
           <span>Jonathan Buwembo</span>

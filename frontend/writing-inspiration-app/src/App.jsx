@@ -23,7 +23,7 @@ function App() {
         {/* TODO: UI done */}
         <Route path="/Register" element={<Register/>} />
         {/* TODO: UI currently working on */}
-        <Route path="/home" element={<HomePage/>} />
+        <Route path="/home/*" element={<HomePage/>} />
         {/* not made yet */}
         <Route path="/profile/*" element={<ProfilePage />} /> {/*has subroutes*/}
 

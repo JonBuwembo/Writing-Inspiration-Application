@@ -1,116 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Reset some default styles */
 body, h1, p, ul {
     margin: 0;
     padding: 0;
-  }
-  
-  body {
+}
+
+body {
     font-family: Arial, sans-serif;
-    background-color: #f8f8dc; /* Light beige background */
-  }
-  
-  .profile-page-container {
+    background-color: #f8f8dc;
+    /* Light beige background */
+}
+
+.profile-page-container {
     display: flex;
-    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
-  }
-  
-  /* Left Sidebar */
-  .sidebar {
-    width: 250px; /* Fixed width for the sidebar */
-    background-color: #333; /* Dark background */
+    height: 100vh;
+    /* Full viewport height */
+    width: 100vw;
+    /* Full viewport width */
+}
+
+/* Left Sidebar */
+.sidebar {
+    width: 250px;
+    /* Fixed width for the sidebar */
+    background-color: #333;
+    /* Dark background */
     color: #fff;
-    padding: 40px;
+    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 0px 0px 5px; /*<top-padding> <left-right-padding>* /
     box-sizing: border-box;
-    height: 100%; /* Ensure the sidebar spans the full height */
-  }
-  
-  .sidebar nav ul {
-    list-style-type: none;
+    height: 100%;
     
-  }
-  
-  .sidebar nav ul li {
-    margin-bottom: 40px; /*Space between text options */
- 
-  }
-  
-  .sidebar nav ul li a {
+    /* Ensure the sidebar spans the full height */
+}
+
+.sidebar nav {
+    margin: 0px;
+    width: calc(100%);
+}
+.sidebar nav ul {
+    list-style-type: none;
+    margin-top: 10px;
+    margin: 0;
+    padding: 0;
+    width: calc(100%);
+    text-align: left;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 20px; /* Space between menu items */
+   
+    /*Space between text options */
+
+}
+
+
+.sidebar nav  ul li a {
+    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #fff;
     text-decoration: none;
+    text-align: left;
     font-size: 20px;
-  }
+    display: block; 
+    display: fixed;
+    padding: 8px 17px;
+}
 
-  .sidebar nav ul li a:hover {
+.sidebar ul li a:hover {
+    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #6C757D;
-    border-radius: 20px;
-    padding: 8px 12px; /*<Shadow height>  <Shadow length> */
-  }
-  
-  /* Right Content Wrapper */
-  .content-wrapper {
-    flex-grow: 1; /* Allows the right content to take up remaining space */
+    border-radius: 2px;
+    padding: 8px 17px;
+    /*<Shadow height>  <Shadow length> */
+}
+
+/* Right Content Wrapper */
+.content-wrapper {
+    flex-grow: 1;
+    /* Allows the right content to take up remaining space */
     display: flex;
     flex-direction: column;
-    width: calc(100% - 250px); /* Fill the space excluding the sidebar width */
-  }
-  
-  /* Top Navigation Bar */
-  .top-nav {
+    width: calc(100% - 250px);
+    /* Fill the space excluding the sidebar width */
+}
+
+/* Top Navigation Bar */
+.top-nav {
     display: flex;
+    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     justify-content: space-between;
     align-items: center;
-    background-color: #494B4F; /* Dark gray background */
+    background-color: #eeeff2;
+    /* Dark gray background */
     padding: 10px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: white;
-  }
-  
-  /* Search Input in Top Navigation */
-  .search-container input {
+}
+
+/* Search Input in Top Navigation */
+.search-container input {
+    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     padding: 7px;
-    margin-top: 12px; /*Spacing above the search bar*/ 
+    margin-top: 10px;
+    /*Spacing above the search bar*/
+    margin-bottom: 9px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    width: 340px;
-  }
-  
-  /* User Info in Top Navigation */
-  .user-info {
+    border: 1px solid #0e0d0d;
+    border-radius: 20px;
+    width: 360px;
+    height: 40px;
+}
+
+/* User Info in Top Navigation */
+.user-info {
     color: #fff;
     font-size: 16px;
-  }
-  
-  /* Sub Navigation Bar */
-  .sub-nav {
-    background-color: #6C757D; /* Medium gray background */
+}
+
+/* Sub Navigation Bar */
+.sub-nav {
+    background-color: #e7e9ed;
+    /* Medium gray background */
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .sub-nav ul {
+    border-top: 1px solid rgba(112, 110, 110, 0.436);
+    border-bottom: 1px solid rgba(112, 110, 110, 0.436);
+}
+
+.sub-nav ul {
     list-style-type: none;
     display: flex;
     gap: 20px;
-  }
-  
-  .sub-nav a {
-    color: #fff;
+}
+
+.sub-nav a {
+    color: #110e0e;
     text-decoration: none;
     font-size: 16px;
-  }
-  
-  .sub-nav a:hover {
+}
+
+.sub-nav a:hover {
     text-decoration: underline;
-  }
-  
-  /* Main Content Area */
-  .main-content {
+}
+
+/* Main Content Area */
+.main-content {
     padding: 20px;
-    flex-grow: 1; /* Allows the main content to expand */
+    flex-grow: 1;
+    /* Allows the main content to expand */
     overflow-y: auto;
-    background-color: #fff; /* White background */
-    height: calc(100vh - 65px); /* Adjust height based on top nav and sub nav */
-  }
-  
+    background-color: #fff;
+    /* White background */
+    height: calc(100vh - 65px);
+    /* Adjust height based on top nav and sub nav */
+}
+
+
+/*ICONS*/
+.icon-spacing {
+    margin-right: 25px;
+}
+
+/*BUTTON style when active, JavaScript will implement this functionality.*/
+.active {
+    background: #e7e9ed;
+    color:#333;
+}

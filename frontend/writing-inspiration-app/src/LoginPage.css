@@ -112,7 +112,7 @@ input::placeholder {
   color: #1a73e8;
 }
 
-button {
+div form button {
   width: 100%;
   padding: 20px;
   background-color: #10c55e;
@@ -126,11 +126,11 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+div form button:hover {
   background-color: #1669c1;
 }
 
-button:active {
+div form button:active {
   background-color: #135ba1;
 }
 
