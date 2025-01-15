@@ -5,4 +5,6 @@
 - the model functions in 'userModel.js' utilize SQL querying to perform actions directly on the 
 database.
 
-- The routes map the controller functions to a particular endpoint on the frontend. 
+- The routes map the controller functions to a particular endpoint on the frontend.  
+
+'Wrote this comment to committ his file'

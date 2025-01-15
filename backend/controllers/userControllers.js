@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database/server.js');
 const userModel = require('../models/userModel.js');
-
+//Wrote this comment to committ his file
 
 /*
         HTTP status codes:
@@ -30,8 +30,6 @@ const getAllUsers = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error'});
     }
 };
-
-
 
 
 // more routes to add that are user related, for example, ids

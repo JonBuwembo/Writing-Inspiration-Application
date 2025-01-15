@@ -1,5 +1,5 @@
 //THIS FILE: MAIN ENTRY POINT INTO FOR YOUR EXPRESS SERVER. Sets up middleware, defines routes, connects to database
-
+//Wrote this comment to committ his file
 require('dotenv').config({path: 'credentials.env'});
 
 const express = require('express');

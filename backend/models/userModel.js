@@ -1,5 +1,5 @@
 const pool = require('../database/server.js');
-
+//Wrote this comment to committ his file
 const fetchAllUsers = async () => {
     const result = await pool.query('SELECT * FROM users');
     return result.rows;

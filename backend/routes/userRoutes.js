@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/userControllers.js');
 
+//Wrote this comment to committ his file
+
 // Example route for testing
 app.get('/', (req, res) => {
     res.send('Sign in!');

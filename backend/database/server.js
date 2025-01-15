@@ -1,6 +1,7 @@
 require('dotenv').config( {path: '../credentials.env'});
 const express = require('express');
 const { Pool } = require('pg');
+//Wrote this comment to committ his file
 
 const app = require('../app');
 const port = process.env.PORT || 5432;
