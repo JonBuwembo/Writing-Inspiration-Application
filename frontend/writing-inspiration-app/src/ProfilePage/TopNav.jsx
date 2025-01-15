@@ -13,8 +13,20 @@ const TopNav = () => {
         <div className="search-container">
           <input type="text" placeholder=" Search Your Dashboard ...      " />
         </div>
-        <div className="user-info">
-          <span>Jonathan Buwembo</span>
+
+        <div className="options-wrapper-top-profile">
+
+          <ul>
+            <li>
+              <a href="/upload"> <button>Upload</button> </a>
+            </li>
+          </ul>
+
+          <div className="user-info">
+            <div className='vertical'> </div>
+            <div className='font-welcome'> Welcome Jonathan Buwembo!</div>
+          </div>
+
         </div>
       </header>
 

@@ -1,0 +1,32 @@
+{
+  "name": "writing-inspiration-app",
+  "version": "1.0.0",
+  "description": "Express, nodeJS, postgreSQL combined and integrated.",
+  "main": "server.js",
+  "scripts": {
+    "test": "Mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonBuwembo/Writing-Inspiration-Application.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "nodeJS",
+    "postgreSQL",
+    "backend",
+    "api",
+    "database"
+  ],
+  "author": "Jonathan Kibirige Buwembo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonBuwembo/Writing-Inspiration-Application/issues"
+  },
+  "homepage": "https://github.com/JonBuwembo/Writing-Inspiration-Application#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}

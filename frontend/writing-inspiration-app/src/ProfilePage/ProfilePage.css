@@ -92,12 +92,42 @@ body {
     font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     justify-content: space-between;
     align-items: center;
+    text-align: right;
     background-color: #eeeff2;
     /* Dark gray background */
     padding: 10px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: white;
+    
 }
+
+.options-wrapper-top-profile{
+ 
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 45px;
+}
+
+/*Font for welcome message. Must be specific to person who logged in.*/
+.font-welcome {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+ul li {
+    list-style-type: none;
+}
+ul li a button {
+    all: unset; /*Something was messing up the buttons on the homepage*/
+    /* background: linear-gradient(45deg, #f06, #4a90e2); */
+    border: 1px solid #aaa99f;
+    
+    border-radius: 33px;
+    padding: 8px 15px;
+    font-size: 16px;
+    color: #333;
+
+  }
 
 /* Search Input in Top Navigation */
 .search-container input {
@@ -115,8 +145,19 @@ body {
 
 /* User Info in Top Navigation */
 .user-info {
-    color: #fff;
-    font-size: 16px;
+    color: #534949;
+    gap: 45px;
+    align-items: center;
+    font-size: 25px;
+    display: flex;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; */
+}
+
+.vertical {
+    width: 0.006em;
+    height: 50px;
+    background-color: #d4d2c6;
+    
 }
 
 /* Sub Navigation Bar */
@@ -164,7 +205,7 @@ body {
 }
 
 /*BUTTON style when active, JavaScript will implement this functionality.*/
-.active {
-    background: #e7e9ed;
+.activate {
+    background: #4bf499;
     color:#333;
 }

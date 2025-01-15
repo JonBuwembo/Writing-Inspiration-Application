@@ -51,7 +51,9 @@ html, body {
   text-decoration: none;
   font-size: 16px;
 }
-
+a {
+  pointer-events: auto; /* Allows clicking */
+}
 ul li a button:hover {
   background: #e7e9ed;
   color:#333;
@@ -204,6 +206,6 @@ button:active {
 
 /*BUTTON style when active, JavaScript will implement this functionality.*/
 .active {
-  background: #e7e9ed;
+  background: #4bf499;
   color:#333;
 }
