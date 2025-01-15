@@ -22,8 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend/node_modules/
-backend/node-postgres/
+
 
 # other files
 credentials.env
