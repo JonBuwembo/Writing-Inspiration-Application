@@ -1,0 +1,40 @@
+# ISSUE #1 FINDING AN AVAILABLE PORT FOR THE SERVER
+
+-- Problem: In an attempt to fix connection to the api url in frontend fetch(), Server ports i chose were coming up as occupied
+-- Solution: I utilized app.list(0, ...) in server.js which is a configuration that allows the app to listen and choose its own available server.
+
+
+
+# ISSUE #2 DYNAMICALLY UPDATING .env FILE TO REFLECT PORT CHOSEN BY SERVER
+
+-- Problem: every time the server chose its own available port, it would erase all content of .env file with just the new variable value.
+-- Solution:
+        utilized fs module and existsSync() to check if the file existed (could be read)
+        utilized readfileSync() in fs library to read the file and save its contents so that it couldn't be overwritten in update of the port.
+        utilized serverportvar as a buffer variable to update ONLY SERVER_PORT variable.
+            --> done by using .split().filter().concat().join() chained methods to carryout this and identify only this variable.
+
+
+# ISSUE #3 DATABASE connection
+
+
+-- Problem: server.js and database.js unable to read .env file.
+-- Solution: 
+        moved .env file directly within the database folder.
+        imported path library as a variable
+        imported dotenv as a variable 
+        utilized path.resolve() method from path library to define the path to the .env file
+        loaded the path to the .env file through dotenv.config()
+        this way process.env.<ENV_VAR> could be read.
+
+# ISSUE #4 register.jsx fetch() unable to retrieve backend path.
+
+-- solution: 
+        discovered that a 500 error from the backend wasn't because of the api url was mounted to the frontend port.
+                but rather that a 500 error meant backend issue!. 
+                putting print statements in the backend, i found that the issue was with userModel's interaction with the database.
+                Specifically bcrypt import which hadn't been installed for password hashing.
+                it turned out my api url path, routing to the userControllers, was not the issue and was working!
+        bcrypt password hasher was not working because its module wasn't installed, therefore ran 'npm install bcrypt'
+        pool was not reading anything, and i found out it was because pool variable was importing server.js instead of database.js, where pool was!
+

@@ -19,55 +19,66 @@ const userModel = require('../models/userModel.js');
 */ 
 
 
-//those who have registered
-const getAllUsers = async (req, res) => {
+// //those who have registered
+// const getAllUsers = async (req, res) => {
 
-    try {
-        const result = await userModel.fetchAllUsers();
-        res.json(result.rows);
-    } catch (err) { 
-        console.error('Error: Query unable to be executed', err.stack);
-        res.status(500).json({ error: 'Internal Server Error'});
-    }
-};
+//     try {
+//         const result = await userModel.fetchAllUsers();
+//         res.json(result.rows);
+//     } catch (err) { 
+//         console.error('Error: Query unable to be executed', err.stack);
+//         res.status(500).json({ error: 'Internal Server Error'});
+//     }
+// };
 
 
 // more routes to add that are user related, for example, ids
 const createUser = async (req, res) => {
 
     try {
+        console.log("Received request body:", req.body);
         //TODO: implement userModel and its functions
         const newUser = await userModel.createUser(req.body);
+
+        console.log('Insert result:', newUser);
+        //send new user to client
         res.status(201).json(newUser);
-    } catch (err) {
-        console.error('Error: Query unable to be executed', err.stack);
-        res.status(500).json({ error: 'Internal Server Error'});
-    }
-};
 
-const getUserById = async (req, res) => {
-    const userId = req.params.id;
-
-    try {
-        const theUser = await userModel.fetchUserById(userId);
-        //check if user exists or not
-        if (user) {
-            res.status(200).json(theUser);
-        } else {
-            res.status(404).json({error: 'User Not Found '});
-        }
     } catch (error) {
-        console.error('Error fetching user by ID:', error);
-        res.status(500).json({error: 'Internal Server Error'});
+
+        console.error('Error during registration:', error); // need to see the exact error cause.
+
+        if (error.code === '23505') { // Unique violation error code in PostgreSQL
+            res.status(400).json({ error: 'Email or username already exists.' });
+        } 
+
+        res.status(500).json({ error: 'Internal Server Error at database level' });
+        
     }
 };
+
+// const getUserById = async (req, res) => {
+//     const userId = req.params.id;
+
+//     try {
+//         const theUser = await userModel.fetchUserById(userId);
+//         //check if user exists or not
+//         if (user) {
+//             res.status(200).json(theUser);
+//         } else {
+//             res.status(404).json({error: 'User Not Found '});
+//         }
+//     } catch (error) {
+//         console.error('Error fetching user by ID:', error);
+//         res.status(500).json({error: 'Internal Server Error'});
+//     }
+// };
 
 // export your functions
 module.exports = {
-    getUserById,
-    getAllUsers,
+    // getUserById,
+    // getAllUsers,
     createUser,
 };
 
-// export routers
-module.exports = router;
+//no export routers because we are exporting the functions here.

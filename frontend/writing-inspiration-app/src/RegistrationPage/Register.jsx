@@ -5,22 +5,13 @@ import viteLogo from '/vite.svg'
 import './Register.jsx'
 import './Register.css'
 import '../LoginPage/LoginPage.jsx'
+// import '../../vite.config.js'
 
 import { registerUser } from '../services/api';
 
 
 function Register() {
     //All fields here are required to be entered.
-    const [firstName, setFirstName] = useState({ value: "", isTouched: false });
-    const [lastName, setLastName] = useState({ value: "", isTouched: false });
-    const [password, setPassword] = useState({ value: "", isTouched: false });
-    const [username, setUsername] = useState({ value: "", isTouched: false });
-    const [email, setEmail] = useState({ value: "", isTouched: false });
-
-    const [isValidEmail, setIsValidEmail] = useState(false);
-    const [isValidPassword, setIsValidPassword] = useState(false);
-    const [isValidUsername, setIsValidUsername] = useState(false);
-
     /*
 
         -   The React frontend sends a POST request to the backend API route /api/users-appone/register to create a new user.
@@ -29,10 +20,48 @@ function Register() {
     
     */
 
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        username:'',
+        password: '',
+        email: '',
+    });
+
+    const [touched, setTouched] = useState({
+        firstName: false,
+        lastName: false,
+        username: false,
+        password: false,
+        email: false,
+    })
+
+    // state for form errors
+    const [errors, setErrors] = useState({});
+
+
+    // const [firstName, setFirstName] = useState({ value: "", isTouched: false });
+    // const [lastName, setLastName] = useState({ value: "", isTouched: false });
+    // const [password, setPassword] = useState({ value: "", isTouched: false });
+    // const [username, setUsername] = useState({ value: "", isTouched: false });
+    // const [email, setEmail] = useState({ value: "", isTouched: false });
+
+    // const [isValidEmail, setIsValidEmail] = useState(false);
+    // const [isValidPassword, setIsValidPassword] = useState(false);
+    // const [isValidUsername, setIsValidUsername] = useState(false);
+
+ 
+
+    const validateFirstName = (name) => name.trim() !== '';
+    const validateLastName = (name) => name.trim() !== '';
+
     const registerUser = async (userData) => {
 
         try {
-            const response = await fetch('http://localhost:5000/api/users-appone/register', {
+            // Access the database server
+            const response = await fetch('/api/users-appone/register', {
+                //"Add" a user to the database after registration.
+                // Send data payload to backend for processing
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,6 +73,7 @@ function Register() {
                 throw new Error('Issue with connecting to backend');
             }
 
+            // wait for data to be translated to json for processing
             const data = await response.json();
             console.log('User registered successfully', data);
 
@@ -54,7 +84,7 @@ function Register() {
     };
 
     const validatePassword = (password) => {
-        const minimumLength = 10;
+        const minimumLength = 8;
         const hasUpperCase = /[A-Z]/.test(password);
         const hasLowerCase = /[a-z]/.test(password);
         const hasNumbers = /[0-9]/.test(password);
@@ -62,127 +92,205 @@ function Register() {
 
         // Check if all conditions are true
         const isValid = password.length >= minimumLength && hasUpperCase && hasLowerCase && hasNumbers && hasSymbols;
-
-        setIsValidPassword(isValid);
-
+        return isValid;
     }
 
     const validateEmail = (email) => {
 
-        const isValid = String(email)
-            .toLowerCase()
-            .match(
-                // check if email matches regular expression
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            )
+        const isValid =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        // const isValid = String(email)
+        //     .toLowerCase()
+        //     .match(
+        //         // check if email matches regular expression
+        //         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        //     )
 
         // updates the state variable for email validation
-        setIsValidEmail(!!isValid);
-        return !!isValid;
+        return isValid;
     }
 
     const validateUsername = (username) => {
         // a username can contain number, symbols, and letters.
         // it just needs to have a minimum length of 3 characters and contain letters.
-
         const minimumLength = 3;
         const hasLetters = /[a-zA-Z]/.test(username);
 
-        const isValid = username.length >= minimumLength && (hasLetters);
-
-        setIsValidUsername(isValid);
+        const isValid = username.length >= minimumLength && hasLetters;
         return isValid;
     }
 
-    const validateRegistration = () => {
-        return (firstName.value.trim() && lastName.value.trim() && validateEmail(email) && validatePassword(password) && validateUsername(username))
-    }
 
-    const clearForm = () => {
-        setFirstName({ value: "", isTouched: false });
-        setLastName({ value: "", isTouched: false });
-        setPassword({ value: "", isTouched: false });
-        setUsername({ value: "", isTouched: false });
-        setEmail({ value: "", isTouched: false });
-    }
+    // const clearForm = () => {
+    //     setFirstName({ value: "", isTouched: false });
+    //     setLastName({ value: "", isTouched: false });
+    //     setPassword({ value: "", isTouched: false });
+    //     setUsername({ value: "", isTouched: false });
+    //     setEmail({ value: "", isTouched: false });
+    // };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        if (validateRegistration()) {
-           
-            setUsername({ ...username, isTouched: true });
-            setPassword({ ...password, isTouched: true });
-            setFirstName({ ...firstName, isTouched: true});
-            setLastName({ ...lastName, isTouched: true});
-            setEmail({ ...email, isTouched: true});
+    const handleChange = (event) => {
+        const {name, value} = event.target;
 
-            validateUsername(username.value);
-            validatePassword(password.value);
-            validateEmail(email.value);
+        // Form data is dynamically updated here. This data will be stored in database.
+        setFormData((prevData) => ({...prevData, [name]: value}));
 
-            validate
-            const userData = {
-                email: event.target.email.value,
-                username: event.target.username.value,
-                password: event.target.password.value,
-                firstName: event.target.firstName.value,
-                lastName: event.target.lastName.value,
-            };
+        let error = '';
 
-            registerUser(userData);
-            alert("Account has been created!")
-            clearForm();
-        } else {
-            alert("Please complete all required fields correctly!")
+        // value is the information user inputs
+        // value is passed into each function for validation check.
+        // if value does not pass requirements, an error message is shown.
+
+        switch (name) {
+            case 'firstName':
+                if (!validateFirstName(value)) error = 'Please enter your first name.';
+                break;
+            case 'lastName':
+                if (!validateLastName(value)) error = 'Please enter your last name.';
+                break;
+            case 'username':
+                if (!validateUsername(value)) {
+                    error = 'Username must be at least 3 characters long and contain letters.';
+                }
+                break;
+            case 'email':
+                if (!validateEmail(value)) error = 'Please enter a valid email address.';
+                break;
+            case 'password':
+                if (!validatePassword(value)) {
+                    error = 'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol.';
+                }
+                break;
+            default:
+                break;
         }
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error}));
     }
+
+    // Handle Input Blur
+    const handleBlur = (event) => {
+        const { name } = event.target;
+        setTouched((prevTouched) => ({ ...prevTouched, [name]: true}));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        
+        //check for new errors upon submission
+        const newErrors = {};
+
+        // Key, Value Pairs: [field, error] are assigned if validation does not pass.
+        // keys: firstName, lastName, username ...
+        // values: Error messages.
+        // Essentially, newErrors is an object containing a list of these pairs.
+
+        if (!validateFirstName(formData.firstName)) {
+            newErrors.firstName = 'Please enter your first name.';
+        }
+
+        if (!validateLastName(formData.lastName)) {
+            newErrors.lastName = 'Please enter your last name.';
+        }
+
+        if (!validateUsername(formData.username)) {
+            newErrors.username = 'Username must be at least 3 characters long and contain letters.';
+        }
+
+        if (!validatePassword(formData.password)) {
+            newErrors.password = 'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol.';
+        }
+
+        if (!validateEmail(formData.email)) {
+            newErrors.email = 'Please enter a valid email address.';
+        }
+           
+        setErrors(newErrors);
+        setTouched({
+            firstName: true,
+            lastName: true,
+            username: true,
+            password: true,
+            email: true,
+        })
+        
+        if(Object.keys(newErrors).length === 0){
+            try {
+                await registerUser(formData);
+
+                alert('Account has been created');
+
+                //reset form data
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    username: '',
+                    password: '',
+                    email: '',
+                });
+
+                //reset whether it was touched by the mouse.
+                setTouched({
+                    firstName: false,
+                    lastName: false,
+                    username: false,
+                    password: false,
+                    email: false,
+                });
+            } catch (error) {
+                console.error('Registration Failed:', error);
+                alert('Registration failed. Please try again.');
+            }
+        } else {
+            alert('Please complete all required fields correctly!');
+        }
+            
+    
+    };
 
     return (
 
         <div className='registration'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
                 <fieldset>
                     <h1> IdeaFind </h1>
-                    <h2> Sign up to see the latest uploads of what creators have been working on!</h2>
+                    <h2> Sign up to see the latest uploads of what creators have been working on! </h2>
 
                     <div className="field" style={{ position: 'relative', height: '80px' }}>
 
-                        <input id="firstName" value={firstName.value}
-                            onChange={(e) => setFirstName({ ...firstName, value: e.target.value })}
-                            onBlur={(e) => setFirstName({ ...firstName, isTouched: true })}
+                        <input id="firstName" maxLength={120} name="firstName" value={formData.firstName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             placeholder="Firstname" />
-                        {firstName.isTouched && firstName.value === "" && (<p className="error-style">Please enter first name. </p>)}
+                        {touched.firstName && errors.firstName && (<p className="error-style">{errors.firstName} </p>)}
                     </div>
 
-                    <div className="field" style={{ position: 'relative', height: '80px' }}>
+                    <div className="field" maxLength={120} style={{ position: 'relative', height: '80px' }}>
 
-                        <input id="lastName" value={lastName.value}
-                            onChange={(e) => setLastName({ ...lastName, value: e.target.value })}
-                            onBlur={(e) => setLastName({ ...lastName, isTouched: true })}
+                        <input id="lastName" name="lastName" value={formData.lastName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             placeholder='Lastname' />
-                        {lastName.isTouched && lastName.value === "" && (<p className="error-style">Please enter last name. </p>)}
+                        {touched.lastName && errors.lastName && (<p className="error-style">{errors.lastName}</p>)}
                     </div>
 
-                    <div className="field" style={{ position: 'relative', height: '80px' }}>
+                    <div className="field" maxLength={20} style={{ position: 'relative', height: '80px' }}>
 
-                        <input id="username" value={username.value}
-                            onChange={(e) => setUsername({ ...username, value: e.target.value })}
-                            onBlur={(e) => setUsername({ ...username, isTouched: true })}
+                        <input id="username" name="username" value={formData.username}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             placeholder='Username' />
-                        {username.isTouched && (isValidUsername != true) && (<p className="error-style"> Please enter at least 3 letters in your username. You can include numbers and symbols. </p>)}
+                        {touched.username && errors.username && (<p className="error-style"> {errors.username}</p>)}
                     </div>
 
                     <div className="field" style={{ position: 'relative', height: '80px' }}>
 
-                        <input id="password" value={password.value}
-                            onChange={(e) => setPassword({ ...password, value: e.target.value })}
-                            onBlur={(e) => setPassword({ ...password, isTouched: true })}
+                        <input id="password" maxLength={255} name="password" value={formData.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             placeholder='Password' />
 
-                        {password.isTouched && !isValidPassword && (
+                        {touched.password && errors.password && (
                             <p className='error-style'>
-
-                                Please enter password of at least: 8 letters, a Capital, a lowercase, a number, a symbol.
+                               {errors.password}
                             </p>
                         )}
 
@@ -190,11 +298,11 @@ function Register() {
 
                     <div className='field' style={{ position: 'relative', height: '80px' }}>
 
-                        <input id="email" value={email.value}
-                            onChange={(e) => setEmail({ ...email, value: e.target.value })}
-                            onBlur={(e) => setEmail({ ...email, isTouched: true })}
+                        <input id="email" maxLength={350} name="email" value={formData.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             placeholder='Email' />
-                        {email.isTouched && !isValidEmail && (<p className='error-style'>Please enter a valid email address.</p>)}
+                        {touched.email && errors.email && (<p className='error-style'>{errors.email}</p>)}
                     </div>
 
 

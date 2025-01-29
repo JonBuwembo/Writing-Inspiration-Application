@@ -1,11 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
-/* Reset some default styles */
-body, h1, p, ul {
-    margin: 0;
-    padding: 0;
-}
+
 
 body {
     font-family: Arial, sans-serif;
@@ -14,12 +10,25 @@ body {
 }
 
 .profile-page-container {
+    box-sizing: border-box;
+    overflow: auto;
+    resize: none;
     display: flex;
-    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh; /*height of everything */
     /* Full viewport height */
+    min-width: 100vw;
+    height: 100vh;
     width: 100vw;
     /* Full viewport width */
+    
 }
+
+/* Width of the scrollbar */
+.profile-page-container::-webkit-scrollbar {
+    width: 12px; /* Adjust the width as needed */
+  }
+
 
 /* Left Sidebar */
 .sidebar {
@@ -82,7 +91,7 @@ body {
     /* Allows the right content to take up remaining space */
     display: flex;
     flex-direction: column;
-    width: calc(100% - 250px);
+    width: calc(100% - 260px);
     /* Fill the space excluding the sidebar width */
 }
 

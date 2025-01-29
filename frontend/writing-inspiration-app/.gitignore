@@ -23,6 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-
-# other files
-credentials.env

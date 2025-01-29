@@ -7,6 +7,8 @@
 
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
   background-color: #f8f8dc; /* Light beige background */
 }
@@ -122,12 +124,13 @@ ul li a button {
 
 /* Main Content Area */
 .main-content-2 {
-  margin-left: 250px; /* Accounts for sidebar width */
+  display: block;
+  margin-left: 240px; /* Accounts for sidebar width */
   margin-top: 60px; /* Aligns below the top-nav */
   padding-top: 0px;
   padding-left: 0px;
   background-color: #fff; /* White background for the main content */
-  height: calc(100vh - 60px); /* Fills remaining height below the top-nav */
+  height: calc(100% - 60px); /* Fills remaining height below the top-nav */
   overflow-y: auto; /* Allows scrolling for content overflow */
 }
 

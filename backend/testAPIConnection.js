@@ -1,4 +1,5 @@
 const axios = require('axios');
+//Wrote this comment to committ this file
 
 // Replace with the API URL you want to test
 const apiUrl = 'https://catfact.ninja/fact';
