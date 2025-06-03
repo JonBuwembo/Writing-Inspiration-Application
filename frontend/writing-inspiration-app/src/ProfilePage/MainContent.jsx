@@ -15,6 +15,7 @@ const MainContent = () => {
         <Route path="myprojects" element={<MyProjectsPage/>} />
         <Route path="myvideos" element={<MyVideosPage/>} />
         <Route path="mypictures" element={<MyPicturesPage/>} />
+      
         <Route path="*" element={<OverviewPage />} /> {/* Default route */}
       </Routes>
     </main>

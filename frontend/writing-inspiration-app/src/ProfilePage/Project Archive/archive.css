@@ -1,0 +1,11 @@
+
+
+.archive-container, .beginning-container {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: none;
+    color: initial;
+    font-family: initial;
+    text-align: left; 
+}

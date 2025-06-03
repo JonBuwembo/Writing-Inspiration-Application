@@ -8,6 +8,7 @@ import '../LoginPage/LoginPage.jsx'
 import Sidebar from './Sidebar.jsx'
 import TopNav from './TopNav.jsx'
 import MainContent from './MainContent.jsx'
+import ArchivePage from './Project Archive/ArchivePage.jsx'
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 function ProfilePage() {
@@ -18,6 +19,7 @@ function ProfilePage() {
 
         //FOR NOW don't worry about Followed Artists/Authors, music, text collection sections
         //Just have sections of all your uploaded content: Videos, Documents, Music
+        
 
         <div className="profile-page-container">
             <Sidebar />
@@ -25,6 +27,7 @@ function ProfilePage() {
                 <TopNav />
                 <MainContent />
             </div>
+
         </div>
 
 

@@ -12,7 +12,7 @@ function LoginPage() {
     //const [username, setUsername] = useState("");
 
     return (
-        <div>
+        <div className='login-page-container'>
             <form action="#">
                 <h2> 
                     Login 

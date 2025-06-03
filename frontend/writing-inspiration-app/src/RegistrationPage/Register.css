@@ -1,27 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merienda:wght@300..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
 
-html, body {
+.registration {
+   margin-top: 420px; /*padding for space above and below form */
+   margin-bottom: 150px; 
+   border:none;
    height: 100%;
    margin: 0;
    padding: 0;
    overflow-y: auto; /* Ensure scrolling is enabled */
-}
-
-body {
    display: flex;
    flex-direction: column;
    min-height: 690px;
    align-items: center;
    width: 100%;
-   /* padding: 0 10px;  */
-}
-
-.registration {
-   margin-top: 320px; /*padding for space above and below form */
-   margin-bottom: 150px; 
-   border:none;
-   
 }
 .registration form {
    background: none;
