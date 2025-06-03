@@ -21,7 +21,7 @@
    - Vite + React.js (Modern, high-performance frontend)
    - JavaScript (ES6+)
 
-Why Use This?
+### Why Use This?
    - Ideal for writers, researchers, and content creators.
    - Flexible enough for both personal snippets and curated collections.
    - Open-source and customizable.
