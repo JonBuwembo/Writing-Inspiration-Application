@@ -1,7 +1,24 @@
 # Writing Inspiration Application
 
-This Application is enables creators and aspiring authors to
-collect and build a personal archive around inspiring material
-that can aid in their creative work. In this application, just about
-any form of information can be stored and collected, including written work that the
-user made themselves. 
+**Empowering creators to collect, organize, and draw inspiration from their personal archive.**
+
+This application helps writers, artists, and creators build a centralized digital library of inspiring materials—quotes, articles, images, references, and even their own written work—to fuel their creative process.
+
+Features:
+   - Store and organize diverse content types (text, links, images, notes, etc.).
+   - Personal workspace for saving original work and external inspirations.
+   - Fast and intuitive search for easy retrieval.
+
+Tech Stack
+Backend:
+   - Node.js (Express.js or similar framework)
+Database:
+   - PostgreSQL (Relational database for structured storage)
+Frontend:
+   - Vite + React.js (Modern, high-performance frontend)
+   - JavaScript (ES6+)
+
+Why Use This?
+   - Ideal for writers, researchers, and content creators.
+   - Flexible enough for both personal snippets and curated collections.
+   - Open-source and customizable.
