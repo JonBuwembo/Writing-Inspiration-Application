@@ -12,7 +12,7 @@
 ## Tech Stack
 
 ### Backend:
-   - Node.js (Express.js or similar framework)
+   - Node.js (Express.js)
      
 ### Database:
    - PostgreSQL (Relational database for structured storage)
