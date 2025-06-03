@@ -4,20 +4,20 @@
 
 *This application helps writers, artists, and creators build a centralized digital library of inspiring materials—quotes, articles, images, references, and even their own written work—to fuel their creative process.*
 
-Features:
+## Features:
    - Store and organize diverse content types (text, links, images, notes, etc.).
    - Personal workspace for saving original work and external inspirations.
    - Fast and intuitive search for easy retrieval.
 
-Tech Stack
+## Tech Stack
 
-Backend:
+### Backend:
    - Node.js (Express.js or similar framework)
      
-Database:
+### Database:
    - PostgreSQL (Relational database for structured storage)
      
-Frontend:
+### Frontend:
    - Vite + React.js (Modern, high-performance frontend)
    - JavaScript (ES6+)
 
