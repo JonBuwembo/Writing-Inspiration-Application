@@ -10,8 +10,10 @@ Features:
    - Fast and intuitive search for easy retrieval.
 
 Tech Stack
+
 Backend:
    - Node.js (Express.js or similar framework)
+     
 Database:
    - PostgreSQL (Relational database for structured storage)
      
