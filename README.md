@@ -2,7 +2,7 @@
 
 **Empowering creators to collect, organize, and draw inspiration from their personal archive.**
 
-This application helps writers, artists, and creators build a centralized digital library of inspiring materials—quotes, articles, images, references, and even their own written work—to fuel their creative process.
+*This application helps writers, artists, and creators build a centralized digital library of inspiring materials—quotes, articles, images, references, and even their own written work—to fuel their creative process.*
 
 Features:
    - Store and organize diverse content types (text, links, images, notes, etc.).
