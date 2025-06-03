@@ -14,6 +14,7 @@ Backend:
    - Node.js (Express.js or similar framework)
 Database:
    - PostgreSQL (Relational database for structured storage)
+     
 Frontend:
    - Vite + React.js (Modern, high-performance frontend)
    - JavaScript (ES6+)
