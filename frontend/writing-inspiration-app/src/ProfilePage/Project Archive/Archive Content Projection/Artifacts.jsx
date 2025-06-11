@@ -8,7 +8,7 @@ const Artifacts = () => {
     return (
         <div className="artifacts-container">
             <h2>Artifacts for Project {projectID}</h2>
-            <p>This section will contain information about the artifacts or physical items in your story line.</p>
+            <p className="explanation-text">This section will contain information about the artifacts or physical items in your story line.</p>
             {/* Additional content can be added here, such as a list of artifacts, their descriptions, etc. */}
         </div>
     );

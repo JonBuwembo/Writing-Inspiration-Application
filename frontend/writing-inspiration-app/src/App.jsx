@@ -3,6 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 // import './App.css'
 import Register from './RegistrationPage/Register.jsx'
+import 'react-quill/dist/quill.snow.css';
+
 import LoginPage from './LoginPage/LoginPage.jsx'
 import HomePage from './HomePage/HomePage.jsx'
 import ProfilePage from './ProfilePage/ProfilePage.jsx'

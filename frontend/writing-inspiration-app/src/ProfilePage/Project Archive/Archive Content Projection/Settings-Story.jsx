@@ -8,7 +8,7 @@ const SettingsStory = () => {
     return (
         <div className="settings-story-container">
             <h2>Settings for Project {projectID}</h2>
-            <p>This section will contain information about the settings in your project.</p>
+            <p className="explanation-text">This section will contain information about the settings in your project.</p>
             {/* Additional content can be added here, such as a list of settings, their descriptions, etc. */}
         </div>
     );

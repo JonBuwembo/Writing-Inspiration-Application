@@ -15,19 +15,25 @@ function ArchiveContentProjection() {
     const {projectID} = useParams(); // Get the project ID from the URL parameters
     
     return (
-        <div className="ArchiveContentProjection-container">
-        <Routes>
-            <Route path="summary" element={<Summary />} />
-            <Route path="artifacts" element={<Artifacts/>} />
-            <Route path="characters" element={<Characters />} />
-            <Route path="symbols" element={<Symbols />} />
-            <Route path="settings-story" element={<SettingsStory />} />
-            <Route path="beginning" element={<Beginning />} /> 
-            <Route path="climax" element={<Climax />} /> 
-            <Route path="resolution" element={<Resolution />} /> 
-            <Route path="inspiration-blurb" element={<InspirationBlurb />} /> 
-        </Routes>
-        </div>
+
+        <>
+            
+            
+            <div className='archive-content-projection-container'>
+                <Routes>
+                    <Route path="summary" element={<Summary />} />
+                    <Route path="artifacts" element={<Artifacts />} />
+                    <Route path="characters" element={<Characters />} />
+                    <Route path="symbols" element={<Symbols />} />
+                    <Route path="settings-story" element={<SettingsStory />} />
+                    <Route path="beginning" element={<Beginning />} />
+                    <Route path="climax" element={<Climax />} />
+                    <Route path="resolution" element={<Resolution />} />
+                    <Route path="inspiration-blurb" element={<InspirationBlurb />} />
+                </Routes>
+            </div>
+            
+        </>
 
         
     );

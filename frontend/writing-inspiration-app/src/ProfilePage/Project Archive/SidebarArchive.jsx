@@ -6,9 +6,16 @@ function SidebarArchive() {
   const {projectID} = useParams(); // Get the project ID from the URL parameters
 
   return (
-    <div className="SidebarArchive-container">
-        <h2>Project {projectID} Archive</h2>
-        <nav className="sidebar-nav">
+    <div className="sidebarArchive-container">
+
+        <h2 className="project-title-display">Project {projectID} Archive</h2>
+
+        <hr></hr>
+
+        <div className="section-label"> Content </div>
+
+        
+        <nav className="sidebar-nav-author">
             <ul>
                 <li><a href={`/projectarchive/${projectID}/summary`}>Summary</a></li>
                 <li><a href={`/projectarchive/${projectID}/characters`}>Characters</a></li>

@@ -12,10 +12,6 @@ function ArchivePage() {
   return (
     <div className="archive-container">
 
-      <h1>Project Archive</h1>
-      <p>Welcome to the Project Archive. Here you can find all your information in Project {projectID}.</p>
-
-      
       <SidebarArchive/>
       <ArchiveContentProjection projectID={projectID} />
       

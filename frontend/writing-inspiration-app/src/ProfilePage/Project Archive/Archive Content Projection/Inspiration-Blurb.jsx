@@ -8,7 +8,7 @@ const Characters = () => {
   return (
     <div className="inspiration-container">
       <h2>Inspiration for Project {projectID}</h2>
-      <p>This section will contain information about the what inspired you to write your story.</p>
+      <p className="explanation-text">This section will contain information about the what inspired you to write your story.</p>
       {/* Additional content can be added here, such as a list of characters, their descriptions, etc. */}
     </div>
   );

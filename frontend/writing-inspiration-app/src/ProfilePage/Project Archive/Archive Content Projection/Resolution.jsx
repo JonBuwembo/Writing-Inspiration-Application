@@ -8,7 +8,7 @@ const Resolution = () => {
   return (
     <div className="resolution-container">
       <h2>Resolution for Project {projectID}</h2>
-      <p>This section will contain information about the Resolution in your story line.</p>
+      <p className="explanation-text">This section will contain information about the Resolution in your story line.</p>
       {/* Additional content can be added here, such as a list of characters, their descriptions, etc. */}
     </div>
   );
