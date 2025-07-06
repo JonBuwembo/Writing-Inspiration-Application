@@ -35,7 +35,7 @@ const Characters = () => {
     
         if (index < 0 || index >= characters.length) return; // Ensure index is valid
         
-        if (characters.some((chapter) => character.name.trim().toLowerCase() === newName.trim().toLowerCase())) {
+        if (characters.some((character) => character.name.trim().toLowerCase() === newName.trim().toLowerCase())) {
             alert("Chapter name already exists. Please choose a different name.");
             return; // Prevent changing to a duplicate chapter name
         }
@@ -71,29 +71,32 @@ const Characters = () => {
         const action = prompt(`Right-click menu:\n1. Rename\n2. Delete\n\nType "1" or "2"`);
     
         if (action === "1"){
-            const newName = prompt("Enter new chapter name: ");
+            const newName = prompt("Enter new character name: ");
             if (newName) {
                 changeCharacterName(index, newName);
             }
         }
     
         if (action === "2") {
-            const confirmDeletion = window.confirm("Do you want to delete this chapter?");
+            const confirmDeletion = window.confirm("Do you want to delete this character?");
             if (confirmDeletion) {
                 removeCharacter(index);
             }
         }
       }
     
-      const handleLeftClick = () => {
+      const handleLeftClick = (character) => {
         // go to link of the chapter.
+        
+        // create a link automatically to A_Character.jsx
+        
       }
     
     
     
     return (
         <div className="climax-container">
-            <h2> Climax! </h2>
+            <h2> Characters In Project </h2>
             <p className="explanation-text">This section will contain information about the characters in your project.</p>
 
 

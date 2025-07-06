@@ -1,0 +1,155 @@
+
+.project-popup-container{
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(20px); /* Start position for the popup */
+    transition: transform 0.3s ease-out;
+    overflow: hidden; /* Ensures content doesn't overflow */
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* fadein: This animation will be applied to the project popup */
+/* It will make the popup appear smoothly */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.project-popup-content h2{
+    margin: 0;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.project-popup-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0); /* Transparent background */
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Prevents interaction when hidden */
+
+    transition:
+      opacity 0,3s ease-out,
+      visibility 0,3s eas-out,
+      background-color 0,3s ease-out;
+}
+
+/* Active State for Modal Overlay */
+/* This class is added when the modal is open */
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.7) /* Semi-transparent background when open */;
+    backdrop-filter: blur(5px); /* Optional: adds a blur effect to the background */
+}
+
+.project-popup-container {
+    transform: translateY(20px); /* Start position for the modal */
+    transition: transform 0.3s ease-out;
+}
+
+.close-button{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}   
+
+.close-button:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.modal-overlay.open .project-popup-container {
+    transform: translateY(0); /* Moves the modal into view when open */
+}
+
+
+@media (max-width: 600px) {
+    .project-popup-container {
+        width: 90%; /* Adjust width for smaller screens */
+        padding: 1rem; /* Reduce padding */
+    }
+
+    .project-popup-content {
+        font-size: 1.2rem; /* Smaller font size for mobile */
+    }
+
+    .close-button {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.2rem;
+    }
+
+    .project-popup-body {
+        padding: 1rem;
+    }
+}
+
+

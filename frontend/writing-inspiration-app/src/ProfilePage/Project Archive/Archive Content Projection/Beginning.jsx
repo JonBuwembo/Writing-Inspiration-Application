@@ -1,15 +1,29 @@
 import React from "react";
 import "../archive.css";
-import { useParams } from "react-router-dom";   
-
+import { useNavigate, useParams } from "react-router-dom";   
+//import {useAuth} from "../context/AuthContext"; // will ONLY work after i create an auth context.
 import { useEffect } from "react"; // Import useEffect to handle side effects
 import { useState } from "react"; // Import useState to manage state
 
 const Beginning = () => {
   const { projectID } = useParams(); // Get the project ID from the URL parameters
+  //const { currentUser } = useAuth(); // Not yet using --> meant to get current user.
+  const navigate = useNavigate();
 
   // State to hold chapters
-  const [chapters, setChapters] = React.useState([{ name: "FIRST UN-NAMED CHAPTER" }]);
+  // hold chapters to localStorag on component mount
+  const [chapters, setChapters] = React.useState(() => {
+    const saved = localStorage.getItem(`project_${projectID}_chapters`);
+    return saved ? JSON.parse(saved) : [{ 
+      id: crypto.randomUUID(), 
+      name: "FIRST UN-NAMED CHAPTER" 
+    }]; 
+  });
+
+  // save chapters to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(`project_${projectID}_chapters`, JSON.stringify(chapters));
+  }, [chapters, projectID]);
   
   const addChapter = () => {
     
@@ -27,37 +41,45 @@ const Beginning = () => {
     }
 
     // if all edge cases pass: name the chapter.
-    setChapters([...chapters, { name: newChapterName }]); // Add a new chapter with an empty name
+    setChapters([...chapters, { 
+      id: crypto.randomUUID(), 
+      name: newChapterName.trim() 
+    }]); // Add a new chapter with an empty name
 
   };
 
   // Change a chapter name by right clicking chapter name.
-  const changeChapterName = (index, newName) => {
+  const changeChapterName = (chapter, newName) => {
     if (newName.trim() === "") return; // Prevent setting empty chapter names
-
-    if (index < 0 || index >= chapters.length) return; // Ensure index is valid
     
-    if (chapters.some((chapter) => chapter.name.trim().toLowerCase() === newName.trim().toLowerCase())) {
+    const trimmedName = newName.trim();
+    if (chapters.some((ch) => 
+            ch.id !== chapter.id &&
+            ch.name.trim().toLowerCase() === trimmedName.toLowerCase())) {
         alert("Chapter name already exists. Please choose a different name.");
         return; // Prevent changing to a duplicate chapter name
     }
 
-    const updatedChapters = [...chapters];
-    updatedChapters[index].name = newName;
-    setChapters(updatedChapters);
+    
+    // const updatedChapters = [...chapters];
+    // updatedChapters[index].name = newName;
+    // setChapters(updatedChapters);
+
+    // update the chapter with its new chapter name if the ids match or else don't.
+    setChapters(chapters.map(c =>
+      c.id ===chapter.id ? { ...c, name: trimmedName } : c
+    ));
   };
 
   // remove chapter by right clicking it and its removed.
-  const removeChapter = (index) => {
+  const removeChapter = (chapterId) => {
 
-    if (chapters.length < 1) {
+    if (chapters.length <= 1) {
         alert("No chapters to remove.");
         return; // Prevent removing if there are no chapters
     }
 
-    const updatedChapters = [...chapters]; //updated state variable
-    updatedChapters.splice(index, 1); // Remove the chapter at the specified index (only one item removed)
-    setChapters(updatedChapters); // Update the state with the new chapters array
+    setChapters(chapters.filter(c => c.id !== chapterId));
 
   }
 
@@ -67,7 +89,7 @@ const Beginning = () => {
   // right click for renaming and deleting chapters
   // ON-CONTEXT-MENU is the event handler that listens to a right-click event. 
 
-  const handleRightClick = (e, index) => {
+  const handleRightClick = (e, chapter) => {
     e.preventDefault();
 
     const action = prompt(`Right-click menu:\n1. Rename\n2. Delete\n\nType "1" or "2"`);
@@ -75,20 +97,34 @@ const Beginning = () => {
     if (action === "1"){
         const newName = prompt("Enter new chapter name: ");
         if (newName) {
-            changeChapterName(index, newName);
+            changeChapterName(chapter, newName);
         }
     }
 
     if (action === "2") {
         const confirmDeletion = window.confirm("Do you want to delete this chapter?");
         if (confirmDeletion) {
-            removeChapter(index);
+            removeChapter(chapter.id);
         }
     }
   }
 
-  const handleLeftClick = () => {
+  // const renderHrefLink = (index, chapterName) => (
+  //   <a href={`/chapter/${index}`}> {chapterName} </a>
+  // );
+
+  // const createRouteLink = (index, chapterName) => (
+  //   <Link to={`/chapter/${index}`}> {chapterName} </Link>
+  // )
+
+
+  const handleLeftClick = (chapterId, projectID) => {
     // go to link of the chapter.
+    // TODO: implement useAuth for a particular log in.
+
+    // Temporarily using placeholder until auth is implemented
+   // const userId = currentUser?.id || "userID";
+    navigate(`/projectarchive/${projectID}/beginning/chapters/${chapterId}`);
   }
 
 
@@ -117,17 +153,19 @@ const Beginning = () => {
 
       <div className="chapter-list">
 
-        {chapters.map((chapter, index) => (
+        {chapters.map((chapter) => (
             // onContextMenu listens for right-clicking event.
             // it gets triggeed when the user right clicks on this div element on the webpage.
-            <div key={index} className="chapter-item" onClick={() => handleLeftClick(index)} onContextMenu={(e) => handleRightClick(e, index)}> 
+            <div 
+              key={chapter.id} 
+              className="chapter-item" 
+              onClick={() => handleLeftClick(chapter.id, projectID)} 
+              onContextMenu={(e) => handleRightClick(e, chapter)}> 
                 <h3>{chapter.name}</h3>
             </div>
         ))}
 
       </div>
-      
-     
     </div>
   );
 }

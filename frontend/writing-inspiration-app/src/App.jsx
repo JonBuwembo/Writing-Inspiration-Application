@@ -11,7 +11,7 @@ import ProfilePage from './ProfilePage/ProfilePage.jsx'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ArchivePage from './ProfilePage/Project Archive/ArchivePage.jsx';
 import ArchiveContentProjection from './ProfilePage/Project Archive/ArchiveContentProjection.jsx'
-
+import ChapterDetail from './ProfilePage/Project Archive/Archive Content Projection/Singular Components/A_Character.jsx';
 
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
         {/* not made yet */}
         <Route path="/profile/*" element={<ProfilePage />} /> {/*has subroutes*/}
 
-        {/* <Route path="/profile" element={<ProfilePage/>} /> */}
+        {/* <Route path="/profile" element={<ProfilePage/>} /> */}   
 
         </Routes>
       </Router>

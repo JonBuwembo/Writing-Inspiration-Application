@@ -101,9 +101,9 @@ const Climax = () => {
 
   return (
     <div className="beginning-container">
-      <h2>Beginning of Project {projectID}</h2>
+      <h2>Climax of Project {projectID}</h2>
       <p className= "explanation-text">
-        This section contains the beginning of the story for Project {projectID}.
+        This section contains the climax of the story for Project {projectID}.
         Here you can add details about the initial setup, characters, and setting.
 
         This page will also display the chapters that you can manually add/remove 

@@ -5,15 +5,39 @@
 import './LoginPage.css'
 import '../RegistrationPage/Register.jsx'
 import './LoginPage.jsx'
+import supabase from '../config/supabaseClient.js';
+import { authService } from '../auth/authService.js';
+import { useState } from 'react';
 
 function LoginPage() {
     //let [newEmails, setCount] = useState(0)
     //const [password, setPassword] = useState("");
     //const [username, setUsername] = useState("");
 
+    const [formData, setFormData] = useState({
+        email:'',
+        password:''
+    })
+
+    const handleLogin = async (event) => {
+        event.preventDefault();
+        try {
+            await authService.loginUser(
+                formData.email, // Email input)
+                formData.password)
+
+            // If login is successful, redirect to the home page
+            window.location.href = '/home'; // Redirect to home page
+        } catch (error) {
+            alert(error.message);
+            console.error('Login failed:', error);
+            // Handle login error (e.g., show an error message to the user)
+        }
+    }
+
     return (
         <div className='login-page-container'>
-            <form action="#">
+            <form onSubmit={handleLogin}>
                 <h2> 
                     Login 
                     
@@ -21,11 +45,11 @@ function LoginPage() {
                 </h2>
 
                 <div className="input-field">
-                    <input type="text" placeholder="Email" required />
+                    <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
                 </div>
 
                 <div className="input-field">
-                    <input type="password" placeholder="Password" required />
+                    <input type="password" placeholder="Password" onChange={(e) => setFormData({...formData, password: e.target.value})} required />
                 </div>
 
                 {/* logic needs to be implemented for 'Remember me' button */}

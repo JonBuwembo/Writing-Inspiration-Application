@@ -1,0 +1,142 @@
+
+
+li {
+    list-style-type: none;
+}
+
+.font {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.font-centered {
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+}
+
+/* Base container */
+.project-container {
+  min-width: 600px;
+  margin: 20px;
+  margin-top: 80px;
+  margin-bottom: 80px;
+  height: 100px;
+  display: flex;
+  padding: 0;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Project rectangle */
+.project-rectangle {
+  width: 600px;
+  height: auto; /* Changed to auto for dynamic height */
+  min-height: 100px;
+  background-color: white;
+  border: 1px solid rgb(139, 154, 176);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: 'Open Sans', sans-serif;
+  cursor: pointer;
+  overflow: hidden; /* Ensures child elements respect border-radius */
+  transition: background-color 0.3s ease;
+}
+
+.project-rectangle:hover {
+  background-color: rgb(94, 117, 140);
+  color: white;
+}
+
+/* Header inside rectangle */
+.project-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Delete box */
+.delete-box {
+  width: 100px;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100px;
+  font-family: 'Open Sans', sans-serif;
+  background-color: white; /* Fixed color code (was missing #) */
+  color: #FF2400;
+  border: 1px solid #FF2400; /* Combined border properties */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures child elements respect border-radius */
+}
+
+.delete-box:hover {
+  background-color: #FF2400;
+  color: white;
+  box-shadow: 0 2px 4px #FF2400;
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* text inside delete box */
+.delete-box p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.delete-box p:first-child {
+    margin-bottom: 8px;
+}
+
+
+/* Add project button */
+.add-project-btn {
+  width: 200px;
+  font-family: 'open sans', sans-serif;
+  height: 50px;
+  background-color: rgb(57, 55, 72);
+  color: white;
+  border: 2px solid rgb(57, 55, 72);
+  font-size: 1.2rem;
+  margin: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+  transform: translateZ(0); /* Optimize for performance */
+}
+
+
+.add-project-btn:hover {
+  background-color: rgb(57, 55, 72);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+
+  transition: translateZ(0) scale(1.02);
+}
+
+.edit-project-btn {
+  width: 120px;
+
+  /*move button left*/
+  align-self: flex-end; /* button stays at the end of the flex container */
+  font-family: 'open sans', sans-serif;
+  height: 50px;
+  margin-top: 10px;
+  background-color: rgb(57, 55, 72);
+  color: white;
+  border: 2px solid rgb(57, 55, 72);
+  font-size: 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}

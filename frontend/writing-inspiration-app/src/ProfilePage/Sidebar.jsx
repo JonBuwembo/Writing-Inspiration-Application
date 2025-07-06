@@ -11,12 +11,12 @@ const Sidebar = () => {
     return (
         <aside className="sidebar">
             <nav>
-                <ul>
+                <ul className="sidebar-nav">
                     <li><a id="home-link" href="/home"><FontAwesomeIcon icon={faHouse} className="icon-spacing" />Home</a></li>
-                    <li><a id="dashboard" href="/profile"><FontAwesomeIcon icon={faBriefcase} className="icon-spacing"/> My Dashboard</a></li>
-                    <li><a id="sign-out" href="/login"> <FontAwesomeIcon icon={faArrowRightFromBracket} className="icon-spacing" /> Sign Out </a></li>
-                    <li><a id="chats" href="#"> <FontAwesomeIcon icon={faComment} className='icon-spacing' /> Chats </a></li>
-                    <li><a id="settings" href="/settings"> <FontAwesomeIcon icon={faGear} className='icon-spacing' /> Settings </a></li>
+                    <li><a id="dashboard" href="/profile"><FontAwesomeIcon icon={faBriefcase} className="icon-spacing"/>My Dashboard </a></li>
+                    <li><a id="sign-out" href="/login"> <FontAwesomeIcon icon={faArrowRightFromBracket} className="icon-spacing" />Sign Out </a></li>
+                    <li><a id="chats" href="#"> <FontAwesomeIcon icon={faComment} className='icon-spacing' />Chats </a></li>
+                    <li><a id="settings" href="/settings"> <FontAwesomeIcon icon={faGear} className='icon-spacing' />Settings </a></li>
                     {/* Add more links as needed */}
                 </ul>
             </nav>

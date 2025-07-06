@@ -6,9 +6,9 @@ import './Register.jsx'
 import './Register.css'
 import '../LoginPage/LoginPage.jsx'
 // import '../../vite.config.js'
+import supabase from '../config/supabaseClient.js';import { registerUser } from '../services/api';
 
-import { registerUser } from '../services/api';
-
+import { authService } from '../auth/authService.js';
 
 function Register() {
     //All fields here are required to be entered.
@@ -19,7 +19,9 @@ function Register() {
         -   The frontend handles the response accordingly
     
     */
-
+    
+    // Testing
+    // console.log(supabase);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -57,17 +59,21 @@ function Register() {
 
     const registerUser = async (userData) => {
 
+        
         try {
             // Access the database server
-            const response = await fetch('/api/users-appone/register', {
-                //"Add" a user to the database after registration.
-                // Send data payload to backend for processing
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
+
+            const response = await authService.registerUser(formData.email, formData.password, formData.username, formData.firstName, formData.lastName)
+            
+            // const response = await fetch('/api/users-appone/register', {
+            //     //"Add" a user to the database after registration.
+            //     // Send data payload to backend for processing
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(userData),
+            // });
 
             if (!response.ok) {
                 throw new Error('Issue with connecting to backend');
@@ -76,6 +82,7 @@ function Register() {
             // wait for data to be translated to json for processing
             const data = await response.json();
             console.log('User registered successfully', data);
+            window.location.href = '/login'; // Redirect to login page after successful registration.
 
         } catch (error) {
             //unsuccessful registration

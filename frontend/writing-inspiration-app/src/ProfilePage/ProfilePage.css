@@ -29,60 +29,53 @@ body {
     width: 12px; /* Adjust the width as needed */
   }
 
-
-/* Left Sidebar */
 .sidebar {
-    width: 250px;
-    /* Fixed width for the sidebar */
-    background-color: #333;
-    /* Dark background */
-    color: #fff;
-    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 40px 0px 0px 5px; /*<top-padding> <left-right-padding>* /
-    box-sizing: border-box;
-    height: 100%;
-    
-    /* Ensure the sidebar spans the full height */
+    border-width: 0.01px;
+    border-color: rgb(139, 154, 176);
+    width: 260px;
+    background-color: white;
+    border-style: solid;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
 }
 
-.sidebar nav {
-    margin: 0px;
-    width: calc(100%);
+.sidebar-nav {
+    padding-top: 20px;
 }
-.sidebar nav ul {
-    list-style-type: none;
-    margin-top: 10px;
-    margin: 0;
-    padding: 0;
-    width: calc(100%);
-    text-align: left;
-}
-
-.sidebar nav ul li {
-    margin-bottom: 20px; /* Space between menu items */
-   
-    /*Space between text options */
-
-}
-
-
-.sidebar nav  ul li a {
-    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff;
+/* Target all links in the sidebar */
+.sidebar-nav li a {
+    font-size: 1.1rem; /* Adjust font size */
+    font-weight: 500; /* Medium boldness */
+    color: #151414;
     text-decoration: none;
-    text-align: left;
-    font-size: 20px;
-    display: block; 
-    display: fixed;
-    padding: 8px 17px;
+    display: block;
+    padding: 18px 20px;
+    margin: 0 20px 0px 20px; /* Spacing around links [mainly for the color on hover */
+    transition: all 0.3s ease; /* Smooth hover effects */
 }
 
-.sidebar ul li a:hover {
-    font-family: 'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #6C757D;
-    border-radius: 2px;
-    padding: 8px 17px;
-    /*<Shadow height>  <Shadow length> */
+/* Font Awesome icon spacing */
+.sidebar-nav li a .icon-spacing {
+    margin-right: 12px;
+    width: 20px; /* Ensures consistent icon spacing */
+}
+
+/* Hover effect with shadow cursor */
+.sidebar-nav li a:hover {
+    background-color: #356d9e;
+    color: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    transform: translateY(-2px); /* Slight lift */
+}
+
+/* Active link styling */
+.sidebar-nav li a.active {
+    background-color: #2a5a8a;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+
 }
 
 /* Right Content Wrapper */
