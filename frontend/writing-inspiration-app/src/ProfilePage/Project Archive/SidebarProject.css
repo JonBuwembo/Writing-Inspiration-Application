@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
+/* Base styles */
+.archive-container, .beginning-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    box-sizing: border-box;
+    background: none;
+    color: initial;
+    text-align: left;
+}
+
+/* Sidebar container */
+.sidebarArchive-container {
+    min-width: 350px;
+    max-width: 430px;
+    background-color: white;
+    color: black;
+    font-family: Roboto;
+    font-weight: 700;
+    font-size: 16px;
+    box-sizing: border-box;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    /* 
+        The 'left' property specifies the horizontal position of a positioned element.
+        When set to 0, the element is aligned to the left edge of its containing block.
+        This property only applies to elements with position set to relative, absolute, fixed, or sticky.
+    */
+    left: 0; 
+    overflow-y: auto;
+    border-right: 0.01px solid rgb(139, 154, 176);
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; /* Stack children vertically */
+    user-select: none; /* no text selection during sidebar drag adjusting*/
+
+    /* Hide scrollbar for chrome */
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */;
+}
+
+.project-popup-body::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers */
+}
+
+
+.project-title-display {
+    margin: 0 0 20px 0; /* Only bottom margin */
+    text-align: center; /* Center the title */
+    font-family: 'Roboto', sans-serif;
+}
+
+hr {
+    margin: 20px 0;
+    border: 0.5px solid #eee;
+    width: 100%;
+}
+
+/* Project type dropdown */
+.project-type-dropdown-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.project-type-dropdown-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.project-type-dropdown-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Add content button */
+.add-content-btn {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* Center button text */
+}
+
+.add-content-btn:hover {
+    background-color: #357ab8;
+}
+
+.metric-group {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-section {
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    cursor:pointer;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+.section-title:hover {
+    background: #f3f4f6;
+}
+
+.section-title::after {
+    content: "›";
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+details[open] .section-title::after {
+    transform: rotate(90deg);
+}
+
+.metric-group a {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 14px;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.metric-group a:hover {
+    background: #a3c6e8;
+    border-left-color: #4f46e5;
+}
+
+.metric-count {
+    background: #e0e7ff;
+    color: 4f46e5;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+/*Nested sections*/
+.metric-group details {
+    margin-left: 16px;
+}
+
+.metric-group details .section-title {
+    font-weight: 500;
+    font-size: 13px;
+}
+
+hr { 
+    border: none;
+    height: 1px;
+    background: #f3f4f6;
+    margin: 20px 0;
+}
+
+/* Resize handle */
+
+.resize-handle {
+    position: absolute;
+    top: 0; 
+    right: 0;
+    bottom: 0;
+    width: 10px; 
+    cursor: col-resize;
+    z-index: 100; 
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.resize-handle:hover {
+    background: rgb(79, 70, 229, 0.1);
+    opacity: 0.2;
+}
+
+body.resizing-active {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+.sidebarArchive-container {
+  transition: width 0.15s ease-out;
+}
+
+
+
+/* For touch devices*/
+@media (pointer: coarse) {
+    .resize-handle {
+        width: 16px;
+    }
+}
+
+/* 
+
+.sidebar-options-container details {
+  margin-top: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.03),
+    0 4px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.sidebar-options-container summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1a1a1a;
+  background: linear-gradient(135deg, rgba(249,249,249,1) 0%, rgba(252,252,252,1) 100%);
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  list-style: none;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.sidebar-options-container summary::after {
+  content: "↓";
+  font-size: 14px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+  color: #666;
+}
+
+.sidebar-options-container details[open] summary {
+  background: rgb(255, 255, 255);
+  border-radius: 12px 12px 0 0;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.05);
+}
+
+.sidebar-options-container details[open] summary:hover {
+  background: rgb(175, 195, 230);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.sidebar-options-container details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.sidebar-options-container summary:hover {
+  background: rgb(175, 195, 230);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.sidebar-options-container summary:active {
+  transform: translateY(0);
+  background: rgb(175, 195, 230);
+}
+
+
+.sidebar-options-container details > div {
+  padding: 16px 24px;
+  background: white;
+  border-radius: 0 0 12px 12px;
+} */

@@ -1,7 +1,7 @@
 import './ProjectPopUp.css';
 import { useEffect } from 'react';
 
-const ProjectPopUp = ({popupTitle = "Edit Project Description", children, onClose, isOpen}) => {
+const ProjectPopUp = ({popupTitle = "Edit Project", children, onClose, isOpen}) => {
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -21,8 +21,9 @@ const ProjectPopUp = ({popupTitle = "Edit Project Description", children, onClos
 
 
     return (
+        <div className="project-popup-container">
         <div 
-         className={`modal-overlay" ${isOpen ? 'open' : ''}`}
+         className={`modal-overlay ${isOpen ? 'open' : ''}`}
          role="dialog" 
          aria-modal="true"
          aria-labelledby="project-popup-title"
@@ -34,17 +35,18 @@ const ProjectPopUp = ({popupTitle = "Edit Project Description", children, onClos
             {/* ARIA-LABELLED-BY: Links the popup title to the dialog for screen readers */}
             {/* OVERLAY: Word that means the background is dimmed when the popup is open */}
 
-            <div className="project-popup-container">
+                
                 <button className="close-button" aria-label="Close popup" onClick={onClose}>
                     &times; {/* Close button */}
                 </button>
 
                 <div className="project-popup-content">
-                    <h2 id="project-popup-title">{popupTitle}</h2>
+                    {/* <h2 id="project-popup-title">{popupTitle}</h2> */}
                     <div className="project-popup-body">{children}</div>
                 </div>
 
-            </div>
+            
+        </div>
         </div> 
 
     )

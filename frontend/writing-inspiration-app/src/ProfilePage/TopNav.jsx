@@ -37,6 +37,7 @@ const TopNav = () => {
           <li><Link to="/profile/myprojects">MyProjects</Link></li>
           <li><Link to="/profile/mypictures">MyPictures</Link></li>
           <li><Link to="/profile/myvideos">MyVideos</Link></li>
+          <li><Link to="">ArchivedProjects</Link></li>
           {/* Add more links as needed */}
         </ul>
       </nav>

@@ -1,22 +1,63 @@
+/* Modal Overlay - keeping your original class name */
 
-.project-popup-container{
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 500px;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    transform: translateY(20px); /* Start position for the popup */
-    transition: transform 0.3s ease-out;
-    overflow: hidden; /* Ensures content doesn't overflow */
+/* Force centering - add this at the end of your CSS */
+.modal-overlay {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+
+
+.project-popup-container {
+    margin: auto !important;
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Project Popup Container - keeping your original class name */
+.project-popup-container {
+    background: white;
+    padding: 0;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(20px);
+    transition: transform 0.3s ease-out;
+    overflow: hidden;
     animation: fadeIn 0.3s ease-out;
 }
 
-/* fadein: This animation will be applied to the project popup */
-/* It will make the popup appear smoothly */
+.modal-overlay.open .project-popup-container {
+    transform: translateY(0);
+}
+
+/* Keeping your original fadeIn animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -28,7 +69,9 @@
     }
 }
 
-.project-popup-content h2{
+
+/* Project Popup Content - keeping your original class name */
+.project-popup-content h2 {
     margin: 0;
     padding: 1.5rem;
     font-size: 1.5rem;
@@ -36,17 +79,22 @@
     color: #111827;
     border-bottom: 1px solid #e5e7eb;
     background-color: #f9fafb;
-    position: relative;
-    display: flex;
-    align-items: center;
 }
 
+/* Project Popup Body - keeping your original class name */
 .project-popup-body {
     padding: 1.5rem;
     overflow-y: auto;
-    flex-grow: 1;
+    max-width: 800px; /* Extra wide */
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */;
 }
 
+.project-popup-body::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers */
+}
+
+/* Close Button - keeping your original class name */
 .close-button {
     position: absolute;
     top: 10px;
@@ -70,75 +118,105 @@
     color: #333;
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0); /* Transparent background */
+/* Form Styles - using your existing structure */
+.project-edit-form {
     display: flex;
-    justify-content:center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0; /* Initially hidden */
-    visibility: hidden; /* Prevents interaction when hidden */
-
-    transition:
-      opacity 0,3s ease-out,
-      visibility 0,3s eas-out,
-      background-color 0,3s ease-out;
+    width: 500px;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-/* Active State for Modal Overlay */
-/* This class is added when the modal is open */
-.modal-overlay.open {
-    opacity: 1;
-    visibility: visible;
-    background-color: rgba(0, 0, 0, 0.7) /* Semi-transparent background when open */;
-    backdrop-filter: blur(5px); /* Optional: adds a blur effect to the background */
+
+.title-popup {
+    font-size: 1.45rem;
+    font-weight: bold;
+    color: #111827;
+    font-family: 'Rubik', 'open sans', sans-serif;
+    
 }
 
-.project-popup-container {
-    transform: translateY(20px); /* Start position for the modal */
-    transition: transform 0.3s ease-out;
+.project-edit-form label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
 }
 
-.close-button{
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    width: 2.5rem;
-    height: 2.5rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
+.project-edit-form textarea {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    /*pointer: cursor*/
     cursor: pointer;
-    color: #666;
-    border-radius: 50%;
+
+}
+
+
+
+/* .project-edit-form textarea:focus {
+    outline: none;
+    border-color: black;
+    border-width: 2px !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+} */
+
+
+/* Form Actions - keeping your original class name */
+.form-actions {
     display: flex;
-    align-items: center;
-    justify-content: center;
-}   
-
-.close-button:hover {
-    background-color: #f5f5f5;
-    color: #333;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
-.modal-overlay.open .project-popup-container {
-    transform: translateY(0); /* Moves the modal into view when open */
+.cancel-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    background-color: white;
+    border: 1px solid #4f46e5;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+.cancel-button:hover {
+    background-color: white;
+    color: #374151;
+}
 
+.save-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-button:hover {
+    background-color: #4338ca;
+}
+
+/* Responsive styles - keeping your original structure */
 @media (max-width: 600px) {
     .project-popup-container {
-        width: 90%; /* Adjust width for smaller screens */
-        padding: 1rem; /* Reduce padding */
+        width: 90%;
+        padding: 0;
     }
 
-    .project-popup-content {
-        font-size: 1.2rem; /* Smaller font size for mobile */
+    .project-popup-content h2 {
+        font-size: 1.2rem;
+        padding: 1rem;
+    }
+
+    .project-popup-body {
+        padding: 1rem;
     }
 
     .close-button {
@@ -146,10 +224,4 @@
         height: 2rem;
         font-size: 1.2rem;
     }
-
-    .project-popup-body {
-        padding: 1rem;
-    }
 }
-
-

@@ -1,0 +1,13 @@
+
+.archive-content-projection-container {
+    /* margin-left: 350px;   */
+    padding: 20px;
+    background-color: white; /* Light background for the content area */
+    /* Ensure that this area is to the side of the sidebar according to the styles above (no top nav) */
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: margin-left 0.2s ease-out; 
+    flex-grow: 1; /* Take remaining space */
+}
+

@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import ProjectArchive from '../Project Archive/ArchivePage.jsx';
 import { Link } from 'react-router-dom';
 import './myProjectsPage.css';
+import './ProjectPopUp.css';
 //import ReactModal from 'react-modal';
 import ProjectPopUp from './ProjectPopUp.jsx'; // Import the popup component for project details
 
@@ -77,16 +78,33 @@ const MyProjectsPage = () => {
         setIsPopupOpen(true);
     }
 
-    const editProject = (id, newName) => {
+    const editProject = (id, updatedData) => {
         // Find the project to edit
-        const projectToEdit = projects.find(project => project.id === id);
-        if (projectToEdit) {
-            // Update the project name
-            const updatedProjects = projects.map(project =>
-                project.id === id ? { ...project, name: newName } : project
-            );
-            setProjects(updatedProjects);
+       setProjects(projects.map(project => project.id === id? { ...project, ...updatedData}: project));
+    };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const updatedName = formData.get('project-name').trim();
+        const updatedDesc = formData.get('project-desc').trim();
+
+        if (currentProject.id && projects.some(project => project.id === currentProject.id)) {
+            // If currentProject has an id, update the existing project
+            editProject(currentProject.id, {
+                name: formData.get('project-name').trim(),
+                description: formData.get('project-desc').trim()
+            });
+        } else {
+            // Add a new project.
+            setProjects([...projects, {
+                id: currentProject.id, 
+                name: updatedName || `Project ${currentProject.id}`, 
+                description: updatedDesc || 'Add Description' 
+            }]);
         }
+        
+        handleClosingPopup();
     };
 
 
@@ -107,66 +125,56 @@ const MyProjectsPage = () => {
             
             <p className='font'> Select any project to view details and unlock AI-powered insights tailored to your work. </p>
 
-            {projects.map(project => (
-                <div key={project.id} className='project-container'>
-                    {/* Use Link from react-router-dom for client-side routing */}
-                    <li className='project-rectangle' onClick={() => handleNavigate(project.id)} > 
-                       <header className='project-header'>
+            <div className="project-list-container">
+                {projects.map(project => (
+                    <div key={project.id} className='project-container'>
+                        {/* Use Link from react-router-dom for client-side routing */}
+                        <li className='project-rectangle' onClick={() => handleNavigate(project.id)} > 
+                        <header className='project-header'>
+                            
+                                {project.name}
+
+                            </header> 
+
+
+                        <p> {project.description || 'No description yet'}</p>
+
+
                         
-                            {project.name}
+                                {/* Button to open popup*/}
+                                <button 
+                                    className='edit-project-btn' 
+                                    onClick={(e) => handleEditClick(project, e)}
+                                    aria-label="Edit Project"
+                                >
+                                Edit
+                                </button>
+                        </li>      
 
-                        </header> 
-
-
-                       <p> {project.description || 'No description yet'}</p>
-
-
-                       
-                            {/* Button to open popup*/}
-                            <button 
-                                className='edit-project-btn' 
-                                onClick={(e) => handleEditClick(project, e)}
-                                aria-label="Edit Project"
-                            >
-                            Edit
-                            </button>
-                    </li>      
-
-                    <li className='delete-box' onClick={() => deleteProject(project.id)}> <p> Delete </p></li>
+                        <li className='delete-box' onClick={() => deleteProject(project.id)}> <p> Delete </p></li>
+                    </div>
+                ))}
                 </div>
-            ))}
             </div>
 
-            {/* Popup for project details */}
+            {/* Popup for project details popup appears over everything only when edit button is clicked */}
             <div>
 
                 <ProjectPopUp
                     isOpen={isPopopupOpen}
                     onClose={handleClosingPopup}
-                    popupTitle={currentProject ? `Edit ${currentProject.name}` : 'Edit Project'}
+                    popupTitle={currentProject && currentProject.name ? `Edit ${currentProject.name}` : 'Edit Project'}
                 >
-                    <form className="project-edit-form"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        const formData = new FormData(e.target);
-                        const newName = formData.get('project-name').trim();
-                        const newDescription = formData.get('project-desc').trim();
+                    <form 
+                        className="project-edit-form"
+                        onSubmit={handleFormSubmit}
+                    >
+                        <p className="title-popup"> Update Project</p>
+                        <label className="input-box-label" htmlFor="project-name">Project Name</label>
+                        <input className="input-box" id="project-name" name="project-name"  placeholder="Enter project name" defaultValue={currentProject?.name || ''} />
 
-                        if (currentProject) {
-                            // If currentProject is set, we are editing an existing project
-                            editProject(currentProject.id, newName);
-                            setCurrentProject({ ...currentProject, name: newName, description: newDescription });
-                        } else {
-                            // If currentProject is null, we are adding a new project
-                            addProject(newName);
-                        }
-                        handleClosingPopup();
-                    }}>
-                        <label htmlFor="project-name">Project Name</label>
-                        <textarea id="project-name" name="project-name" rows="2" cols="10" defaultValue={currentProject?.name || ''} />
-
-                        <label htmlFor="project-desc">Project Description</label>
-                        <textarea id="project-desc" name="project-desc" rows="2" cols="10" defaultValue={currentProject?.description || ''} />
+                        <label className="textbox-label" htmlFor="project-desc">Project Description</label>
+                        <textarea className="textbox" id="project-desc" name="project-desc"  placeholder= "Enter project description" defaultValue={currentProject?.description || ''} />
 
                         <div className="form-actions">
                             <button type="button" onClick={handleClosingPopup} className="cancel-button"> Cancel </button>

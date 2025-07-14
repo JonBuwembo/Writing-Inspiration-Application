@@ -12,26 +12,21 @@ import Artifacts from './Archive Content Projection/Artifacts.jsx';
 import Symbols from './Archive Content Projection/Symbols.jsx';
 import ChapterDetail from './Archive Content Projection/Singular Components/A_Chapter.jsx';
 import CharacterDetail from './Archive Content Projection/Singular Components/A_Character.jsx';
-function ArchiveContentProjection() {  
-    const {projectID} = useParams(); // Get the project ID from the URL parameters
+
+function ArchiveContentProjection({className, style, projectID}) {  
+   
     
     return (
 
-        <>
+        
             
             
-            <div className='archive-content-projection-container'>
+            <div className={className} style={style} >
                 <Routes>
                     <Route path="summary" element={<Summary />} />
                     <Route path="artifacts" element={<Artifacts />} />
                     <Route path="characters" element={<Characters />} />
                     <Route path="characters/:characterId" element={<CharacterDetail />} />
-                    <Route path="symbols" element={<Symbols />} />
-                    <Route path="settings-story" element={<SettingsStory />} />
-                    <Route path="beginning" element={<Beginning />} />
-                    <Route path="beginning/chapters/:chapterId" element={<ChapterDetail />} />
-                    <Route path="climax" element={<Climax />} />
-                    <Route path="resolution" element={<Resolution />} />
                     <Route path="inspiration-blurb" element={<InspirationBlurb />} />
                     
                 </Routes>
@@ -39,10 +34,11 @@ function ArchiveContentProjection() {
                 
             </div>
             
-        </>
-
         
+
+            
     );
-    }
-export default ArchiveContentProjection;
-// This component will render the content for each section of the project archive based on the project ID from the URL parameters.
+}
+
+    export default ArchiveContentProjection;
+    // This component will render the content for each section of the project archive based on the project ID from the URL parameters.

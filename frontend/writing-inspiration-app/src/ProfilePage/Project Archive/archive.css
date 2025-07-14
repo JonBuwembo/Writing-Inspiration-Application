@@ -1,59 +1,5 @@
 
 
-.archive-container, .beginning-container {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background: none;
-    color: initial;
-    font-family: initial;
-    text-align: left; 
-}
-
-
-/* Sidebar Styles */
-.sidebarArchive-container {
-  width: 170px; /* Fixed width for the sidebar */
-  background-color: #e5e29c; /* Dark background */
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  padding-left: 0px;
-  box-sizing: border-box;
-  height: calc(100vh); /* Ensure it spans the height below the top-nav */
-  position: fixed; /* Sidebar is fixed on the left */
-  top: 0px; /* Starts right below the top-nav */
-  left: 0;
-  border-color:rgb(93, 104, 189);
-  border-style: solid;
-  border-width: 1px;
-}
-
-
-.sidebar-nav-author {
-    background-color: #f5f0d6;
-    /* want the background color to appear as a smaller box within sidebarArchive-container */
-    width: 90%;
-    margin-top: 5px auto;
-    margin-left: 8px;
-    margin-right: 8px;
-    padding: 10px;
-    border-color: rgb(93, 104, 189);
-    border-style: solid;
-    font-size: 10px;
-    border-width: 1px;
-}
-
-.archive-content-projection-container {
-    margin-left: 170px; /* Adjusted to account for the sidebar width */
-    padding: 20px;
-    background-color: #f3ebc4; /* Light background for the content area */
-    /* Ensure that this area is to the side of the sidebar according to the styles above (no top nav) */
-    min-height: 100vh;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-
-}
-
 .section-label {
     font-size: 14px;
     font-weight: bold;
