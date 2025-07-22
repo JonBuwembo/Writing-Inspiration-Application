@@ -27,7 +27,7 @@ function App() {
         {/* TODO: UI done */}
         <Route path="/Register" element={<Register/>} />
 
-        <Route path="/projectarchive/:projectID/*" element={<ArchivePage />} />
+        <Route path="/projectarchive/:projectName/*" element={<ArchivePage />} />
         {/* TODO: UI currently working on */}
         <Route path="/home/*" element={<HomePage/>} />
         {/* not made yet */}

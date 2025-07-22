@@ -36,13 +36,15 @@ function LoginPage() {
     }
 
     return (
+        <div className="page">
         <div className='login-page-container'>
             <form onSubmit={handleLogin}>
-                <h2> 
-                    Login 
-                    
-                    <p> Stay creative and updated on current inspiration </p>
-                </h2>
+
+                <h3 style={{ fontSize: '25px'}}> 
+                    Login to your account!
+                </h3>
+
+                <p>  Stay creative and updated on current inspiration </p>
 
                 <div className="input-field">
                     <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
@@ -54,8 +56,8 @@ function LoginPage() {
 
                 {/* logic needs to be implemented for 'Remember me' button */}
 
-                <div className="textbox-field">
-                    <input type="checkbox" id="remember" className="textbox" />
+                <div className="checkbox-field">
+                    <input type="checkbox" id="remember" className="checkbox" />
                     <p className='remember-me'> Remember me</p>
                 </div>
 
@@ -67,12 +69,30 @@ function LoginPage() {
                 </div>
 
                 {/* When user logs in, they are sent to the home page of Inspira */}
-                <button type="submit"> Log In </button>
+                <button type="submit" className="login-btn"> Log In </button>
+
+                 <div id="g_id_onload"
+                    data-client_id="173883313635-c3qhml5k8th9u5pflu7c1ea4lpbqen2q.apps.googleusercontent.com"
+                    data-login_uri="http://localhost:5173/auth/google/callback"
+                    data-auto_prompt="false">
+                </div>
+                
+                <div className="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left">
+                </div>
+
+                <script src="https://accounts.google.com/gsi/client" async defer></script>
 
                 <div className="register">
                     <p> Don't have an account? <a href="/Register">Register</a></p>
                 </div>
             </form>
+        </div>
         </div>
     )
 }

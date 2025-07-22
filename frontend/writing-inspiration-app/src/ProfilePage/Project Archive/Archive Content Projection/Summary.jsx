@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-import "../archive.css";
+import "./ProjectSections.css";
 import { useParams } from "react-router-dom";   
 import ReactQuill from "react-quill"; // Imported ReactQuill for text editing
 import 'react-quill/dist/quill.snow.css'; // Importing the Quill CSS for styling
@@ -69,9 +69,13 @@ const Summary = () => {
     
     
     return (
-        <div className="summary-container">
+        <div className="project-text-body">
             <h2 className="title-projection-text">Summary for Project {projectID}</h2>
-            <p className="explanation-text">This section will contain information about the summary of your story line.</p>
+            <p>
+                This section will contain information about the summary of your story line.
+
+                -- Inherits ProjectTextArea.jsx
+            </p>
 
             <div className="text-box" style={{ height: textBoxHeight, paddingBottom: textpadding }}>
                 <ReactQuill ref={quillRef} modules={modules} value={text} onChange={handleChange} placeholder="Start typing your summary here ..."/>

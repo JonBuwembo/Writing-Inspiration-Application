@@ -1,19 +1,14 @@
 import React from 'react';
 import './archive.css';
 import {Routes, Route, useParams} from 'react-router-dom';
-import Beginning from './Archive Content Projection/Beginning.jsx';
-import Climax from './Archive Content Projection/Climax.jsx';
-import Resolution from './Archive Content Projection/Resolution.jsx';
 import Summary from './Archive Content Projection/Summary.jsx';
 import Characters from './Archive Content Projection/Characters.jsx';
+import Overview from './Archive Content Projection/Overview.jsx';
 import SettingsStory from './Archive Content Projection/Settings-Story.jsx';
-import InspirationBlurb from './Archive Content Projection/Inspiration-Blurb.jsx';
-import Artifacts from './Archive Content Projection/Artifacts.jsx';
-import Symbols from './Archive Content Projection/Symbols.jsx';
-import ChapterDetail from './Archive Content Projection/Singular Components/A_Chapter.jsx';
+import Credits from './Archive Content Projection/Credits.jsx';
 import CharacterDetail from './Archive Content Projection/Singular Components/A_Character.jsx';
 
-function ArchiveContentProjection({className, style, projectID}) {  
+function ArchiveContentProjection({className, style}) {  
    
     
     return (
@@ -23,11 +18,11 @@ function ArchiveContentProjection({className, style, projectID}) {
             
             <div className={className} style={style} >
                 <Routes>
-                    <Route path="summary" element={<Summary />} />
-                    <Route path="artifacts" element={<Artifacts />} />
+                    <Route path="overview" element={<Overview />} />
+                    <Route path="Summary" element={<Summary />} />
                     <Route path="characters" element={<Characters />} />
                     <Route path="characters/:characterId" element={<CharacterDetail />} />
-                    <Route path="inspiration-blurb" element={<InspirationBlurb />} />
+                    <Route path="credits" element={<Credits />} />
                     
                 </Routes>
 

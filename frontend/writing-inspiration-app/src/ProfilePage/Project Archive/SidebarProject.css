@@ -16,7 +16,23 @@
 .sidebarArchive-container {
     min-width: 350px;
     max-width: 430px;
-    background-color: white;
+    background:
+        linear-gradient(
+            rgb(253, 253, 255),
+            transparent
+        ),
+        linear-gradient(
+            -45deg,
+            rgb(222, 225, 227),
+            transparent
+        ),
+        linear-gradient(
+            45deg,
+            rgb(243, 243, 247),
+            transparent
+        );
+        background-blend-mode: multiply;
+
     color: black;
     font-family: Roboto;
     font-weight: 700;
@@ -32,7 +48,8 @@
     */
     left: 0; 
     overflow-y: auto;
-    border-right: 0.01px solid rgb(139, 154, 176);
+    /* border-right: 0.001px solid rgb(182, 179, 172); */
+
     padding: 20px; 
     display: flex; 
     flex-direction: column; /* Stack children vertically */
@@ -41,6 +58,10 @@
     /* Hide scrollbar for chrome */
     scrollbar-width: none;
     -ms-overflow-style: none; /* IE and Edge */;
+
+    /*Visually acts as a line thinner than 0.01px.*/
+    border-right: 1.2px solid #e2dbdb;
+   
 }
 
 .project-popup-body::-webkit-scrollbar {
@@ -50,52 +71,173 @@
 
 .project-title-display {
     margin: 0 0 20px 0; /* Only bottom margin */
-    text-align: center; /* Center the title */
+    text-align: left; /* Center the title */
     font-family: 'Roboto', sans-serif;
 }
 
-hr {
-    margin: 20px 0;
-    border: 0.5px solid #eee;
-    width: 100%;
+/*Search option*/
+.search-btn {
+    color: #666;
 }
+
+/* Ensure both elements respect the spacing, was struggling to get an umbrella spacing style for both.*/
+.spacing {
+    font-weight: 600;
+}
+.link-to-dashboard {
+    display: flex;              /* Enables flexbox centering */
+    align-items: center;        /* Vertical centering */
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    text-align: center;        /* Fallback for text centering */
+    text-decoration: none;     /* Removes underline from links */
+    color: #666; 
+}
+
+.link-to-dashboard:hover {
+    background-color: rgba(222, 231, 234, 1);
+}
+
+.search-btn {
+  display: block;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
 
 /* Project type dropdown */
 .project-type-dropdown-container {
-    width: 100%;
-    margin-bottom: 20px;
+    position: relative;
+    /* top right bottom left shorthand */
+    
 }
 
+.custom-select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    position: relative;
+}
+
+.custom-select::after {
+    content: "▼";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+    font-size: 16px;
+    color: #555;
+}
+
+.custom-select.open::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-options {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 4px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+}
+.custom-options-wrapper {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.custom-options-wrapper.open {
+  max-height: 500px; /* sufficiently large to fit all options */
+  opacity: 1;
+}
+
+.custom-options div {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-left: 3px solid;
+}
+
+.custom-options div:hover {
+    background: #c1c7d7 !important;
+    /* border-left-color: #4f46e5; */
+}
+
+/* Label styling */
 .project-type-dropdown-container label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    color: #666;
     font-weight: bold;
 }
 
+
+/* .project-type-dropdown-container::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    color: #555;
+    transition: transform 0.3s ease;
+} */
+
+/* Rotate arrow when container has 'open' class */
+.project-type-dropdown-container:focus-within::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Select dropdown styling */
 .project-type-dropdown-container select {
     width: 100%;
-    padding: 8px;
+    padding: 13px 16px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 8px;
+    background: white;
+    appearance: none;          /* Remove default styling for most browsers */
+    -webkit-appearance: none;  /* Remove default styling for Safari */
+    -moz-appearance: none;     /* Firefox */
+    font-size: 14px;
+    cursor: pointer;
+    box-sizing: border-box;
 }
+
 
 /* Add content button */
 .add-content-btn {
-    width: 100%;
-    padding: 12px;
+    padding: 10px 16px;
     margin: 20px 0;
-    background-color: #4a90e2;
+    background-color: #8ba9cb;
     color: white;
-    border: none;
-    border-radius: 4px;
+    border: none; 
+    border-radius: 8px;
     font-size: 16px;
+    font-family: 'Roboto';
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
     text-align: center; /* Center button text */
 }
 
+
+
 .add-content-btn:hover {
     background-color: #357ab8;
+}
+
+.add-content-btn:active {
+    animation: bounce 0.5s ease;
 }
 
 .metric-group {
@@ -133,8 +275,23 @@ hr {
     transition: transform 0.3s ease;
 }
 
+.details-content {
+    overflow: hidden;
+}
+
+
 details[open] .section-title::after {
     transform: rotate(90deg);
+}
+
+
+
+.metric-group .metric-group {
+  opacity: 1 !important;
+  transform: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 .metric-group a {
@@ -178,6 +335,17 @@ hr {
     height: 1px;
     background: #f3f4f6;
     margin: 20px 0;
+}
+
+
+.metric-group {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 300ms ease-in-out;
+
+    > div {
+        overflow: hidden;
+    }
 }
 
 /* Resize handle */

@@ -7,7 +7,7 @@ import './maincontent.css';
 
 function ArchivePage() {
 
-  const {projectID} = useParams(); //paramater in the URL
+  const {projectName} = useParams(); //paramater in the URL
   const [sidebarWidth, setSidebarWidth] = useState(350);
 
   // projectID is the ID of the project we are viewing
@@ -26,7 +26,7 @@ function ArchivePage() {
       <SidebarArchive
         sidebarWidth={sidebarWidth}
         setSidebarWidth={setSidebarWidth}
-        projectID = {projectID}
+        projectName = {projectName}
       />
 
       <ArchiveContentProjection 
@@ -35,7 +35,7 @@ function ArchivePage() {
           marginLeft: `${sidebarWidth}px`,
           transition: 'margin-left 0.2s ease-out'
         }}
-        projectID={projectID} 
+       
         
       />
 

@@ -5,6 +5,7 @@ import ProjectArchive from '../Project Archive/ArchivePage.jsx';
 import { Link } from 'react-router-dom';
 import './myProjectsPage.css';
 import './ProjectPopUp.css';
+import SidebarProject from '../Project Archive/SidebarProject.jsx';
 //import ReactModal from 'react-modal';
 import ProjectPopUp from './ProjectPopUp.jsx'; // Import the popup component for project details
 
@@ -108,11 +109,12 @@ const MyProjectsPage = () => {
     };
 
 
-    const handleNavigate = (projectID)=> {
+    const handleNavigate = (projectName)=> {
         // // Construct relative path by appending to current path
         // // Ensure no double slashes
         // let basePath = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-        navigate(`/projectarchive/${projectID}`);
+        navigate(`/projectarchive/${projectName}`);
+
     };
 
     return (
@@ -129,12 +131,12 @@ const MyProjectsPage = () => {
                 {projects.map(project => (
                     <div key={project.id} className='project-container'>
                         {/* Use Link from react-router-dom for client-side routing */}
-                        <li className='project-rectangle' onClick={() => handleNavigate(project.id)} > 
+                        <li className='project-rectangle' onClick={() => handleNavigate(project.name)} > 
                         <header className='project-header'>
                             
                                 {project.name}
 
-                            </header> 
+                        </header> 
 
 
                         <p> {project.description || 'No description yet'}</p>
@@ -182,6 +184,10 @@ const MyProjectsPage = () => {
                         </div>                        
                     </form>
                 </ProjectPopUp>
+                
+                
+
+                
             </div>
         </div>        
     );

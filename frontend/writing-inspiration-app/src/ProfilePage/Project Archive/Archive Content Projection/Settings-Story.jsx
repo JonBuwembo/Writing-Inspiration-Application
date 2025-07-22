@@ -1,5 +1,5 @@
 import React from "react";
-import "../archive.css";
+import "./ProjectSections.css";
 import { useParams } from "react-router-dom";   
 
 const SettingsStory = () => {  
