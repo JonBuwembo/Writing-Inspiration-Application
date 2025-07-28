@@ -113,7 +113,7 @@ const MyProjectsPage = () => {
         // // Construct relative path by appending to current path
         // // Ensure no double slashes
         // let basePath = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-        navigate(`/projectarchive/${projectName}`);
+        navigate(`/project/${projectName}`);
 
     };
 

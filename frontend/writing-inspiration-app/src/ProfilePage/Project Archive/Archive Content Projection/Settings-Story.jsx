@@ -1,5 +1,5 @@
 import React from "react";
-import "./ProjectSections.css";
+import "./NoteEditor/ProjectSections.css";
 import { useParams } from "react-router-dom";   
 
 const SettingsStory = () => {  

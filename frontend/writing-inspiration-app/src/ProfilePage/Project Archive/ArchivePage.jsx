@@ -1,17 +1,279 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import './archive.css';
-import {useParams} from 'react-router-dom';
-import SidebarArchive from './SidebarProject.jsx'; // Import the sidebar component for the archive page
-import ArchiveContentProjection from './ArchiveContentProjection.jsx';
+import {useNavigate, useParams} from 'react-router-dom';
+import SidebarProject from './SidebarProject.jsx'; // Import the sidebar component for the archive page
+import ProjectContentProjection from './ProjectContentProjection.jsx';
 import './maincontent.css';
+import ProjectTextArea from './Archive Content Projection/NoteEditor/ProjectTextArea.jsx';
+import NoteEditor from './Archive Content Projection/NoteEditor/NoteEditor.jsx';
+//import {userContext} from '../Auth/UserContext';
+
+//--------------------------------------------------------------------
+// PURPOSE: Page of a project that the user is going to work in.
+//--------------------------------------------------------------------
 
 function ArchivePage() {
 
-  const {projectName} = useParams(); //paramater in the URL
-  const [sidebarWidth, setSidebarWidth] = useState(350);
+  // This page will be used to fetch the project data from the server or local storage to display specific information about the project.
 
-  // projectID is the ID of the project we are viewing
-  // This will be used to fetch the project data from the server or local storage to display specific information about the project.
+  const {projectName, noteId, section} = useParams(); //paramater in the URL
+  const [sidebarWidth, setSidebarWidth] = useState(350);
+  const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
+  const [notes, setNotes] = useState([]);
+  const [currentNote, setCurrentNote] = useState(null);
+  const [saveStatus, setSaveStatus] = useState('saved');
+
+  // TODO: change for authentication, (currently not yet user specific)
+  const storageKey = 'projectNotes';
+  const navigate = useNavigate();
+
+  // default hashtag words that must match with the users hashtags to be sorted in the sidebar.
+  // these are the only sections that can have multiple notes.
+   const hardcodedHashTags = [
+    {tag: "#section"}, 
+    {tag: "#orphannotes"},
+    {tag: "#plot-threads"},
+    {tag: "#characters"},
+  ]
+
+  // Get user-specific notes key
+  // const getUserNotesKey = () => {
+  //   return currentUser ? `projectNotes_${currentUser.id}` : 'projectNotes_anonymous';
+  // };
+
+  
+  const createBlankNote = (section = 'unsorted') => ({
+    id: `note-${Date.now()}`,
+    title: 'Untitled Note',
+    content: '',
+    section,
+    themes: [],
+    hashTags: [],
+    lastEdited: new Date().toISOString()
+  })
+
+  const addNewNote = (section = 'unsorted') => {
+    // create a new blank note by default 
+    const newNote = createBlankNote(section);
+
+    // update current note state
+    // This will update the current note to the new note created.
+    setCurrentNote(newNote);
+    setSaveStatus('unsaved');
+    setNotes(prevNotes => [...prevNotes, newNote]);
+
+    // Navigate to the new note's URL
+    navigate(`/project/${projectName}/${section}/note/${newNote.id}`);
+
+  }
+  // Check if there are any existing notes in localStorage
+  useEffect(() => {
+    // WHEN AUTHENTICATION IMPLEMENTED: Wait untill we know the user
+    //if (!currentUser) return;
+
+    const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
+    const projectNotes = storedNotes[projectName] || []; //get the project name and see if it exists
+    setNotes(projectNotes);
+    // const userNotesKey = getUserNotesKey();
+
+    if (noteId) {
+      // load existing note by seeing if IDs match
+      const note = projectNotes.find(aNote => aNote.id === noteId);
+      // If there is no existing note found, then create a blank default note.
+      // otherwise set the current note state with the note found.
+      // defensive programming**
+      setCurrentNote(note || createBlankNote());
+    } else {
+
+      //If there are notes but are not specific to the one we were fetching then get the most recent worked on one.
+      if (projectNotes.length > 0) {
+        // Get the most recent note. 
+        // sorted by last edited in decending order.
+        // spreads all project notes into an immutable array for sorting.
+        // takes the first element (most recent)
+        const mostRecentNote = [...projectNotes].sort((a, b) =>
+          new Date(b.lastEdited) - new Date(a.lastEdited))[0];
+        // navigate to most recent (last edited) section in URL
+        navigate(`/project/${projectName}/${mostRecentNote.section}/note/${mostRecentNote.id}`);
+
+      } else {
+        const defaultNote = createBlankNote();
+        setCurrentNote(defaultNote);
+        setSaveStatus('unsaved')
+
+        // New notes get 'unsorted' section in URL
+        navigate(`/project/${projectName}/unsorted/note/${defaultNote.id}`);
+
+      }
+    }
+    
+  }, [projectName, navigate, section, noteId]);
+
+
+
+  //Autosaving feature.
+  useEffect(()=>{
+    if (saveStatus !== 'unsaved' || !currentNote) return;
+
+    // if in a saving state, automatically save content after 2 seconds of no typing.
+    const timer = setTimeout(()=>{
+      handleNoteSave();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  },[currentNote, saveStatus]);
+
+
+  const handleNoteSave = () => {
+    // WHEN AUTHENTICATION IMPLEMENTED:
+    // const userNotesKey = getUserNotesKey();
+
+    // Early exit if there's no note to save.
+    if(!currentNote) return;
+
+    // set saving state
+    setSaveStatus('saving');
+
+    try {
+
+      // Load all existing data (notes) using the storage key.
+      // The storage key for now isn't user specific. 
+      // Fall back to {} if no data found.
+      const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
+      // Remove old version of the note if it exists.
+      const updatedNotes = notes.filter(n => n.id !== currentNote.id);
+      
+      // update project data: Spread operator ... creates new array, and adds the updated note to it.
+      // maintains referential integrity.
+      storedData[projectName] = [...updatedNotes, currentNote];
+      // store this updated data back to local storage so it can persist. Stringifies entire data structure.
+      localStorage.setItem(storageKey, JSON.stringify(storedData));
+
+      // update the local state.
+      setNotes(storedData[projectName]);
+      // update status to now saved.
+      setSaveStatus('saved');
+      
+      // Update URL with current section.
+      // Checks if url already reflects current section. 
+      // only navigates if section changes.
+      if (!window.location.pathname.includes(`/${currentNote.section}/`)) {
+        navigate(`/project/${projectName}/${currentNote.section}/note/${currentNote.id}`);
+      }
+
+    } catch (error) {
+
+      // in case saving failed.
+      console.error('save failed.');
+      console.error('To look at the mess for this error:', error);
+      setSaveStatus('error');
+    }
+
+  };
+
+
+  const handleNoteChange = (updates) => {
+    setCurrentNote(previousNote => ({
+      ...previousNote,
+      ...updates,
+      lastEdited: new Date().toISOString()
+    }));
+    setSaveStatus('unsaved');
+  };
+
+  const handleDeleteNote = (id) => {
+    const updatedNotes = notes.filter(note => note.id !== id);
+
+    const storedData = JSON.parse(localStorage.getItem('projectNotes')) || {};
+    
+    storedData[projectName] = updatedNotes; // update with a new set of notes with one less.
+    localStorage.setItem('projectNotes', JSON.stringify(storedData));
+    setNotes(updatedNotes);
+
+    if (currentNote?.id === id) {
+      if (updatedNotes.length > 0) {
+          navigate(`/project/${projectName}/note/${updatedNotes[0].id}`);
+      } else {
+          setCurrentNote(createBlankNote());
+          setSaveStatus('unsaved');
+      }
+    }  
+  };
+
+  // Function to handle checking hash tag input validity
+  const isValidHashTag = (hashTagWord) => {
+    // check if the hashtag starts with a '#' and has at least 2 characters
+    if (hashTagWord.startsWith('#') && hashTagWord.length > 1){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const sortHashTags = (userHashTagList) => {
+    if (!userHashTagList?.length) return; // Exit immediately if no hashtags.
+
+    // Find the first hardcoded tag match (case-insensitive)
+    const matchedHardCodedTag = userHashTagList.find(tagObj => {
+      const tag = tagObj.tag.toLowerCase();
+      return hardcodedHashTags.some(hardcodedTag => 
+        hardcodedTag.tag.toLowerCase() === tag
+      );
+    });
+
+    // Get unmatched tags (optional: only if needed for themes)
+    const unmatchedTags = matchedHardCodedTag 
+      ? userHashTagList.filter(tagObj => 
+          !hardcodedHashTags.some(hardcodedTag => 
+            hardcodedTag.tag.toLowerCase() === tagObj.tag.toLowerCase()
+          )
+        )
+      : userHashTagList; // All tags are unmatched if no hardcoded match
+
+    // Update state ONCE
+    setCurrentNote(prevNote => ({
+      ...prevNote,
+      section: matchedHardCodedTag ? matchedHardCodedTag.tag.replace('#', '') : prevNote.section, // Keep existing section if no match
+      themes: unmatchedTags.map(tagObj => tagObj.tag.replace('#', '')), // Store all unmatched tags as themes
+      hashTags: userHashTagList, // Preserve original list (or sort if needed)
+    }));
+  };
+
+
+  const handleAddingHashTag = (hashTagWord) => {
+    // if not a valid hashtag, return early
+    if (!isValidHashTag(hashTagWord)) return;
+
+    // overview, summary, and timeline are single files that can't have notes added to them.
+      const unAddableSections = ['#overview', '#summary', '#timeline'];
+      const unMatchable = unAddableSections.find(unMatchableTag => unMatchableTag.toLowerCase() === hashTagWord.toLowerCase());
+   
+    // Add to the list of hashtags in that note.
+    setCurrentNote(prevNote => {
+      const existingTags = prevNote.hashTags.map(tagObj => tagObj.tag);
+      // check if the tag already exists, skip over it.
+      if (existingTags.some(tag => tag.toLowerCase() === hashTagWord.toLowerCase())) {
+        return prevNote; // do nothing if there are duplicates. keep state the same.
+      }
+
+      // ignore if hashtag matched unmatchable sections.
+      if (unMatchable) {
+        return prevNote; // do nothing if any tags match unmatchable sections. (leave state the same)
+      }
+
+      // If it doesn't exist, add it to the list of hashtags.
+      const updatedHashTags = [...prevNote.hashTags, { tag: hashTagWord }];
+      sortHashTags(updatedHashTags);
+
+      return {
+        ...prevNote, 
+        hashTags: updatedHashTags
+      };
+    });
+  };
+
+
+  
 
   return (
     <div className="archive-container">
@@ -23,21 +285,41 @@ function ArchivePage() {
          Then we pass sidebarWidth and its changing-state-var as a prop into both components for manipulation.
          The main content has its width adjusted according to how the user adjusts the sidebar.
       */}
-      <SidebarArchive
+      <SidebarProject
         sidebarWidth={sidebarWidth}
         setSidebarWidth={setSidebarWidth}
         projectName = {projectName}
+        onDeleteNote={handleDeleteNote}
+        currentNoteId={currentNote?.id}
+        hardcodedHashTags={hardcodedHashTags}
+        onAddHashTag={handleAddingHashTag}
+        addNewNote={addNewNote}
+        notes={notes}
       />
 
-      <ArchiveContentProjection 
+      <ProjectContentProjection 
         className="archive-content-projection-container"
         style={{ 
           marginLeft: `${sidebarWidth}px`,
           transition: 'margin-left 0.2s ease-out'
         }}
-       
-        
-      />
+      >
+        <NoteEditor
+          note={currentNote || addNewNote()}
+          onChange={handleNoteChange}
+          handleAddingHashTag={handleAddingHashTag}
+          saveStatus={saveStatus}
+          
+        />
+
+      </ProjectContentProjection>
+{/* 
+      {showDefaultNote && (
+        <NoteEditor 
+          onSave={handleNoteSave}
+          isSectionNote={false}
+        />
+      )} */}
 
     </div>
   );

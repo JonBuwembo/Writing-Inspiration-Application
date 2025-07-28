@@ -3,12 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './SidebarProject.css';
 import './maincontent.css';
 import CollapsibleSection from './CollapsibleSection';
+import NoteListItem from './NoteListItem';
+import { useMemo } from 'react';
 
-function SidebarArchive({ sidebarWidth, setSidebarWidth, projectName }) {
+function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
   const sidebarReference = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("Select Project Type");
+
 
   const handleOptionClick = (option) => {
     setSelected(option);
@@ -21,6 +24,40 @@ function SidebarArchive({ sidebarWidth, setSidebarWidth, projectName }) {
     plotThreads: 3,
     characters: 10,
     themes: 4,
+  };
+
+  // const realMetrics = {
+  //   sections: sections.length,
+  //   orphanNotes: orphanNotes.length,
+  //   plotThreads: notes?.filter(n => n.hashTags?.some(t => t.tag.toLowerCase() === '#plot-threads')).length || 0,
+  //   characters: notes?.filter(n => n.hashTags?.some(t => t.tag.toLowerCase() === '#characters')).length || 0,
+  //   themes: notes?.filter(n => n.hashTags?.some(t => t.tag.toLowerCase() === '#themes')).length || 0,
+  // };
+
+
+  // Section handling
+  const {sections, orphanNotes} = useMemo(() => {
+    const result = { sections: [], orphanNotes: [] };
+
+    notes?.forEach(note => {
+      const hasSectionTag = note.hashTags?.some(tagObj =>
+        hardcodedHashTags.some(hardcodedTag =>
+          hardcodedTag.tag.toLowerCase() === tagObj.tag.toLowerCase()
+        )
+      );
+
+      if (hasSectionTag) {
+        result.sections.push(note);
+      } else {
+        result.orphanNotes.push(note);
+      }
+    });
+    return result;
+  }, [notes, hardcodedHashTags]);
+
+    // Function to handle adding tags from sidebar
+  const handleAddSection = (sectionName) => {
+    onAddHashTag(`#${sectionName}`);
   };
 
   const startResizing = useCallback((event) => {
@@ -140,27 +177,37 @@ function SidebarArchive({ sidebarWidth, setSidebarWidth, projectName }) {
       </div>
 
       
-      <button className="add-content-btn">+ Add Content</button>
+      <button className="add-content-btn" onClick={addNewNote}>+ Add Content</button>
 
       <div className="sidebar-options-container">
         <ul className="metric-group">
           <li>
             <CollapsibleSection title="Navigation">
               <ul className="metric-group">
-                <li><a href={`/projectarchive/${projectName}/overview`}>Overview</a></li>
-                <li><a href={`/projectarchive/${projectName}/timeline`}>Timeline</a></li>
-                <li><a href={`/projectarchive/${projectName}/summary`}>Summary</a></li>
+                <li><a href={`/project/${projectName}/overview`}>Overview</a></li>
+                <li><a href={`/project/${projectName}/timeline`}>Timeline</a></li>
+                <li><a href={`/project/${projectName}/summary`}>Summary</a></li>
                 <CollapsibleSection title={`Sections (${metrics.sections})`}>
-                  <li><a href={`/projectarchive/${projectName}/section1`}>Section 1</a></li>
-                  <li><a href={`/projectarchive/${projectName}/section2`}>Section 2</a></li>
+                  <li><a href={`/project/${projectName}/section1`}>Section 1</a></li>
+                  <li><a href={`/project/${projectName}/section2`}>Section 2</a></li>
                 </CollapsibleSection>
                 <CollapsibleSection title={`Orphan Notes (${metrics.orphanNotes})`}>
-                  <li><a href={`/projectarchive/${projectName}/orphan-note1`}>Orphan Note 1</a></li>
-                  <li><a href={`/projectarchive/${projectName}/orphan-note2`}>Orphan Note 2</a></li>
+                  <li><a href={`/project/${projectName}/orphan-note1`}>Orphan Note 1</a></li>
+                  <li><a href={`/project/${projectName}/orphan-note2`}>Orphan Note 2</a></li>
+
+                  {/* Testing */}
+                   {orphanNotes.map(note => (
+                      <NoteListItem 
+                        key={note.id}
+                        note={note}
+                        // isActive={note.id === currentNoteId}
+                      />
+                    ))}
+
                 </CollapsibleSection>
                 <CollapsibleSection title={`Plot Threads (${metrics.plotThreads})`}>
-                  <li><a href={`/projectarchive/${projectName}/plot-thread1`}>Plot Thread 1</a></li>
-                  <li><a href={`/projectarchive/${projectName}/plot-thread2`}>Plot Thread 2</a></li>
+                  <li><a href={`/project/${projectName}/plot-thread1`}>Plot Thread 1</a></li>
+                  <li><a href={`/project/${projectName}/plot-thread2`}>Plot Thread 2</a></li>
                 </CollapsibleSection>
               </ul>
             </CollapsibleSection>
@@ -205,4 +252,4 @@ function SidebarArchive({ sidebarWidth, setSidebarWidth, projectName }) {
   );
 }
 
-export default SidebarArchive;
+export default SidebarProject;

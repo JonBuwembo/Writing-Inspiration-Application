@@ -10,7 +10,7 @@ import HomePage from './HomePage/HomePage.jsx'
 import ProfilePage from './ProfilePage/ProfilePage.jsx'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ArchivePage from './ProfilePage/Project Archive/ArchivePage.jsx';
-import ArchiveContentProjection from './ProfilePage/Project Archive/ArchiveContentProjection.jsx'
+import ArchiveContentProjection from './ProfilePage/Project Archive/ProjectContentProjection.jsx'
 import ChapterDetail from './ProfilePage/Project Archive/Archive Content Projection/Singular Components/A_Character.jsx';
 
 
@@ -27,7 +27,7 @@ function App() {
         {/* TODO: UI done */}
         <Route path="/Register" element={<Register/>} />
 
-        <Route path="/projectarchive/:projectName/*" element={<ArchivePage />} />
+        <Route path="/project/:projectName/*" element={<ArchivePage />} />
         {/* TODO: UI currently working on */}
         <Route path="/home/*" element={<HomePage/>} />
         {/* not made yet */}

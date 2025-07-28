@@ -59,10 +59,32 @@
 }
 
 [contentEditable="true"]:empty::before {
-    content: attr(placeholder);
+    content: attr(data-placeholder);
     color: #aaa;
     pointer-events: none;
 }
+
+.title-text-area[contenteditable="true"]:empty::before {
+    font-size: 1.5em;
+    font-weight: bold;
+    opacity: 0.6;
+}
+
+.text-body[contenteditable="true"]:empty::before {
+    white-space: pre-wrap; /*Preserves new lines*/
+    line-height: 1.6;
+}
+
+.text-body[data-placeholder*="📝"]:empty::before {
+    font-weight: 500;
+    color: #666;
+}
+
+.text-body[data-placeholder*="✨"]:empty::before {
+    opacity: 0.8;
+    
+}
+
 .toolbar {
   position: absolute;
   background: white;
@@ -118,4 +140,17 @@
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
+}
+
+.placeholder-title {
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.placeholder-hint {
+    font-family: inherit;
+    font-size: 15px;
+    color: #aaa;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./ProjectSections.css";
+import "./NoteEditor/ProjectSections.css";
 import { useParams } from "react-router-dom";   
-import ProjectTextArea from "./ProjectTextArea";
+import ProjectTextArea from "./NoteEditor/ProjectTextArea";
 
 const Overview = () => {
   const { projectID } = useParams(); // Get the project ID from the URL parameters

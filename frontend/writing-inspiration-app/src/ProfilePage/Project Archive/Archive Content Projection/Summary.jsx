@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-import "./ProjectSections.css";
+import "./NoteEditor/ProjectSections.css";
 import { useParams } from "react-router-dom";   
 import ReactQuill from "react-quill"; // Imported ReactQuill for text editing
 import 'react-quill/dist/quill.snow.css'; // Importing the Quill CSS for styling

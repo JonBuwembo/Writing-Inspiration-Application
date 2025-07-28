@@ -1,11 +1,12 @@
 import React, {useRef, useEffect, useState} from "react";
 import './ProjectSections.css';
 
-const ProjectTextArea = ({ title, textBody, onTitleChange, onTextBodyChange }) => {
+const ProjectTextArea = ({ isSectionNote, onTitleChange, onTextBodyChange }) => {
 
     const titleRef = useRef(null);
     const bodyRef = useRef(null);
 
+    //dummy testing
     //window.getSelection() API to check if text is selected.
     //getRangeAt(0).getBoundingClientRect() to position the toolbar menu near the text
     const [toolbar, setToolbar] = useState({ visible: false, x: 0, y: 0});
@@ -170,6 +171,7 @@ const ProjectTextArea = ({ title, textBody, onTitleChange, onTextBodyChange }) =
         })
     }
 
+
     return (
         <div>
             <div className="project-text-box"> 
@@ -180,7 +182,7 @@ const ProjectTextArea = ({ title, textBody, onTitleChange, onTextBodyChange }) =
                     suppressContentEditableWarning
                     onPaste={handlePaste}
                     onInput={handleTitleInput}
-                    placeholder="+ Start typing your  Title..."
+                    data-placeholder="+ Start Typing your Title..."
                 />
                 
 
@@ -193,7 +195,14 @@ const ProjectTextArea = ({ title, textBody, onTitleChange, onTextBodyChange }) =
                     suppressContentEditableWarning
                     onPaste={handlePaste}
                     onInput={handleTextBodyInput}
-                    placeholder="+ Start typing your section..."
+
+                    data-placeholder={ 
+
+                        isSectionNote ?
+                        "📝 Start writing this section..." :
+                        "✨ Quick Capture\nJot down raw ideas, snippets, or brainstorms here.\nPress `#` to organize or drag to a section later."
+                        
+                    }
                  />
             </div>
 
