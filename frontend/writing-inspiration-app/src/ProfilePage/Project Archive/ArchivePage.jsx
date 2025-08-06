@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
+import { Outlet } from 'react-router-dom';
 import './archive.css';
 import {useNavigate, useParams} from 'react-router-dom';
 import SidebarProject from './SidebarProject.jsx'; // Import the sidebar component for the archive page
@@ -12,17 +13,58 @@ import NoteEditor from './Archive Content Projection/NoteEditor/NoteEditor.jsx';
 // PURPOSE: Page of a project that the user is going to work in.
 //--------------------------------------------------------------------
 
+
+
+// This page will be used to fetch the project data from the server or local storage to display specific information about the project.
+// console.log("ArchivePage is using NoteEditor component:", NoteEditor);
+ 
 function ArchivePage() {
 
-  // This page will be used to fetch the project data from the server or local storage to display specific information about the project.
 
-  const {projectName, noteId, section} = useParams(); //paramater in the URL
-  const [sidebarWidth, setSidebarWidth] = useState(350);
-  const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
-  const [notes, setNotes] = useState([]);
-  const [currentNote, setCurrentNote] = useState(null);
-  const [saveStatus, setSaveStatus] = useState('saved');
+   const {projectName, noteId} = useParams(); //paramater in the URL
+   const [sidebarWidth, setSidebarWidth] = useState(350);
+   const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
+   const [notes, setNotes] = useState([]);
+   const [currentNote, setCurrentNote] = useState(null);
+   const [saveStatus, setSaveStatus] = useState('saved');
+  
+   // Testing function
+   const resetNotes = () => {
+    localStorage.removeItem('projectNotes');
+    console.log('Project notes reset!');
+   };
 
+   const createBlankNote = (section = 'unsorted') => ({
+    id: `note-${Date.now()}`,
+    title: '',
+    content: '',
+    section,
+    themes: [],
+    hashTags: [],
+    lastEdited: new Date().toISOString()
+  })
+
+  
+ 
+
+  // useEffect(() => {
+  //   // Test: Add three notes and check if they were added
+  //   const testNotes = [
+  //     createBlankNote('test1'),
+  //     createBlankNote('test2'),
+  //     createBlankNote('test3')
+  //   ];
+  //   setNotes(testNotes);
+
+  //   // Test if notes were added
+  //   if (testNotes.length === 3) {
+  //     console.log('Test Passed: 3 notes added:', testNotes);
+  //   } else {
+  //     console.error('Test Failed: Notes not added correctly');
+  //   }
+  // }, []);
+
+  // console.log("ArchivePage is using NoteEditor:", NoteEditor);
   // TODO: change for authentication, (currently not yet user specific)
   const storageKey = 'projectNotes';
   const navigate = useNavigate();
@@ -32,7 +74,7 @@ function ArchivePage() {
    const hardcodedHashTags = [
     {tag: "#section"}, 
     {tag: "#orphannotes"},
-    {tag: "#plot-threads"},
+    {tag: "#plotthreads"},
     {tag: "#characters"},
   ]
 
@@ -41,74 +83,144 @@ function ArchivePage() {
   //   return currentUser ? `projectNotes_${currentUser.id}` : 'projectNotes_anonymous';
   // };
 
-  
-  const createBlankNote = (section = 'unsorted') => ({
-    id: `note-${Date.now()}`,
-    title: 'Untitled Note',
-    content: '',
-    section,
-    themes: [],
-    hashTags: [],
-    lastEdited: new Date().toISOString()
-  })
+  // Check if there are any existing notes in localStorage
+  const [isLoading, setIsLoading] = useState(true);
 
-  const addNewNote = (section = 'unsorted') => {
+  // Consolidated loading effect
+  useEffect(() => {
+    const loadNotes = () => {
+      try {
+        const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
+        const projectNotes = storedNotes[projectName] || [];
+        setNotes(projectNotes);
+
+        let noteToSet;
+        if (noteId) {
+          noteToSet = projectNotes.find(n => n.id === noteId);
+
+        } else if (projectNotes.length > 0) {
+          noteToSet = [...projectNotes].sort((a, b) => 
+            new Date(b.lastEdited) - new Date(a.lastEdited))[0];
+
+        } else {
+          noteToSet = createBlankNote();
+          setNotes([noteToSet]); // Ensure at least one note exists
+          const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
+          storedData[projectName] = [noteToSet];
+          localStorage.setItem(storageKey, JSON.stringify(storedData));
+        }
+
+        console.log('Setting currentNote:', noteToSet);
+        setCurrentNote(noteToSet);
+        
+        // Ensure note's section is valid (default to 'unsorted')
+        const sectionToNavigate = noteToSet.section || 'unsorted'; 
+
+        // Update URL if needed
+        // if (!window.location.pathname.includes(`/project/${projectName}/${sectionToNavigate}/note/${noteToSet.id}`)) {
+        //   navigate(`/project/${projectName}/${sectionToNavigate}/note/${noteToSet.id}`);
+        // }
+
+        // if (!noteToSet) {
+        //   noteToSet = createBlankNote();
+        //   setNotes([noteToSet]);
+        //   setCurrentNote(noteToSet);
+        // }
+        const path = `/project/${projectName}/note/${noteToSet.id}`;
+        console.log("Navigating to new note:", path);
+        if (window.location.pathname !== path) {
+          navigate(path);
+        }
+        setIsLoading(false);
+        
+      } catch (error) {
+        console.error('Failed to load notes:', error);
+        setCurrentNote(createBlankNote());
+        setIsLoading(false);
+      }
+    };
+
+   loadNotes();
+  }, [projectName, noteId, navigate]);
+
+  // useEffect(() => {
+  //   // WHEN AUTHENTICATION IMPLEMENTED: Wait untill we know the user
+  //   //if (!currentUser) return;
+
+  //   const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
+  //   const projectNotes = storedNotes[projectName] || []; //get the project name and see if it exists
+  //   setNotes(projectNotes);
+  //   // const userNotesKey = getUserNotesKey();
+
+  //   if (noteId) {
+  //     // load existing note by seeing if IDs match
+  //     const note = projectNotes.find(aNote => aNote.id === noteId);
+  //     // If there is no existing note found, then create a blank default note.
+  //     // otherwise set the current note state with the note found.
+  //     // defensive programming**
+  //     setCurrentNote(note || createBlankNote());
+  //   } else {
+
+  //     //If there are notes but are not specific to the one we were fetching then get the most recent worked on one.
+  //     if (projectNotes.length > 0) {
+  //       // Get the most recent note. 
+  //       // sorted by last edited in decending order.
+  //       // spreads all project notes into an immutable array for sorting.
+  //       // takes the first element (most recent)
+  //       const mostRecentNote = [...projectNotes].sort((a, b) =>
+  //         new Date(b.lastEdited) - new Date(a.lastEdited))[0];
+  //       // navigate to most recent (last edited) section in URL
+  //       navigate(`/project/${projectName}/${mostRecentNote.section}/note/${mostRecentNote.id}`);
+
+  //     } else {
+  //       const defaultNote = createBlankNote();
+  //       setCurrentNote(defaultNote);
+  //       setSaveStatus('unsaved')
+
+  //       // New notes get 'unsorted' section in URL
+  //       navigate(`/project/${projectName}/unsorted/note/${defaultNote.id}`);
+
+  //     }
+  //   }
+    
+  // }, [projectName, navigate, section, noteId]);
+
+ 
+  // setCurrentNote(createBlankNote())
+
+
+  const addNewNote = () => {
     // create a new blank note by default 
-    const newNote = createBlankNote(section);
+    const newNote = createBlankNote();
+    const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
     // update current note state
     // This will update the current note to the new note created.
     setCurrentNote(newNote);
-    setSaveStatus('unsaved');
+    // setSaveStatus('unsaved');
+
+    
+    storedData[projectName] = [newNote, ...(storedData[projectName] || [])]; // Add new note to existing notes
+    localStorage.setItem(storageKey, JSON.stringify(storedData));
     setNotes(prevNotes => [...prevNotes, newNote]);
+    console.log("I've added a new note 'AddNewNote()' ran.");
 
     // Navigate to the new note's URL
-    navigate(`/project/${projectName}/${section}/note/${newNote.id}`);
+    //navigate(`/project/${projectName}/${section}/note/${newNote.id}`);
+  
+
+    // 4. Navigate to new note
+    const encodedProjectName = encodeURIComponent(projectName);
+    //const encodedSection = encodeURIComponent(newNote.section);
+    const encodedNoteId = encodeURIComponent(newNote.id);
+
+    const path = `/project/${encodedProjectName}/note/${encodedNoteId}`;
+
+    // Navigate to the newly created note's URL
+    navigate(path);
 
   }
-  // Check if there are any existing notes in localStorage
-  useEffect(() => {
-    // WHEN AUTHENTICATION IMPLEMENTED: Wait untill we know the user
-    //if (!currentUser) return;
-
-    const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
-    const projectNotes = storedNotes[projectName] || []; //get the project name and see if it exists
-    setNotes(projectNotes);
-    // const userNotesKey = getUserNotesKey();
-
-    if (noteId) {
-      // load existing note by seeing if IDs match
-      const note = projectNotes.find(aNote => aNote.id === noteId);
-      // If there is no existing note found, then create a blank default note.
-      // otherwise set the current note state with the note found.
-      // defensive programming**
-      setCurrentNote(note || createBlankNote());
-    } else {
-
-      //If there are notes but are not specific to the one we were fetching then get the most recent worked on one.
-      if (projectNotes.length > 0) {
-        // Get the most recent note. 
-        // sorted by last edited in decending order.
-        // spreads all project notes into an immutable array for sorting.
-        // takes the first element (most recent)
-        const mostRecentNote = [...projectNotes].sort((a, b) =>
-          new Date(b.lastEdited) - new Date(a.lastEdited))[0];
-        // navigate to most recent (last edited) section in URL
-        navigate(`/project/${projectName}/${mostRecentNote.section}/note/${mostRecentNote.id}`);
-
-      } else {
-        const defaultNote = createBlankNote();
-        setCurrentNote(defaultNote);
-        setSaveStatus('unsaved')
-
-        // New notes get 'unsorted' section in URL
-        navigate(`/project/${projectName}/unsorted/note/${defaultNote.id}`);
-
-      }
-    }
-    
-  }, [projectName, navigate, section, noteId]);
-
+  
 
 
   //Autosaving feature.
@@ -158,7 +270,7 @@ function ArchivePage() {
       // Checks if url already reflects current section. 
       // only navigates if section changes.
       if (!window.location.pathname.includes(`/${currentNote.section}/`)) {
-        navigate(`/project/${projectName}/${currentNote.section}/note/${currentNote.id}`);
+        navigate(`/project/${projectName}/note/${currentNote.id}`);
       }
 
     } catch (error) {
@@ -172,14 +284,30 @@ function ArchivePage() {
   };
 
 
-  const handleNoteChange = (updates) => {
-    setCurrentNote(previousNote => ({
-      ...previousNote,
-      ...updates,
-      lastEdited: new Date().toISOString()
-    }));
+  const handleNoteChange = useCallback((updates) => {
+    setCurrentNote(prevNote => {
+      const updatedNote = {
+        ...prevNote,
+        ...updates,
+        lastEdited: new Date().toISOString(),
+      };
+    
+      setNotes(prevNotes => {
+        // Update the note in the notes array
+          const updatedNotes = prevNotes.map((note) =>
+            note.id === updatedNote.id ? updatedNote : note
+          );
+
+          localStorage.setItem(storageKey, JSON.stringify(updatedNotes))
+          return updatedNotes;
+        }
+      );
+
+      return updatedNote;
+    });
+
     setSaveStatus('unsaved');
-  };
+  },[]);
 
   const handleDeleteNote = (id) => {
     const updatedNotes = notes.filter(note => note.id !== id);
@@ -210,8 +338,8 @@ function ArchivePage() {
     }
   }
 
-  const sortHashTags = (userHashTagList) => {
-    if (!userHashTagList?.length) return; // Exit immediately if no hashtags.
+  const sortHashTags = (userHashTagList, currentSection) => {
+    if (!userHashTagList?.length) return { hashTags: [], section: currentSection, themes: [] }; // Exit immediately if no hashtags.
 
     // Find the first hardcoded tag match (case-insensitive)
     const matchedHardCodedTag = userHashTagList.find(tagObj => {
@@ -231,61 +359,95 @@ function ArchivePage() {
       : userHashTagList; // All tags are unmatched if no hardcoded match
 
     // Update state ONCE
-    setCurrentNote(prevNote => ({
-      ...prevNote,
-      section: matchedHardCodedTag ? matchedHardCodedTag.tag.replace('#', '') : prevNote.section, // Keep existing section if no match
-      themes: unmatchedTags.map(tagObj => tagObj.tag.replace('#', '')), // Store all unmatched tags as themes
-      hashTags: userHashTagList, // Preserve original list (or sort if needed)
-    }));
+
+    if (userHashTagList.length > 0) {
+      return {
+        hashTags: userHashTagList, // Preserve original list (or sort if needed)
+        section: matchedHardCodedTag ? matchedHardCodedTag.tag.replace('#', '') : "unsorted", // Keep existing section if no match
+        themes: unmatchedTags.map(tagObj => tagObj.tag.replace('#', '')), // Store all unmatched tags as themes
+      };
+    } else {
+      return {
+        hashTags: [],
+        section: currentSection || 'unsorted',
+        themes: [],
+      };
+    }
+   
   };
 
 
   const handleAddingHashTag = (hashTagWord) => {
-    // if not a valid hashtag, return early
-    if (!isValidHashTag(hashTagWord)) return;
 
+    const trimmedHashTag = hashTagWord.trim();
+    // normalize hashtag into a string
+    const normalizedHashTag = trimmedHashTag.toLowerCase();
     // overview, summary, and timeline are single files that can't have notes added to them.
-      const unAddableSections = ['#overview', '#summary', '#timeline'];
-      const unMatchable = unAddableSections.find(unMatchableTag => unMatchableTag.toLowerCase() === hashTagWord.toLowerCase());
-   
+    const unAddableSections = ['#overview', '#summary', '#timeline'];
+  
+    // if not a valid hashtag, return early
+    if (!isValidHashTag(trimmedHashTag)) return;
+
+    
     // Add to the list of hashtags in that note.
     setCurrentNote(prevNote => {
-      const existingTags = prevNote.hashTags.map(tagObj => tagObj.tag);
-      // check if the tag already exists, skip over it.
-      if (existingTags.some(tag => tag.toLowerCase() === hashTagWord.toLowerCase())) {
-        return prevNote; // do nothing if there are duplicates. keep state the same.
-      }
+      if (!prevNote) return prevNote;
 
-      // ignore if hashtag matched unmatchable sections.
-      if (unMatchable) {
-        return prevNote; // do nothing if any tags match unmatchable sections. (leave state the same)
+      // check if the tag already exists, skip over it.
+      if (
+       prevNote.hashTags.some(tagObj => {
+        const tagValue = typeof tagObj === "string" ? tagObj : tagObj.tag;
+        return tagValue.toLowerCase() === normalizedHashTag;
+      }) || 
+       unAddableSections.includes(normalizedHashTag)
+      ) {
+        return prevNote;
       }
 
       // If it doesn't exist, add it to the list of hashtags.
-      const updatedHashTags = [...prevNote.hashTags, { tag: hashTagWord }];
-      sortHashTags(updatedHashTags);
+      const updatedHashTags = [...prevNote.hashTags, { tag: normalizedHashTag }];
+      const sorted = sortHashTags(updatedHashTags, prevNote.section);
 
-      return {
+      const updatedNote = {
         ...prevNote, 
-        hashTags: updatedHashTags
+        hashTags: sorted.hashTags,
+        section: sorted.section, // Update section if it was changed
+        themes: sorted.themes,
+        lastEdited: new Date().toISOString() // Update last edited time
       };
+
+      //keep notes in sync.   
+      setNotes((prevNotes) =>
+        prevNotes.map(anote => (anote.id === updatedNote.id ? updatedNote : anote))
+      );
+
+      return updatedNote;
     });
   };
 
+  
 
+  //TESTING PURPOSES
+  console.log('Current note:', currentNote);
+  //console.log('section being passed: ', currentNote.section);
+
+  
+  const testProp = "I was passed into Note Editor!!!!!";
   
 
   return (
+
     <div className="archive-container">
 
-      {/* 
+       {/* 
          Objective: have Maincontent adjust as sidebar grows.  
          We lift the sidebarWidth adjustment variable up to the parent component that interfaces the main content 
          and the sidebar component.
          Then we pass sidebarWidth and its changing-state-var as a prop into both components for manipulation.
          The main content has its width adjusted according to how the user adjusts the sidebar.
       */}
-      <SidebarProject
+
+       <SidebarProject
         sidebarWidth={sidebarWidth}
         setSidebarWidth={setSidebarWidth}
         projectName = {projectName}
@@ -294,35 +456,27 @@ function ArchivePage() {
         hardcodedHashTags={hardcodedHashTags}
         onAddHashTag={handleAddingHashTag}
         addNewNote={addNewNote}
+        resetNotes={resetNotes}
         notes={notes}
       />
 
-      <ProjectContentProjection 
-        className="archive-content-projection-container"
-        style={{ 
-          marginLeft: `${sidebarWidth}px`,
-          transition: 'margin-left 0.2s ease-out'
-        }}
-      >
-        <NoteEditor
-          note={currentNote || addNewNote()}
-          onChange={handleNoteChange}
-          handleAddingHashTag={handleAddingHashTag}
-          saveStatus={saveStatus}
-          
-        />
+      {console.log('CurrentNote before its being passed: ', currentNote)}
 
-      </ProjectContentProjection>
-{/* 
-      {showDefaultNote && (
-        <NoteEditor 
-          onSave={handleNoteSave}
-          isSectionNote={false}
-        />
-      )} */}
-
+      <div className="archive-content-projection-container" style={{ 
+        marginLeft: `${sidebarWidth}px`,
+        transition: 'margin-left 0.2s ease-out'
+      }}>
+          <Outlet context={{
+            notes: notes,
+            testProp: 'I was passed into NoteEditor!!!!!',
+            onChange: handleNoteChange,
+            onAddHashTag: handleAddingHashTag,
+            isSectionNote: currentNote ? currentNote.section.toLowerCase() !== 'unsorted' : false
+          }} />
+      </div>
     </div>
-  );
+    );
 }
+
 
 export default ArchivePage;

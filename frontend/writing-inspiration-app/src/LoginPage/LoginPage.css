@@ -13,7 +13,11 @@
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  background-color: #f4f7f5;
+  /* background-color: #f4f7f5; */
+  background-image: url('../Images/login.png'); /* Path to your background image */
+  background-size: cover; /* Optional: scales the image to cover the entire element */
+  background-position: center; /* Optional: centers the image within the element */
+  background-repeat: no-repeat;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

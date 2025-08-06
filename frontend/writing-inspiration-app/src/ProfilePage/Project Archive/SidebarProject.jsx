@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './SidebarProject.css';
 import './maincontent.css';
 import CollapsibleSection from './CollapsibleSection';
-import NoteListItem from './NoteListItem';
+// import NoteListItem from './NoteListItem';
 import { useMemo } from 'react';
 
-function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
+function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, projectName, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
   const sidebarReference = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -18,13 +19,7 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
     setIsOpen(false);
   };
 
-  const metrics = {
-    sections: 2,
-    orphanNotes: 5,
-    plotThreads: 3,
-    characters: 10,
-    themes: 4,
-  };
+ 
 
   // const realMetrics = {
   //   sections: sections.length,
@@ -36,29 +31,33 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
 
 
   // Section handling
-  const {sections, orphanNotes} = useMemo(() => {
-    const result = { sections: [], orphanNotes: [] };
+const category = useMemo(() => {
+  const result = {
+    section: [],
+    orphannotes: [],
+    plotthreads: [],
+    characters: [],
+  };
 
-    notes?.forEach(note => {
-      const hasSectionTag = note.hashTags?.some(tagObj =>
-        hardcodedHashTags.some(hardcodedTag =>
-          hardcodedTag.tag.toLowerCase() === tagObj.tag.toLowerCase()
-        )
-      );
+  notes?.forEach(note => {
+    const sectionKey = note.section?.toLowerCase();
+    if (sectionKey && result[sectionKey]) {
+      result[sectionKey].push(note);
+    } else {
+      result.orphannotes.push(note); // fallback if note has no recognized section
+    }
+  });
 
-      if (hasSectionTag) {
-        result.sections.push(note);
-      } else {
-        result.orphanNotes.push(note);
-      }
-    });
-    return result;
-  }, [notes, hardcodedHashTags]);
+  return result;
+}, [notes]);
+
+ 
 
     // Function to handle adding tags from sidebar
-  const handleAddSection = (sectionName) => {
-    onAddHashTag(`#${sectionName}`);
-  };
+  // const handleAddSection = (sectionName) => {
+  //   // onAddHashTag(`#${sectionName}`);
+   
+  // };
 
   const startResizing = useCallback((event) => {
     setIsResizing(true);
@@ -103,6 +102,15 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
       //will handle search popup to search for users content.
   };
 
+   const metrics = {
+    section: category.section.length,
+    orphanNote: category.orphannotes.length,
+    plotThread: category.plotthreads.length,
+    character: category.characters.length,
+    theme: 4,
+  };
+ 
+
   return (
     <div
       className="sidebarArchive-container"
@@ -112,6 +120,9 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
       <h2 className="project-title-display">{projectName}</h2>
      
      <div className='spacing'>
+           
+
+           <button onClick={resetNotes}>Reset Me (For Testing) </button>
 
           
           <div 
@@ -177,37 +188,99 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
       </div>
 
       
-      <button className="add-content-btn" onClick={addNewNote}>+ Add Content</button>
+      <button className="add-content-btn" 
+      onClick={() => {
+            console.log("Add content button clicked");
+            addNewNote();
+      }}>
+        + Add Content
+      </button>
 
       <div className="sidebar-options-container">
         <ul className="metric-group">
           <li>
             <CollapsibleSection title="Navigation">
               <ul className="metric-group">
-                <li><a href={`/project/${projectName}/overview`}>Overview</a></li>
-                <li><a href={`/project/${projectName}/timeline`}>Timeline</a></li>
-                <li><a href={`/project/${projectName}/summary`}>Summary</a></li>
-                <CollapsibleSection title={`Sections (${metrics.sections})`}>
-                  <li><a href={`/project/${projectName}/section1`}>Section 1</a></li>
-                  <li><a href={`/project/${projectName}/section2`}>Section 2</a></li>
-                </CollapsibleSection>
-                <CollapsibleSection title={`Orphan Notes (${metrics.orphanNotes})`}>
-                  <li><a href={`/project/${projectName}/orphan-note1`}>Orphan Note 1</a></li>
-                  <li><a href={`/project/${projectName}/orphan-note2`}>Orphan Note 2</a></li>
+                <li><Link to={`/project/${projectName}/overview/`}>Overview</Link></li>
+                <li><Link to={`/project/${projectName}/timeline/`}>Timeline</Link></li>
+                <li><Link to={`/project/${projectName}/summary/`}>Summary</Link></li>
+
+                <CollapsibleSection title={`Sections (${metrics.section})`}>
+                  {/* <li><Link to={`/project/${projectName}/section1`}>Section 1</Link></li>
+                  <li><Link to={`/project/${projectName}/section2`}>Section 2</Link></li> */}
 
                   {/* Testing */}
-                   {orphanNotes.map(note => (
-                      <NoteListItem 
-                        key={note.id}
-                        note={note}
-                        // isActive={note.id === currentNoteId}
-                      />
-                    ))}
+                  {category.section?.map(note => {
+                    console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                    
+
+                    return (
+                      <li key={note.id}>
+                        <Link to={`/project/${projectName}/note/${note.id}`}>
+                          {note.title || 'Untitled Note'}
+                        </Link>
+                      </li>
+                    );
+                    
+                    
+                  })}
+
+                  {/* <li>
+                    <button 
+                      className="add-subcontent-btn" 
+                      onClick={() => addNewNote()}
+                    >
+                    + Add Section Note
+                    </button>
+                  </li> */}
+
+
+
+                  
 
                 </CollapsibleSection>
-                <CollapsibleSection title={`Plot Threads (${metrics.plotThreads})`}>
-                  <li><a href={`/project/${projectName}/plot-thread1`}>Plot Thread 1</a></li>
-                  <li><a href={`/project/${projectName}/plot-thread2`}>Plot Thread 2</a></li>
+                <CollapsibleSection title={`Orphan Notes (${metrics.orphanNote})`}>
+                  {/* <li><Link to={`/project/${projectName}/orphan-note1`}>Orphan Note 1</Link></li>
+                  <li><Link to={`/project/${projectName}/orphan-note2`}>Orphan Note 2</Link></li> */}
+
+                   {category.orphannotes.map(note => {
+                    console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                    
+
+                    return (
+                      <li key={note.id}>
+                        
+                        <Link to={`/project/${projectName}/note/${note.id}`}>
+                          {note.title || 'Untitled Note'}
+                        </Link>
+                      </li>
+                    );
+                    
+                    
+                  })}
+
+                  
+
+                </CollapsibleSection>
+                <CollapsibleSection title={`Plot Threads (${metrics.plotThread})`}>
+                  <li><Link to={`/project/${projectName}/plot-thread1`}>Plot Thread 1</Link></li>
+                  <li><Link to={`/project/${projectName}/plot-thread2`}>Plot Thread 2</Link></li>
+
+                      {category.plotthreads.map(note => {
+                        console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                        
+
+                        return (
+                          <li key={note.id}>
+                            <Link to={`/project/${projectName}/note/${note.id}`}>
+                              {note.title || 'Untitled Note'}
+                            </Link>
+                          </li>
+                        );
+                      
+                      
+                      })}
+                  
                 </CollapsibleSection>
               </ul>
             </CollapsibleSection>
@@ -216,8 +289,10 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
           <li>
             <CollapsibleSection title="Context">
               <ul className="metric-group">
-                <li><a href={`/projectarchive/${projectName}/characters`}>Characters <span className="metric-count">{metrics.characters}</span></a></li>
-                <li><a href={`/projectarchive/${projectName}/themes`}>Themes <span className="metric-count">{metrics.themes}</span></a></li>
+                <CollapsibleSection title={`Characters (${metrics.character})`}>
+                <li><Link to={`/projectarchive/${projectName}/characters`}>Characters <span className="metric-count">{metrics.characters}</span></Link></li>
+                </CollapsibleSection>
+                <li><Link to={`/projectarchive/${projectName}/themes`}>Themes <span className="metric-count">{metrics.themes}</span></Link></li>
               </ul>
             </CollapsibleSection>
           </li>
@@ -225,19 +300,19 @@ function SidebarProject({ sidebarWidth, setSidebarWidth, projectName, addNewNote
           <li>
             <CollapsibleSection title="Tools">
               <ul className="metric-group">
-                <li><a href={`/projectarchive/${projectName}/plot-outline`}>Plot Outline</a></li>
+                <li><Link to={`/projectarchive/${projectName}/plot-outline`}>Plot Outline</Link></li>
                 <CollapsibleSection title="Structure Generator">
-                  <li><a href={`/projectarchive/${projectName}/structure/three-act`}>Three Act Structure</a></li>
-                  <li><a href={`/projectarchive/${projectName}/structure/hero-journey`}>Hero's Journey</a></li>
-                  <li><a href={`/projectarchive/${projectName}/structure/save-the-cat`}>Save the Cat</a></li>
+                  <li><Link to={`/projectarchive/${projectName}/structure/three-act`}>Three Act Structure</Link></li>
+                  <li><Link to={`/projectarchive/${projectName}/structure/hero-journey`}>Hero's Journey</Link></li>
+                  <li><Link to={`/projectarchive/${projectName}/structure/save-the-cat`}>Save the Cat</Link></li>
                 </CollapsibleSection>
-                <li><a href={`/projectarchive/${projectName}/ai-writing-assistant`}>AI Writing Assistant</a></li>
+                <li><Link to={`/projectarchive/${projectName}/ai-writing-assistant`}>AI Writing Assistant</Link></li>
                 <li><strong>Word Count:</strong> <span>0</span></li>
               </ul>
             </CollapsibleSection>
           </li>
 
-          <li><a href={`/projectarchive/${projectName}/credits`}>Credits</a></li>
+          <li><Link to={`/projectarchive/${projectName}/credits`}>Credits</Link></li>
         </ul>
       </div>
 

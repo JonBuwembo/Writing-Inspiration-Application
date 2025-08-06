@@ -62,6 +62,8 @@
     content: attr(data-placeholder);
     color: #aaa;
     pointer-events: none;
+    display: block;
+    white-space: pre-wrap;
 }
 
 .title-text-area[contenteditable="true"]:empty::before {
@@ -84,6 +86,8 @@
     opacity: 0.8;
     
 }
+
+
 
 .toolbar {
   position: absolute;

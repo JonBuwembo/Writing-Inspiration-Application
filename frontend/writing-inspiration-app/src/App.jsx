@@ -10,16 +10,17 @@ import HomePage from './HomePage/HomePage.jsx'
 import ProfilePage from './ProfilePage/ProfilePage.jsx'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ArchivePage from './ProfilePage/Project Archive/ArchivePage.jsx';
-import ArchiveContentProjection from './ProfilePage/Project Archive/ProjectContentProjection.jsx'
-import ChapterDetail from './ProfilePage/Project Archive/Archive Content Projection/Singular Components/A_Character.jsx';
-
+import ProjectContentProjection from './ProfilePage/Project Archive/ProjectContentProjection.jsx';
+import NoteEditor from './ProfilePage/Project Archive/Archive Content Projection/NoteEditor/NoteEditor.jsx';
+import Overview from './ProfilePage/Project Archive/Archive Content Projection/Overview.jsx';
+import Credits from './ProfilePage/Project Archive/Archive Content Projection/Credits.jsx';
 
 function App() {
   //let [newEmails, setCount] = useState(0)
   
   return (
    
-    <Router>
+  
       <Routes>
         <Route path="/" element={<Navigate to="/login" />}/>
         {/* TODO: UI done */}
@@ -27,16 +28,27 @@ function App() {
         {/* TODO: UI done */}
         <Route path="/Register" element={<Register/>} />
 
-        <Route path="/project/:projectName/*" element={<ArchivePage />} />
+        
         {/* TODO: UI currently working on */}
         <Route path="/home/*" element={<HomePage/>} />
         {/* not made yet */}
         <Route path="/profile/*" element={<ProfilePage />} /> {/*has subroutes*/}
 
-        {/* <Route path="/profile" element={<ProfilePage/>} /> */}   
+        {/* <Route path="/profile" element={<ProfilePage/>} /> */}
 
-        </Routes>
-      </Router>
+        <Route path="/project/:projectName" element={<ArchivePage />}>
+          <Route index element={<ProjectContentProjection />} /> {/* default landing inside project */}
+          <Route element={<ProjectContentProjection />}>  {/* wrap nested routes in ProjectContentProjection */}
+            <Route path="unsorted/note/:noteId" element={<NoteEditor />} />
+            <Route path="note/:noteId" element={<NoteEditor />} />
+            <Route path="overview/:noteId" element={<Overview />} />
+            <Route path="credits" element={<Credits />} />
+          </Route>
+        </Route>
+       
+
+      </Routes>
+  
   );
   
 }

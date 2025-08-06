@@ -240,6 +240,32 @@
     animation: bounce 0.5s ease;
 }
 
+.add-subcontent-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151; /* gray-700 */
+  background-color: #f3f4f6; /* gray-100 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-subcontent-btn:hover {
+  background-color: #e5e7eb; /* gray-200 */
+  color: #111827; /* gray-900 */
+  border-color: #9ca3af; /* gray-400 */
+}
+
+.add-subcontent-btn:active {
+  background-color: #d1d5db; /* gray-300 */
+  transform: scale(0.97);
+}
+
+
 .metric-group {
     list-style: none;
     padding: 0;
