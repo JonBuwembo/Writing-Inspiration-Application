@@ -6,12 +6,25 @@ import './maincontent.css';
 import CollapsibleSection from './CollapsibleSection';
 // import NoteListItem from './NoteListItem';
 import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
-function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, projectName, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
+function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
   const sidebarReference = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("Select Project Type");
+
+  const { projectID } = useParams();
+  const [projectName, setProjectName] = useState('');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('projects');
+    if (saved) {
+      const projects = JSON.parse(saved);
+      const project = projects.find(p => String(p.id) === String(projectID));
+      setProjectName(project?.name || 'Untitled');
+    }
+  }, [projectID]);
 
 
   const handleOptionClick = (option) => {
@@ -139,8 +152,8 @@ const category = useMemo(() => {
             Search
           </div>
 
-          <a 
-            href="" 
+          <Link 
+            to={'/profile/overview'}
             className='link-to-dashboard'
 
             style={{
@@ -149,12 +162,13 @@ const category = useMemo(() => {
               gap: '8px'
 
             }}
+
           >
 
             <img width="20" height="20" src="https://img.icons8.com/ios/50/briefcase.png" alt="briefcase"/>
             MyDashboard
           
-          </a> 
+          </Link> 
 
      </div>
 
@@ -211,12 +225,12 @@ const category = useMemo(() => {
 
                   {/* Testing */}
                   {category.section?.map(note => {
-                    console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                    console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
                     
 
                     return (
                       <li key={note.id}>
-                        <Link to={`/project/${projectName}/note/${note.id}`}>
+                        <Link to={`/project/${projectID}/note/${note.id}`}>
                           {note.title || 'Untitled Note'}
                         </Link>
                       </li>
@@ -244,13 +258,13 @@ const category = useMemo(() => {
                   <li><Link to={`/project/${projectName}/orphan-note2`}>Orphan Note 2</Link></li> */}
 
                    {category.orphannotes.map(note => {
-                    console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                    console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
                     
 
                     return (
                       <li key={note.id}>
                         
-                        <Link to={`/project/${projectName}/note/${note.id}`}>
+                        <Link to={`/project/${projectID}/note/${note.id}`}>
                           {note.title || 'Untitled Note'}
                         </Link>
                       </li>
@@ -267,12 +281,12 @@ const category = useMemo(() => {
                   <li><Link to={`/project/${projectName}/plot-thread2`}>Plot Thread 2</Link></li>
 
                       {category.plotthreads.map(note => {
-                        console.log("Linking to:", `/project/${projectName}/note/${note.id}`);
+                        console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
                         
 
                         return (
                           <li key={note.id}>
-                            <Link to={`/project/${projectName}/note/${note.id}`}>
+                            <Link to={`/project/${projectID}/note/${note.id}`}>
                               {note.title || 'Untitled Note'}
                             </Link>
                           </li>

@@ -6,7 +6,7 @@ function NoteListItem({ note, isActive }) {
     const navigate = useNavigate();
     const {projectName} = useParams();
 
-     const hardcodedHashTags = [
+    const hardcodedHashTags = [
         {tag: "#section"}, 
         {tag: "#orphannotes"},
         {tag: "#plot-threads"},

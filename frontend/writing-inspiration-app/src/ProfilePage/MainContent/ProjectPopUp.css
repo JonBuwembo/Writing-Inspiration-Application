@@ -10,11 +10,11 @@
 
 
 .project-popup-container {
-    margin: auto !important;
-    position: static !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
+    margin: auto ;
+    position: static ;
+    top: auto ;
+    left: auto ;
+   
 }
 
 .modal-overlay {
@@ -42,22 +42,22 @@
 /* Project Popup Container - keeping your original class name */
 .project-popup-container {
     background: white;
-    padding: 0;
+   
     border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 100% ;
+    max-width: 500px ;
+    box-shadow: 0 4px 80px rgba(0, 0, 0, 0.15);
     transform: translateY(20px);
     transition: transform 0.3s ease-out;
     overflow: hidden;
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .modal-overlay.open .project-popup-container {
     transform: translateY(0);
 }
 
-/* Keeping your original fadeIn animation */
+/* Keeping original fadeIn animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -70,7 +70,7 @@
 }
 
 
-/* Project Popup Content - keeping your original class name */
+/* Project Popup Content */
 .project-popup-content h2 {
     margin: 0;
     padding: 1.5rem;
@@ -81,7 +81,7 @@
     background-color: #f9fafb;
 }
 
-/* Project Popup Body - keeping your original class name */
+/* Project Popup Body  */
 .project-popup-body {
     padding: 1.5rem;
     overflow-y: auto;
@@ -121,7 +121,7 @@
 /* Form Styles - using your existing structure */
 .project-edit-form {
     display: flex;
-    width: 500px;
+    width: 100%;
     flex-direction: column;
     gap: 1rem;
 }

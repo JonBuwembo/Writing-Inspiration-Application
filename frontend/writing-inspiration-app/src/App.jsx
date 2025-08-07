@@ -16,7 +16,8 @@ import Overview from './ProfilePage/Project Archive/Archive Content Projection/O
 import Credits from './ProfilePage/Project Archive/Archive Content Projection/Credits.jsx';
 
 function App() {
-  //let [newEmails, setCount] = useState(0)
+  //Syncing to local storage.
+
   
   return (
    
@@ -36,7 +37,7 @@ function App() {
 
         {/* <Route path="/profile" element={<ProfilePage/>} /> */}
 
-        <Route path="/project/:projectName" element={<ArchivePage />}>
+        <Route path="/project/:projectID" element={<ArchivePage />}>
           <Route index element={<ProjectContentProjection />} /> {/* default landing inside project */}
           <Route element={<ProjectContentProjection />}>  {/* wrap nested routes in ProjectContentProjection */}
             <Route path="unsorted/note/:noteId" element={<NoteEditor />} />
@@ -48,6 +49,8 @@ function App() {
        
 
       </Routes>
+
+     
   
   );
   

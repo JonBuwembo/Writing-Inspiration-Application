@@ -21,7 +21,7 @@ import NoteEditor from './Archive Content Projection/NoteEditor/NoteEditor.jsx';
 function ArchivePage() {
 
 
-   const {projectName, noteId} = useParams(); //paramater in the URL
+   const {projectID, noteId} = useParams(); //paramater in the URL
    const [sidebarWidth, setSidebarWidth] = useState(350);
    const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
    const [notes, setNotes] = useState([]);
@@ -91,7 +91,7 @@ function ArchivePage() {
     const loadNotes = () => {
       try {
         const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
-        const projectNotes = storedNotes[projectName] || [];
+        const projectNotes = storedNotes[projectID] || [];
         setNotes(projectNotes);
 
         let noteToSet;
@@ -106,27 +106,14 @@ function ArchivePage() {
           noteToSet = createBlankNote();
           setNotes([noteToSet]); // Ensure at least one note exists
           const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-          storedData[projectName] = [noteToSet];
+          storedData[projectID] = [noteToSet];
           localStorage.setItem(storageKey, JSON.stringify(storedData));
         }
 
         console.log('Setting currentNote:', noteToSet);
         setCurrentNote(noteToSet);
         
-        // Ensure note's section is valid (default to 'unsorted')
-        const sectionToNavigate = noteToSet.section || 'unsorted'; 
-
-        // Update URL if needed
-        // if (!window.location.pathname.includes(`/project/${projectName}/${sectionToNavigate}/note/${noteToSet.id}`)) {
-        //   navigate(`/project/${projectName}/${sectionToNavigate}/note/${noteToSet.id}`);
-        // }
-
-        // if (!noteToSet) {
-        //   noteToSet = createBlankNote();
-        //   setNotes([noteToSet]);
-        //   setCurrentNote(noteToSet);
-        // }
-        const path = `/project/${projectName}/note/${noteToSet.id}`;
+        const path = `/project/${projectID}/note/${noteToSet.id}`;
         console.log("Navigating to new note:", path);
         if (window.location.pathname !== path) {
           navigate(path);
@@ -141,52 +128,7 @@ function ArchivePage() {
     };
 
    loadNotes();
-  }, [projectName, noteId, navigate]);
-
-  // useEffect(() => {
-  //   // WHEN AUTHENTICATION IMPLEMENTED: Wait untill we know the user
-  //   //if (!currentUser) return;
-
-  //   const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
-  //   const projectNotes = storedNotes[projectName] || []; //get the project name and see if it exists
-  //   setNotes(projectNotes);
-  //   // const userNotesKey = getUserNotesKey();
-
-  //   if (noteId) {
-  //     // load existing note by seeing if IDs match
-  //     const note = projectNotes.find(aNote => aNote.id === noteId);
-  //     // If there is no existing note found, then create a blank default note.
-  //     // otherwise set the current note state with the note found.
-  //     // defensive programming**
-  //     setCurrentNote(note || createBlankNote());
-  //   } else {
-
-  //     //If there are notes but are not specific to the one we were fetching then get the most recent worked on one.
-  //     if (projectNotes.length > 0) {
-  //       // Get the most recent note. 
-  //       // sorted by last edited in decending order.
-  //       // spreads all project notes into an immutable array for sorting.
-  //       // takes the first element (most recent)
-  //       const mostRecentNote = [...projectNotes].sort((a, b) =>
-  //         new Date(b.lastEdited) - new Date(a.lastEdited))[0];
-  //       // navigate to most recent (last edited) section in URL
-  //       navigate(`/project/${projectName}/${mostRecentNote.section}/note/${mostRecentNote.id}`);
-
-  //     } else {
-  //       const defaultNote = createBlankNote();
-  //       setCurrentNote(defaultNote);
-  //       setSaveStatus('unsaved')
-
-  //       // New notes get 'unsorted' section in URL
-  //       navigate(`/project/${projectName}/unsorted/note/${defaultNote.id}`);
-
-  //     }
-  //   }
-    
-  // }, [projectName, navigate, section, noteId]);
-
- 
-  // setCurrentNote(createBlankNote())
+  }, [projectID, noteId, navigate]);
 
 
   const addNewNote = () => {
@@ -200,21 +142,21 @@ function ArchivePage() {
     // setSaveStatus('unsaved');
 
     
-    storedData[projectName] = [newNote, ...(storedData[projectName] || [])]; // Add new note to existing notes
+    storedData[projectID] = [newNote, ...(storedData[projectID] || [])]; // Add new note to existing notes
     localStorage.setItem(storageKey, JSON.stringify(storedData));
     setNotes(prevNotes => [...prevNotes, newNote]);
     console.log("I've added a new note 'AddNewNote()' ran.");
 
     // Navigate to the new note's URL
-    //navigate(`/project/${projectName}/${section}/note/${newNote.id}`);
+
   
 
     // 4. Navigate to new note
-    const encodedProjectName = encodeURIComponent(projectName);
+    const encodedProjectID = encodeURIComponent(projectID);
     //const encodedSection = encodeURIComponent(newNote.section);
     const encodedNoteId = encodeURIComponent(newNote.id);
 
-    const path = `/project/${encodedProjectName}/note/${encodedNoteId}`;
+    const path = `/project/${encodedProjectID}/note/${encodedNoteId}`;
 
     // Navigate to the newly created note's URL
     navigate(path);
@@ -257,12 +199,12 @@ function ArchivePage() {
       
       // update project data: Spread operator ... creates new array, and adds the updated note to it.
       // maintains referential integrity.
-      storedData[projectName] = [...updatedNotes, currentNote];
+      storedData[projectID] = [...updatedNotes, currentNote];
       // store this updated data back to local storage so it can persist. Stringifies entire data structure.
       localStorage.setItem(storageKey, JSON.stringify(storedData));
 
       // update the local state.
-      setNotes(storedData[projectName]);
+      setNotes(storedData[projectID]);
       // update status to now saved.
       setSaveStatus('saved');
       
@@ -270,7 +212,7 @@ function ArchivePage() {
       // Checks if url already reflects current section. 
       // only navigates if section changes.
       if (!window.location.pathname.includes(`/${currentNote.section}/`)) {
-        navigate(`/project/${projectName}/note/${currentNote.id}`);
+        navigate(`/project/${projectID}/note/${currentNote.id}`);
       }
 
     } catch (error) {
@@ -298,7 +240,10 @@ function ArchivePage() {
             note.id === updatedNote.id ? updatedNote : note
           );
 
-          localStorage.setItem(storageKey, JSON.stringify(updatedNotes))
+          const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
+          storedData[projectID] = updatedNotes;
+          localStorage.setItem(storageKey, JSON.stringify(storedData));
+          
           return updatedNotes;
         }
       );
@@ -314,13 +259,13 @@ function ArchivePage() {
 
     const storedData = JSON.parse(localStorage.getItem('projectNotes')) || {};
     
-    storedData[projectName] = updatedNotes; // update with a new set of notes with one less.
+    storedData[projectID] = updatedNotes; // update with a new set of notes with one less.
     localStorage.setItem('projectNotes', JSON.stringify(storedData));
     setNotes(updatedNotes);
 
     if (currentNote?.id === id) {
       if (updatedNotes.length > 0) {
-          navigate(`/project/${projectName}/note/${updatedNotes[0].id}`);
+          navigate(`/project/${projectID}/note/${updatedNotes[0].id}`);
       } else {
           setCurrentNote(createBlankNote());
           setSaveStatus('unsaved');
@@ -450,7 +395,7 @@ function ArchivePage() {
        <SidebarProject
         sidebarWidth={sidebarWidth}
         setSidebarWidth={setSidebarWidth}
-        projectName = {projectName}
+       
         onDeleteNote={handleDeleteNote}
         currentNoteId={currentNote?.id}
         hardcodedHashTags={hardcodedHashTags}

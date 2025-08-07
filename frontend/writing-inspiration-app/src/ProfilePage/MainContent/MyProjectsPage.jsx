@@ -5,10 +5,10 @@ import ProjectArchive from '../Project Archive/ArchivePage.jsx';
 import { Link } from 'react-router-dom';
 import './myProjectsPage.css';
 import './ProjectPopUp.css';
-import SidebarProject from '../Project Archive/SidebarProject.jsx';
+import { v4 as uuidv4 } from 'uuid';
 //import ReactModal from 'react-modal';
 import ProjectPopUp from './ProjectPopUp.jsx'; // Import the popup component for project details
-
+import ArchivePage from '../Project Archive/ArchivePage.jsx';
 
 //ReactModal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -63,8 +63,10 @@ const MyProjectsPage = () => {
 
     const addProject = () => {
         // ID is length of list of projects so far.
-        const newId = projects.length ? projects[projects.length - 1].id + 1 : 1;
-        setProjects([...projects, { id: newId, name: `Project ${newId}`, description: 'Add Description' }]);
+        const newId = uuidv4();
+        const projectLength = projects.length;
+
+        setProjects([...projects, { id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description' }]);
     };
 
     const deleteProject = (id) => {
@@ -109,11 +111,11 @@ const MyProjectsPage = () => {
     };
 
 
-    const handleNavigate = (projectName)=> {
+    const handleNavigate = (projectID)=> {
         // // Construct relative path by appending to current path
         // // Ensure no double slashes
         // let basePath = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-        navigate(`/project/${projectName}`);
+        navigate(`/project/${String(projectID)}`);
 
     };
 
@@ -131,26 +133,11 @@ const MyProjectsPage = () => {
                 {projects.map(project => (
                     <div key={project.id} className='project-container'>
                         {/* Use Link from react-router-dom for client-side routing */}
-                        <li className='project-rectangle' onClick={() => handleNavigate(project.name)} > 
-                        <header className='project-header'>
-                            
-                                {project.name}
-
-                        </header> 
-
-
-                        <p> {project.description || 'No description yet'}</p>
-
-
-                        
-                                {/* Button to open popup*/}
-                                <button 
-                                    className='edit-project-btn' 
-                                    onClick={(e) => handleEditClick(project, e)}
-                                    aria-label="Edit Project"
-                                >
-                                Edit
-                                </button>
+                        <li className='project-rectangle' onClick={() => handleNavigate(project.id)} > 
+                            <header className='project-header'>{project.name}</header> 
+                            <p> {project.description || 'No description yet'}</p>
+                            {/* Button to open popup*/}
+                            <button className='edit-project-btn'  onClick={(e) => handleEditClick(project, e)} aria-label="Edit Project">  Edit </button>
                         </li>      
 
                         <li className='delete-box' onClick={() => deleteProject(project.id)}> <p> Delete </p></li>
@@ -185,10 +172,12 @@ const MyProjectsPage = () => {
                     </form>
                 </ProjectPopUp>
                 
-                
+               
 
                 
             </div>
+
+
         </div>        
     );
 }
