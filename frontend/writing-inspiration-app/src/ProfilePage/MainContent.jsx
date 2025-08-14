@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProfilePage.css';
+import './MainContent.css';
 import OverviewPage from './MainContent/OverviewPage';
 import MyVideosPage from './MainContent/MyVideosPage';
 import MyProjectsPage from './MainContent/MyProjectsPage';

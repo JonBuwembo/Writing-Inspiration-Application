@@ -1,0 +1,63 @@
+/* Overlay */
+.searchModalOverlay {
+  position: absolute; /* Top-left positioning */
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0); /* transparent background */
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.searchModalOverlay.open {
+  opacity: 1;
+  visibility: visible;
+  background-color: rgba(218, 207, 207, 0.7);
+}
+
+/* Popup Container */
+.searchPopupContainer {
+  position: absolute; /* stay in top-left */
+  top: 5px;
+  left: 100px;
+  height: 400px;
+  background: white;
+  border-radius: 10px;
+  max-width: 1110px;
+  width: calc(100% - 20px);
+  box-shadow: 0 4px 80px rgba(0,0,0,0.15);
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* FadeIn Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Popup Content */
+.searchPopupContent {
+  padding: 1rem;
+}
+
+/* Popup Body */
+.searchPopupBody {
+  max-height: 500px; /* adjust as needed */
+  overflow-y: auto;
+}
+
+.searchPopupBody::-webkit-scrollbar {
+  display: none; /* hide scrollbar in Webkit */
+}

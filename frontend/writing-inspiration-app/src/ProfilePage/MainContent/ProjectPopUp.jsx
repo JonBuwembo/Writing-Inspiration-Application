@@ -11,7 +11,7 @@ const ProjectPopUp = ({popupTitle = "Edit Project", children, onClose, isOpen}) 
         if (isOpen) {
             document.addEventListener('keydown', handleKeyDown); // Listen for Escape key to close popup
             document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
-        }
+        };
 
         return () => {
             document.removeEventListener('keydown', handleKeyDown); // Clean up event listener
@@ -23,11 +23,11 @@ const ProjectPopUp = ({popupTitle = "Edit Project", children, onClose, isOpen}) 
     return (
        
             <div 
-            className={`modal-overlay ${isOpen ? 'open' : ''}`}
-            role="dialog" 
-            aria-modal="true"
-            aria-labelledby="project-popup-title"
-            onClick={(e) => e.target === e.currentTarget && onClose()}
+                className={`modal-overlay ${isOpen ? 'open' : ''}`}
+                role="dialog" 
+                aria-modal="true"
+                aria-labelledby="project-popup-title"
+                onClick={(e) => e.target === e.currentTarget && onClose()}
             >
 
                 {/* DIALOG KEYWORD: Ensures popup is accessible.*/}

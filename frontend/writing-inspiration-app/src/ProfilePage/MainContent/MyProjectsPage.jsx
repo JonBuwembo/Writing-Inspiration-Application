@@ -77,8 +77,7 @@ const MyProjectsPage = () => {
 
     const handleEditClick = (project, event) => {
         event.stopPropagation();
-        setCurrentProject(project);
-        setIsPopupOpen(true);
+        handleOpeningPopup(project);
     }
 
     const editProject = (id, updatedData) => {
@@ -119,31 +118,85 @@ const MyProjectsPage = () => {
 
     };
 
+    const handleArchiving = (project, e) =>  {
+      e.stopPropagation();
+    }
+
     return (
         <div>
 
             <div>
-            <h2 className='font'> Here are your projects! </h2>
+                <h2 className='instructive-text'> Active Projects </h2>
 
-            <button onClick={addProject} className='add-project-btn'>+ Add Project</button>
-            
-            <p className='font'> Select any project to view details and unlock AI-powered insights tailored to your work. </p>
+                <button onClick={addProject} className='add-project-btn'> <i className="far fa-plus-square"></i> Add Project</button>
+                
+                <p className='instructive-text'> Select any project to view details and unlock AI-powered insights tailored to your work. </p>
 
-            <div className="project-list-container">
-                {projects.map(project => (
-                    <div key={project.id} className='project-container'>
-                        {/* Use Link from react-router-dom for client-side routing */}
-                        <li className='project-rectangle' onClick={() => handleNavigate(project.id)} > 
-                            <header className='project-header'>{project.name}</header> 
-                            <p> {project.description || 'No description yet'}</p>
-                            {/* Button to open popup*/}
-                            <button className='edit-project-btn'  onClick={(e) => handleEditClick(project, e)} aria-label="Edit Project">  Edit </button>
-                        </li>      
+                <div className="project-list-container">
+                    {projects.map(project => (
+                        <div key={project.id} className="project-card">
+                        {/* Project Content - Clickable Area */}
+                        <div 
+                            className="project-content"
+                            onClick={() => handleNavigate(project.id)}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View ${project.name} project`}
+                        >
+                            <div className="project-header">
+                            <h3 className="project-title">{project.name}</h3>
+                            <span className="project-status">{project.status || 'Draft'}</span>
+                            </div>
+                            
+                            <p className="project-description">
+                            {project.description || 'No description yet'}
+                            </p>
+                            
+                            <div className="project-meta">
+                            <span className="last-edited">
+                                <i className="far fa-clock"></i> Last edited 3 days ago
+                            </span>
+                            </div>
+                        </div>
 
-                        <li className='delete-box' onClick={() => deleteProject(project.id)}> <p> Delete </p></li>
+                        {/* Action Buttons */}
+                        <div className="project-actions">
+                            <button 
+                            className="btn-action btn-edit"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditClick(project, e);
+                            }}
+                            aria-label={`Edit ${project.name}`}
+                            >
+                            <i className="far fa-edit"></i>
+                            </button>
+                            
+                            <button 
+                            className="btn-action btn-archive"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleArchiving(project, e);
+                            }}
+                            aria-label={`Archive ${project.name}`}
+                            >
+                            <i className="fas fa-archive"></i>
+                            </button>
+                            
+                            <button 
+                            className="btn-action btn-delete"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                deleteProject(project.id);
+                            }}
+                            aria-label={`Delete ${project.name}`}
+                            >
+                            <i className="far fa-trash-alt"></i>
+                            </button>
+                        </div>
+                        </div>
+                    ))}
                     </div>
-                ))}
-                </div>
             </div>
 
             {/* Popup for project details popup appears over everything only when edit button is clicked */}

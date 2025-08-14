@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.searchBar {
+   padding: 8px 15px;
+   border-radius: 5px;
+   border-style: solid;
+   border-color: #d6cbcb;
+   font-size: 15px;
+   font-weight: 400;
+   color: rgb(46, 44, 44);
+   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   outline: none;
+}
+
+.searchBar:focus-visible {
+    border-color: blue;
+    border-radius: 5px;
+}
+
+.searchBar:focus {
+    border-color: blue;
+    border-radius: 5px;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="black" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="black" stroke-width="2" stroke-linecap="round"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: center;
+    cursor: pointer;
+}
+
+.searchResults {
+
+}

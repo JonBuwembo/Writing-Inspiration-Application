@@ -12,7 +12,13 @@ const Sidebar = () => {
         <aside className="sidebar">
             <nav>
                 <ul className="sidebar-nav">
-                    <li><a id="home-link" href="/home"><FontAwesomeIcon icon={faHouse} className="icon-spacing" />Home</a></li>
+                    <li>
+                        <a id="home-link" href="/home">
+                            <i className='fas fa-home' style={{marginRight: "12px"}}></i>
+                            Home
+                        </a>
+                    </li>
+
                     <li><a id="dashboard" href="/profile"><FontAwesomeIcon icon={faBriefcase} className="icon-spacing"/>My Dashboard </a></li>
                     <li><a id="sign-out" href="/login"> <FontAwesomeIcon icon={faArrowRightFromBracket} className="icon-spacing" />Sign Out </a></li>
                     <li><a id="chats" href="#"> <FontAwesomeIcon icon={faComment} className='icon-spacing' />Chats </a></li>
