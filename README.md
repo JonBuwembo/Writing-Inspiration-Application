@@ -12,7 +12,7 @@
 ## Tech Stack
 
 ### Backend:
-   - Node.js (Express.js)
+   - Supabase
      
 ### Database:
    - PostgreSQL (Relational database for structured storage)
