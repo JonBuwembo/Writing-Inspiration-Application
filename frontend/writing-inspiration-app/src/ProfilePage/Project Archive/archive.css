@@ -26,7 +26,7 @@
     border-width: 1px;
     
 }
-
+/* 
 .text-box {
 
     margin-top: 20px;
@@ -37,10 +37,10 @@
     border-radius: 4px;
     border-color: rgb(150, 176, 231);
     box-sizing: border-box;
-    margin-bottom: 10px; /* Space between text boxes */
-    overflow-y: auto; /* Enable scrolling if content overflows */
-    min-height: 70px; /* Limit height to prevent overflow */
-}
+    margin-bottom: 10px; 
+    
+    min-height: 70px; 
+} */
 
 .main-projection-text {
     font-size: 16px;

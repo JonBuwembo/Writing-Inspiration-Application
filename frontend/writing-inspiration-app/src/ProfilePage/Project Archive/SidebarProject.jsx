@@ -18,12 +18,17 @@ function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote,
   const [projectName, setProjectName] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('projects');
-    if (saved) {
-      const projects = JSON.parse(saved);
-      const project = projects.find(p => String(p.id) === String(projectID));
-      setProjectName(project?.name || 'Untitled');
+    const savedActiveProjects = JSON.parse(localStorage.getItem('projects'));
+    const savedArchivedProjects = JSON.parse(localStorage.getItem('archivedProjects'));
+
+    let project = savedActiveProjects.find(p => String(p.id) === String(projectID));
+    
+    if (!project) {
+      project = savedArchivedProjects.find(p => String(p.id) === String(projectID));
     }
+    
+    setProjectName(project?.name || 'Untitled');
+
   }, [projectID]);
 
 

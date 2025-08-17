@@ -120,6 +120,7 @@
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   font-size: 14px;
+  font-family:inherit;
   padding: 7px 14px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -276,4 +277,18 @@ ul, li {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.active-link {
+  border-bottom:  solid greenyellow;
+  padding-bottom: 7.5px;
+}
+
+.active-link-sidebar {
+  background-color: #ebf2f3;
+  color: #fff;
+  border-radius: 4px;
+  border-left: solid blue;
+  border-width: 4px;
+  transform: translateY(-2px);
 }

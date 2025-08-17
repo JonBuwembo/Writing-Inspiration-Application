@@ -261,12 +261,21 @@ li {
   color: #333;
 }
 
-.project-status {
+.project-status-archived {
   font-size: 0.75rem;
   padding: 3px 8px;
   border-radius: 12px;
   background: #f0f7ff;
-  color: #0066cc;
+  color: #00cc0a;
+}
+
+.project-status-active {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #f0f7ff;
+  color: #0066cc;;
+
 }
 
 .project-description {
@@ -274,7 +283,7 @@ li {
   margin: 0 0 15px 0;
   line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -317,4 +326,13 @@ li {
 /* Icons */
 .far {
   font-size: 14px;
+}
+
+.no-archive-text {
+  text-align: center;          /* Center the text horizontally */
+  font-size: 1.2rem;           /* Slightly larger than normal text */
+  color: #c7c1c1;                 /* Subtle gray color */
+  margin: 2rem 0;              /* Space above and below */
+  font-weight: 500;
+  font-style: italic;           /* Light emphasis */
 }

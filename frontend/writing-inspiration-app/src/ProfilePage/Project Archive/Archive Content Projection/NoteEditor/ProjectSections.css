@@ -15,8 +15,9 @@
 }
 
 .project-text-box {
-    min-height: 10vh;
-    min-height: 93dvh;
+    min-height: 85vh;
+    overflow-y: auto;
+   
     background-color: var(--base-clr);
     color: var(--text-clr);
     display: block;
@@ -31,9 +32,15 @@
     margin-bottom: 20px;
     padding: min(3em, 15%);
 
-    border: 1px solid var(--line-clr);
-    border-radius: 1em;
-    margin-bottom: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    
+  
+}
+
+.project-text-box::-webkit-scrollbar {
+    display: none;
 }
 
 
