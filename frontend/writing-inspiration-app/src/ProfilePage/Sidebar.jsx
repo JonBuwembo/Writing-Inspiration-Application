@@ -7,6 +7,7 @@ import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useLocation } from 'react-router-dom';
+import authService from '../auth/authService';
 const Sidebar = () => {
 
     const location = useLocation();
@@ -23,7 +24,7 @@ const Sidebar = () => {
                     </li> */}
 
                     <li><a id="dashboard" href="/profile" className={location.pathname === "/profile" || "/profile/*"? 'active-link-sidebar':''}><FontAwesomeIcon icon={faBriefcase} className="icon-spacing"/>My Dashboard </a></li>
-                    <li><a id="sign-out" href="/login" className={location.pathname === "/login"? 'active-link-sidebar':''}> <FontAwesomeIcon icon={faArrowRightFromBracket} className="icon-spacing" />Sign Out </a></li>
+                    <li><a id="sign-out" href="/login" onClick={authService.logoutUser} className={location.pathname === "/login"? 'active-link-sidebar':''}> <FontAwesomeIcon icon={faArrowRightFromBracket} className="icon-spacing" />Sign Out </a></li>
                     <li><a id="chats" href="#" className={location.pathname === "/chats"? 'active-link-sidebar':''}> <FontAwesomeIcon icon={faComment} className='icon-spacing' />Chats </a></li>
                     <li><a id="settings" href="/settings" className={location.pathname === "/settings"? 'active-link-sidebar':''}> <FontAwesomeIcon icon={faGear} className='icon-spacing' />Settings </a></li>
                     {/* Add more links as needed */}

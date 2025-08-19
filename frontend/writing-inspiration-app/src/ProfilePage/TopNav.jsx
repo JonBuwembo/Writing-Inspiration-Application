@@ -7,7 +7,7 @@ import moreStyles from './SearchPopUp.module.css'
 import { useLocation } from 'react-router-dom';
 import SearchPopUp from './SearchPopup.jsx';
 
-const TopNav = () => {
+const TopNav = ({user}) => {
 
   const [isOpen, setOpen] = useState(false);
   const [isPopopupOpen, setIsPopupOpen] = React.useState(false);
@@ -162,7 +162,7 @@ const TopNav = () => {
 
           <div className="user-info">
             <div className='vertical'> </div>
-            <div className='welcome-text'> Welcome Jonathan Buwembo!</div>
+            <div className='welcome-text'> Welcome {user.first_name}</div>
           </div>
 
         </div>

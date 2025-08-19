@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
 // import './App.css'
 import { useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
@@ -10,11 +8,35 @@ import '../LoginPage/LoginPage.jsx'
 import Sidebar from './Sidebar.jsx'
 import TopNav from './TopNav.jsx'
 import MainContent from './MainContent.jsx'
-import ArchivePage from './Project Archive/ArchivePage.jsx'
-import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import supabase from '../config/supabaseClient.js'
+
 function ProfilePage() {
     //let [newEmails, setCount] = useState(0)
+
+    const currentUser = supabase.auth.getUser(); // get current user
+
+    const [user, setUser] = useState("");
+
+    useEffect(() => {
+        const fetchName = async () => {
+            const {data: {user}} = await supabase.auth.getUser();
+            if (!user) return;
+
+            const {data: userInfo, error} = await supabase
+              .from('users')
+              .select('first_name')
+              .eq('id', user.id)
+              .single()
+
+            if(error) {
+                console.error('Error fetching user/s name: ', error);
+            } else {
+                setUser(userInfo);
+            }
+        }
+
+        fetchName();
+    }, []);
     
 
     // load the LocalStorage on mount for activeProjects. If no project is stored yet, then just return an empty array.
@@ -25,7 +47,9 @@ function ProfilePage() {
                     return JSON.parse(saved).map(proj => ({
                         id: proj.id,
                         name: proj.name,
-                        description: proj.description || 'Add Description'
+                        description: proj.description || 'Add Description',
+                        archived_at: new Date().toISOString(),
+                        user_id: currentUser.id
                     }));
                 }
                 return [];
@@ -132,7 +156,9 @@ function ProfilePage() {
         <div className="profile-page-container">
             <Sidebar />
             <div className="content-wrapper">
-                <TopNav />
+                <TopNav 
+                    user={user}
+                />
                 <MainContent
                     navigate={handleNavigate}
                     projects={projects}

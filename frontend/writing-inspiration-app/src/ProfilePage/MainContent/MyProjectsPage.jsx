@@ -1,17 +1,10 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Routes, Route } from 'react-router-dom';
-import ProjectArchive from '../Project Archive/ArchivePage.jsx';
-import { Link } from 'react-router-dom';
 import './myProjectsPage.css';
 import './ProjectPopUp.css';
 import { v4 as uuidv4 } from 'uuid';
 //import ReactModal from 'react-modal';
 import ProjectPopUp from './ProjectPopUp.jsx'; // Import the popup component for project details
-import ArchivePage from '../Project Archive/ArchivePage.jsx';
-import MyArchive from './MyArchive.jsx';
-import MainContent from '../MainContent.jsx';
-import { Navigate } from 'react-router-dom';
+import supabase from '../../config/supabaseClient.js';
 
 //ReactModal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -22,60 +15,24 @@ import { Navigate } from 'react-router-dom';
  */
 const MyProjectsPage = ({projects, navigate, setProjects, archivedProjects, handleUnarchiving, isPopopupOpen, currentProject, handleArchiving, handleClosingPopup, handleEditClick, handleFormSubmit}) => {
 
-    // const [projects, setProjects] = React.useState(() => {
-    //     // { id: 1, name: 'Project 1' },
-    //     // { id: 2, name: 'Project 2' },
-    //     const saved = localStorage.getItem('projects');
-    //     // return saved ? JSON.parse(saved) : [];
-    //     if (saved) {
-    //         return JSON.parse(saved).map(proj => ({
-    //             id: proj.id,
-    //             name: proj.name,
-    //             description: proj.description || 'Add Description' // Ensure description is always present
-    //         }))
-    //     }
+  
 
-    //     return [];
-    // });
-
-    // const [archivedProjects, setArchivedProjects] = React.useState([]);
-
-    // // For popup page functionality.
-    // const [isPopopupOpen, setIsPopupOpen] = React.useState(false);
-    // const [currentProject, setCurrentProject] = React.useState(null);
-
-
-    // //const location = useLocation();
-
-    // // opening popup when user clicks on a project.
-    // const handleOpeningPopup = (project) => {
-    //     setCurrentProject(project);
-    //     setIsPopupOpen(true);
-    // };
-
-    // // closing popup when user clicks on the close button.
-    // const handleClosingPopup = () => {
-    //     setIsPopupOpen(false);
-    //     setCurrentProject(null);
-    // };
-
-    // useEffect(() => {
-    //     // Save projects to local storage whenever they change
-    //     localStorage.setItem('projects', JSON.stringify(projects));
-    // }, [projects]);
-
-    // useEffect(() => {
-    //     localStorage.setItem('archivedProjects', JSON.stringify(archivedProjects));
-    // }, [archivedProjects]);
-
-
-
-    const addProject = () => {
+    const addProject = async () => {
         // ID is length of list of projects so far.
         const newId = uuidv4();
         const projectLength = projects.length;
 
-        setProjects([...projects, { id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description' }]);
+        const {data, error} = await supabase 
+            .from('projects')
+            .insert([{id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description', archived_at: new Date().toISOString(), user_id: "(MUST BE AUTHENTICATED)" }])
+            .select();
+
+            if (error) {
+                console.error('Error adding Projects:', error.message);
+            } else {
+                setProjects([...projects, { id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description' }]);
+            }
+        
     };
 
     const deleteProject = (id) => {
@@ -83,78 +40,6 @@ const MyProjectsPage = ({projects, navigate, setProjects, archivedProjects, hand
         // and update the state.
         setProjects(projects.filter(project => project.id !== id));
     }
-
-    // const handleEditClick = (project, event) => {
-    //     event.stopPropagation();
-    //     handleOpeningPopup(project);
-    // }
-
-    // const editProject = (id, updatedData) => {
-    //     // Find the project to edit
-    //    setProjects(projects.map(project => project.id === id? { ...project, ...updatedData}: project));
-    // };
-
-    // const handleFormSubmit = (e) => {
-    //     e.preventDefault();
-    //     const formData = new FormData(e.target);
-    //     const updatedName = formData.get('project-name').trim();
-    //     const updatedDesc = formData.get('project-desc').trim();
-
-    //     const updates = {
-    //         name: updatedName ,
-    //         description: updatedDesc
-    //     };
-
-    //     if (currentProject.id && projects.some(project => project.id === currentProject.id)) {
-    //         // If currentProject has an id, update the existing project
-    //         editProject(currentProject.id, updates);
-    //     } else if (currentProject.id && archivedProjects.some(p => p.id === currentProject.id)){
-    //          setArchivedProjects(prev => 
-    //             prev.map(p => p.id === currentProject.id ? { ...p, ...updates } : p)
-    //          );
-    //     } else {
-    //         // Add a new project.
-    //         setProjects([...projects, {
-    //             id: currentProject.id, 
-    //             name: updatedName || `Project ${currentProject.id}`, 
-    //             description: updatedDesc || 'Add Description' 
-    //         }]);
-    //     }
-        
-    //     handleClosingPopup();
-    // };
-
-
-    // const handleNavigate = (projectID)=> {
-    //     // // Construct relative path by appending to current path
-    //     // // Ensure no double slashes
-    //     // let basePath = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-    //     navigate(`/project/${String(projectID)}`);
-
-    // };
-
-    // const handleArchiving = (aProject) =>  {
-
-    //   // Add this project to archived projects
-    //   setArchivedProjects(prevArchived => [...prevArchived, aProject]);
-    //   // remove same project from Active projects.
-    //   setProjects(prev => prev.filter(p => p.id !== aProject.id)); 
-
-    //   const updated = projects.filter(p => p.id !== aProject.id);
-    //   localStorage.setItem('archivedProjects', JSON.stringify([...archivedProjects, aProject]));
-    //   localStorage.setItem('projects',  JSON.stringify(updated));
-    // }
-
-    // const handleUnarchiving = (aProject) => {
-    //     // Add this project back to active projects
-    //     setProjects(prev => [...prev, aProject]);
-    //     // Remove this project from archived projects.
-    //     setArchivedProjects(prevArchived => prevArchived.filter(p => p.id !== aProject.id));
-
-    //     const updatedArchived = archivedProjects.filter(p => p.id !== aProject.id);
-    //     localStorage.setItem('archivedProjects', JSON.stringify(updatedArchived));
-    //     localStorage.setItem('projects', JSON.stringify([...projects, aProject]));
-    // }
 
     return (
 

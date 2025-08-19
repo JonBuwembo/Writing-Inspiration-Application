@@ -40,6 +40,8 @@
   font-family: 'Inter';
 }
 
+
+
 /* --------------------------------------------------
    FORM STYLES
 -------------------------------------------------- */
@@ -123,11 +125,11 @@ form h2 p {
 -------------------------------------------------- */
 .login-btn {
   width: 100%;
-  padding: 20px;
+  padding: 12px;
   font-size: 16px;
   font-weight: 500;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color:rgb(28, 28, 41);
   color: white;
   cursor: pointer;

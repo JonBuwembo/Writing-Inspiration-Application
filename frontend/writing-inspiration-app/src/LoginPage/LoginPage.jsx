@@ -2,17 +2,38 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 // import './App.css'
-import './LoginPage.css'
-import '../RegistrationPage/Register.jsx'
-import './LoginPage.jsx'
+import './LoginPage.css';
+import '../RegistrationPage/Register.jsx';
+import './LoginPage.jsx';
 import supabase from '../config/supabaseClient.js';
 import { authService } from '../auth/authService.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import GoogleLoginButtons from './GoogleLoginButtons.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
     //let [newEmails, setCount] = useState(0)
     //const [password, setPassword] = useState("");
     //const [username, setUsername] = useState("");
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        async function handleOAuthRedirect() {
+            const {data: {session}, error } = await supabase.auth.getSession()
+            if(error) {
+                console.error("OAuth callback error:", error);
+                return;
+            }
+
+            if (session?.user) {
+                window.location.href = "/profile";
+            }
+
+        }
+        handleOAuthRedirect();
+    }, []);
+
 
     const [formData, setFormData] = useState({
         email:'',
@@ -22,18 +43,26 @@ function LoginPage() {
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            await authService.loginUser(
-                formData.email, // Email input)
-                formData.password)
-
+            const user = await authService.loginWithPassword(formData.email, formData.password);
             // If login is successful, redirect to the home page
-            window.location.href = '/home'; // Redirect to home page
+            window.location.href = '/profile'; // Redirect to profile page
+            return { success: true, user: user };
         } catch (error) {
-            alert(error.message);
+            alert("Invalid");
             console.error('Login failed:', error);
             // Handle login error (e.g., show an error message to the user)
+            return { success: false, error };
         }
     }
+
+    const handleGoogleLogin = async () => {
+        try {
+            const user = await authService.signInWithGoogle();
+            window.location.href = '/profile';
+        } catch (error) {
+            alert(error.message)
+        }
+    };
 
     return (
         <div className="page">
@@ -68,25 +97,20 @@ function LoginPage() {
                     </div>
                 </div>
 
-                {/* When user logs in, they are sent to the home page of Inspira */}
                 <button type="submit" className="login-btn"> Log In </button>
-
-                 <div id="g_id_onload"
-                    data-client_id="173883313635-c3qhml5k8th9u5pflu7c1ea4lpbqen2q.apps.googleusercontent.com"
-                    data-login_uri="http://localhost:5173/auth/google/callback"
-                    data-auto_prompt="false">
-                </div>
                 
-                <div className="g_id_signin"
-                    data-type="standard"
-                    data-size="large"
-                    data-theme="outline"
-                    data-text="sign_in_with"
-                    data-shape="rectangular"
-                    data-logo_alignment="left">
+
+                <div style={{ display: "flex", alignItems: "center", margin: "2px 0" }}>
+                    <hr style={{ flex: 1, border: "none", borderTop: "1px solid #9ca1a0" }} />
+                    <span style={{ margin: "0 10px", color: "#666" }}> OR </span>
+                    <hr style={{ flex: 1, border: "none", borderTop: "1px solid #9ca1a0" }} />
                 </div>
 
-                <script src="https://accounts.google.com/gsi/client" async defer></script>
+                {/* Google sign in */}
+             
+                <GoogleLoginButtons onLogin={handleGoogleLogin} />
+                
+                
 
                 <div className="register">
                     <p> Don't have an account? <a href="/Register">Register</a></p>

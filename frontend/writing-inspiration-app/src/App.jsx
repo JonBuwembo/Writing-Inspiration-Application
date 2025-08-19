@@ -14,10 +14,15 @@ import ProjectContentProjection from './ProfilePage/Project Archive/ProjectConte
 import NoteEditor from './ProfilePage/Project Archive/Archive Content Projection/NoteEditor/NoteEditor.jsx';
 import Overview from './ProfilePage/Project Archive/Archive Content Projection/Overview.jsx';
 import Credits from './ProfilePage/Project Archive/Archive Content Projection/Credits.jsx';
+import AuthCallback from './auth/authCallback.jsx';
+import { AuthProvider, useAuth } from './auth/authProvider.jsx';
+
 
 function App() {
   //Syncing to local storage.
+  const {user, loading} = useAuth();
 
+  if (loading) return <div>Loading...</div>
   
   return (
    
@@ -25,7 +30,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />}/>
         {/* TODO: UI done */}
-        <Route path="/login" element={<LoginPage/>} />
+        {/* <Route path="/login" element={<LoginPage/>} /> */}
         {/* TODO: UI done */}
         <Route path="/Register" element={<Register/>} />
 
@@ -33,7 +38,14 @@ function App() {
         {/* TODO: UI currently working on */}
         <Route path="/home/*" element={<HomePage/>} />
         {/* not made yet */}
-        <Route path="/profile/*" element={<ProfilePage />} /> {/*has subroutes*/}
+        {/* <Route path="/profile/*" element={<ProfilePage />} /> has subroutes */}
+
+        <Route path="/auth/callback" element={<AuthCallback />} />
+
+        <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to="/login" />} />
+        <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/profile" />} />
+
+        <Route path="/" element={user ? <Navigate to="/profile" /> : <Navigate to="/login" />} />
 
         {/* <Route path="/profile" element={<ProfilePage/>} /> */}
 

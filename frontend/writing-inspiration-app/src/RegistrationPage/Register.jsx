@@ -57,36 +57,42 @@ function Register() {
     const validateFirstName = (name) => name.trim() !== '';
     const validateLastName = (name) => name.trim() !== '';
 
-    const registerUser = async (userData) => {
-
+    const registerUser = async ({email, password, username, firstName, lastName}) => {
         
         try {
             // Access the database server
 
-            const response = await authService.registerUser(formData.email, formData.password, formData.username, formData.firstName, formData.lastName)
+            const {data: authData, error: authError} = await supabase.auth.signUp({
+                email, 
+                password, 
+            });
+
+            if (authError) throw authError;
+
+            const userId = authData.user.id; // supabase-generated UUID 
             
-            // const response = await fetch('/api/users-appone/register', {
-            //     //"Add" a user to the database after registration.
-            //     // Send data payload to backend for processing
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(userData),
-            // });
+            const {error: registerError} = await supabase.from('users').insert([
+                {
+                    id: userId,
+                    username,
+                    first_name: firstName,
+                    last_name: lastName,
+                    email,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                },
+            ]);
 
-            if (!response.ok) {
-                throw new Error('Issue with connecting to backend');
+            if (registerError) {
+                throw registerError;
             }
-
-            // wait for data to be translated to json for processing
-            const data = await response.json();
+        
             console.log('User registered successfully', data);
-            window.location.href = '/login'; // Redirect to login page after successful registration.
-
+            return {success: true, userId}
         } catch (error) {
             //unsuccessful registration
             console.error('Registration Failed:', error);
+            return {success: false, error};
         }
     };
 
@@ -105,14 +111,7 @@ function Register() {
     const validateEmail = (email) => {
 
         const isValid =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        // const isValid = String(email)
-        //     .toLowerCase()
-        //     .match(
-        //         // check if email matches regular expression
-        //         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        //     )
-
-        // updates the state variable for email validation
+    
         return isValid;
     }
 
@@ -141,36 +140,36 @@ function Register() {
         // Form data is dynamically updated here. This data will be stored in database.
         setFormData((prevData) => ({...prevData, [name]: value}));
 
-        let error = '';
+        // let error = '';
 
-        // value is the information user inputs
-        // value is passed into each function for validation check.
-        // if value does not pass requirements, an error message is shown.
+        // // value is the information user inputs
+        // // value is passed into each function for validation check.
+        // // if value does not pass requirements, an error message is shown.
 
-        switch (name) {
-            case 'firstName':
-                if (!validateFirstName(value)) error = 'Please enter your first name.';
-                break;
-            case 'lastName':
-                if (!validateLastName(value)) error = 'Please enter your last name.';
-                break;
-            case 'username':
-                if (!validateUsername(value)) {
-                    error = 'Username must be at least 3 characters long and contain letters.';
-                }
-                break;
-            case 'email':
-                if (!validateEmail(value)) error = 'Please enter a valid email address.';
-                break;
-            case 'password':
-                if (!validatePassword(value)) {
-                    error = 'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol.';
-                }
-                break;
-            default:
-                break;
-        }
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: error}));
+        // switch (name) {
+        //     case 'firstName':
+        //         if (!validateFirstName(value)) error = 'Please enter your first name.';
+        //         break;
+        //     case 'lastName':
+        //         if (!validateLastName(value)) error = 'Please enter your last name.';
+        //         break;
+        //     case 'username':
+        //         if (!validateUsername(value)) {
+        //             error = 'Username must be at least 3 characters long and contain letters.';
+        //         }
+        //         break;
+        //     case 'email':
+        //         if (!validateEmail(value)) error = 'Please enter a valid email address.';
+        //         break;
+        //     case 'password':
+        //         if (!validatePassword(value)) {
+        //             error = 'Password must be at least 8 characters long and include uppercase, lowercase, number, and symbol.';
+        //         }
+        //         break;
+        //     default:
+        //         break;
+        // }
+        // setErrors((prevErrors) => ({ ...prevErrors, [name]: error}));
     }
 
     // Handle Input Blur
@@ -191,15 +190,15 @@ function Register() {
         // Essentially, newErrors is an object containing a list of these pairs.
 
         if (!validateFirstName(formData.firstName)) {
-            newErrors.firstName = 'Please enter your first name.';
+            newErrors.firstName = 'Required.';
         }
 
         if (!validateLastName(formData.lastName)) {
-            newErrors.lastName = 'Please enter your last name.';
+            newErrors.lastName = 'Required.';
         }
 
         if (!validateUsername(formData.username)) {
-            newErrors.username = 'Username must be at least 3 characters long and contain letters.';
+            newErrors.username = 'Minimum At Least 3 characters.';
         }
 
         if (!validatePassword(formData.password)) {
@@ -207,7 +206,7 @@ function Register() {
         }
 
         if (!validateEmail(formData.email)) {
-            newErrors.email = 'Please enter a valid email address.';
+            newErrors.email = 'Invalid Email.';
         }
            
         setErrors(newErrors);
@@ -219,38 +218,39 @@ function Register() {
             email: true,
         })
         
-        if(Object.keys(newErrors).length === 0){
-            try {
-                await registerUser(formData);
+        if (Object.keys(newErrors).length === 0) {
+            
+            const result = await registerUser(formData);
 
-                alert('Account has been created');
-
-                //reset form data
-                setFormData({
-                    firstName: '',
-                    lastName: '',
-                    username: '',
-                    password: '',
-                    email: '',
-                });
-
-                //reset whether it was touched by the mouse.
-                setTouched({
-                    firstName: false,
-                    lastName: false,
-                    username: false,
-                    password: false,
-                    email: false,
-                });
-            } catch (error) {
-                console.error('Registration Failed:', error);
-                alert('Registration failed. Please try again.');
+            if (result.success) {
+                alert('Account created! Please Login.');
+                window.location.href = '/login';
+            } else {
+                console.error('Registration failed: ', result.error);
+                alert('ERROR: Registration failed!')
             }
+
+            // //reset form data
+            // setFormData({
+            //     firstName: '',
+            //     lastName: '',
+            //     username: '',
+            //     password: '',
+            //     email: '',
+            // });
+
+            // //reset whether it was touched by the mouse.
+            // setTouched({
+            //     firstName: false,
+            //     lastName: false,
+            //     username: false,
+            //     password: false,
+            //     email: false,
+            // });
+
         } else {
             alert('Please complete all required fields correctly!');
-        }
-            
-    
+        }     
     };
 
     return (
