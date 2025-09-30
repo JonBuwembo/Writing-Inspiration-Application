@@ -14,40 +14,57 @@ import ProjectContentProjection from './ProfilePage/Project Archive/ProjectConte
 import NoteEditor from './ProfilePage/Project Archive/Archive Content Projection/NoteEditor/NoteEditor.jsx';
 import Overview from './ProfilePage/Project Archive/Archive Content Projection/Overview.jsx';
 import Credits from './ProfilePage/Project Archive/Archive Content Projection/Credits.jsx';
-import AuthCallback from './auth/authCallback.jsx';
-import { AuthProvider, useAuth } from './auth/authProvider.jsx';
-
-
+import supabase from './config/supabaseClient.js';
+// import AuthCallback from './auth/authCallback.jsx';
+import { useAuth } from './auth/authProvider.jsx';
+import { useEffect } from 'react';
 function App() {
   //Syncing to local storage.
-  const {user, loading} = useAuth();
+  // const {user, loading} = useAuth();
 
-  if (loading) return <div>Loading...</div>
+  // if (loading) return <div>Loading...</div>; // waiting for authentication.
+
+  useEffect(() => {
+    // For Fake testing, created a dummy user for project database:
+    // check if the user exists already
+
+    const seedData = async () => {
+
+      const {data, error} = await supabase
+      .from("app_users")
+      .select("*")
+      .eq("id", "11111111-1111-1111-1111-111111111111");
+
+      if (!error && data.length === 0) {
+        await supabase.from("app_users").insert([
+          {
+            id: "11111111-1111-1111-1111-111111111111",
+            first_name: "Daniel",
+            last_name: "Brown",
+            email: "brownie.user@example.com",
+            username: "dbrown"
+          },
+        ]);
+      }
+    };
+
+    seedData();
+  }, []);
   
   return (
-   
   
+    
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />}/>
-        {/* TODO: UI done */}
-        {/* <Route path="/login" element={<LoginPage/>} /> */}
-        {/* TODO: UI done */}
-        <Route path="/Register" element={<Register/>} />
-
-        
-        {/* TODO: UI currently working on */}
-        <Route path="/home/*" element={<HomePage/>} />
-        {/* not made yet */}
-        {/* <Route path="/profile/*" element={<ProfilePage />} /> has subroutes */}
-
-        <Route path="/auth/callback" element={<AuthCallback />} />
-
-        <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to="/login" />} />
-        <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/profile" />} />
-
+{/*   
         <Route path="/" element={user ? <Navigate to="/profile" /> : <Navigate to="/login" />} />
+        <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/profile" />} />
+        <Route path="/register" element={!user ? <Register /> : <Navigate to="/profile" />} />
+        <Route path="/profile/*" element={loading ? (<div>Loading...</div>) : user ? (<ProfilePage />) : (<Navigate to="/login" />)}/> */}
 
-        {/* <Route path="/profile" element={<ProfilePage/>} /> */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile/*" element={<ProfilePage />}/>
 
         <Route path="/project/:projectID" element={<ArchivePage />}>
           <Route index element={<ProjectContentProjection />} /> {/* default landing inside project */}
@@ -61,6 +78,7 @@ function App() {
        
 
       </Routes>
+    
 
      
   

@@ -6,19 +6,70 @@ import styles from './SearchStyles.module.css'
 import moreStyles from './SearchPopUp.module.css'
 import { useLocation } from 'react-router-dom';
 import SearchPopUp from './SearchPopup.jsx';
+import UploadPopup from './UploadPopup.jsx';
 
 const TopNav = ({user}) => {
 
+  // Track popup state
   const [isOpen, setOpen] = useState(false);
-  const [isPopopupOpen, setIsPopupOpen] = React.useState(false);
+  const [popupType, setPopupType] = useState(null); // "Image" or "Video"
+  const [isPopopupOpen, setIsPopupOpen] = useState(false);
+
+  // Track search state
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
+
+  // Track media upload form state
+  const [mediaFile, setMediaFile] = useState(null);
+  const [mediaName, setMediaName] = useState("");
+  const [mediaDesc, sedMediaDesc] = useState("");
 
   const location = useLocation(); //Get current location/link user is on.
 
 
   //STORAGE KEY FOR PROJECTS IS: "projects"
   const projectStorageKey = "projects";
+
+  const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  
+  
+  
+  
+  const addImage = (src, title, description) => {
+      // add image to local storage
+      const images = JSON.parse(localStorage.getItem('images')) || [];
+      images.push({ src, title, description });
+      localStorage.setItem('images', JSON.stringify(images));
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (!mediaFile) {
+      alert("Please select a media file to upload.");
+      return;
+    }
+
+    const newMedia = {
+      file: mediaFile,
+      name: mediaName,
+      description: mediaDesc,
+      preview: URL.createObjectURL(mediaFile), // showing previews
+    };
+
+    console.log("New Media to upload: ", newMedia);
+
+    const existingMedia = JSON.parse(localStorage.getItem('media')) || [];
+    existingMedia.push(newMedia);
+    localStorage.setItem('media', JSON.stringify(existingMedia));
+    alert("Media uploaded successfully!");
+
+    setMediaFile(null);
+    setMediaName("");
+    sedMediaDesc("");
+    handleClosingPopup();
+  }
 
   //mock data to test Search engine:
   const mockProjects = [
@@ -32,12 +83,19 @@ const TopNav = ({user}) => {
 
   const toggleDropdown = () => setOpen(!isOpen);
 
-  const handleOpeningPopup = () => {
+  const handleOpeningPopup = (media) => {
+    setPopupType(media.toLowerCase());
+  }
+
+  const handleOpeningSearchPopup = () => {
     setIsPopupOpen(true);
   }
 
   const handleClosingPopup = () => {
+    setPopupType(null);
     setIsPopupOpen(false);
+    setSearchQuery("");
+    setSearchResults([]);
   }
 
   const handleSearch = (aSearchQuery) => {
@@ -111,7 +169,7 @@ const TopNav = ({user}) => {
           ></i>
           <input 
             type="text" 
-            onClick={handleOpeningPopup} 
+            onClick={handleOpeningSearchPopup} 
             placeholder=" Type / to Search ...      "
             style={{
               width: "100%",
@@ -152,8 +210,8 @@ const TopNav = ({user}) => {
                       >
                         
                         <p> Choose Media </p>
-                        <a href="#">Video</a>
-                        <a href="#">Images</a>
+                        <a onClick={() => handleOpeningPopup("video")} href="#">Video</a>
+                        <a onClick={() => handleOpeningPopup("image")} href="#">Images</a>
                       </div>
                     )}
                 </div>
@@ -253,6 +311,47 @@ const TopNav = ({user}) => {
           </div>
           </div>
         </SearchPopUp>
+      </div>
+
+
+      <div>
+        {/* Upload Popup */}
+        {/* Popup for project details popup appears over everything only when edit button is clicked */}
+            <div>
+
+                <UploadPopup
+                    isOpen={!!popupType} // true if popupType is "image" or "video"
+                    onClose={handleClosingPopup}
+                    popupTitle={`Upload ${popupType ? popupType[0].toUpperCase() + popupType.slice(1) : ''}`}
+                >
+                    <form 
+                        className="upload-form"
+                        onSubmit={handleFormSubmit}
+                    >
+
+
+                        {/* button right here for uploading from device */}
+                        <label className="input-box-label" htmlFor="media-file"> Choose File </label>
+
+                        <input type="file" id="media-file" name="media-file"  accept="image/*,video/*" onChange={(e) =>setMediaFile(e.target.files[0])} className="input-box" />
+
+                        <label className="input-box-label" htmlFor="media-name">Media Name</label>
+                        <textarea className="input-box" id="media-name" name="media-name"  placeholder="Enter media name" value={mediaName} onChange={(e) => setMediaName(e.target.value)} />
+
+                        <label className="textbox-label" htmlFor="media-desc">Media Description</label>
+                        <textarea className="text-box" id="media-desc" name="media-desc"  placeholder= "Enter media description" value={mediaDesc} onChange={(e) => sedMediaDesc(e.target.value)} />
+
+                        <div className="upload-form-actions">
+                            <button type="button" onClick={handleClosingPopup} className="upload-cancel-button"> Cancel </button>
+                            <button type="submit" onClick={saveToImages} className="upload-save-button"> Save Changes </button>                            
+                        </div>                        
+                    </form>
+                </UploadPopup>
+                
+               
+                
+            </div>
+          
       </div>
     </div>
   );

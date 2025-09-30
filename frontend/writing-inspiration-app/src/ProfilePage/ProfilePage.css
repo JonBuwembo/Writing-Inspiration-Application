@@ -24,7 +24,7 @@
   border-style: solid;
   border-width: 0 0 0 0.1px;
   border-color: rgb(139, 154, 176);
-  font-family: 'inter';
+  font-family: 'inter', Arial, Helvetica, sans-serif;
 }
 
 .sidebar {

@@ -20,7 +20,12 @@ const port = process.env.SERVER_PORT;
 console.log('Loaded SERVER_PORT:', process.env.SERVER_PORT);
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(
+    {
+      fastRefresh: false,
+    }
+  )],
+
   server: {
     proxy: {
       '/api': {
@@ -43,6 +48,13 @@ export default defineConfig({
         }
 
       },
+
+
+      // headers: {
+      //   "Cross-Origin-Opener-Policy": "unsafe-none",
+      //   "Cross-Origin-Opener-Policy": "same-origin",
+      // },
+    
     },
   },
 });

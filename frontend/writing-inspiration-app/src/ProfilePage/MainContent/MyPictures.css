@@ -1,0 +1,69 @@
+
+.margin {
+    margin: 0px 20px;
+}
+
+/* Images Section */
+.margin {
+  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: 600;
+  color: #24292f;
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 6px;
+}
+
+/* Gallery Layout */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Individual Image Card */
+.image-card {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(27, 31, 36, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(27, 31, 36, 0.15);
+}
+
+/* Image Styling */
+.image-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Content Styling */
+.image-card-content {
+  padding: 12px 14px;
+  flex-grow: 1;
+}
+
+.image-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #24292f;
+}
+
+.image-card-desc {
+  font-size: 14px;
+  color: #57606a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+
+

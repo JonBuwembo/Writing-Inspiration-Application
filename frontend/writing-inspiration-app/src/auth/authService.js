@@ -1,87 +1,56 @@
 import supabase from '../config/supabaseClient.js';
 
+
 // Auth Services is a module I created that contains functions for user authentication.
 // It includes functions for registering, logging in, and logging out users, which was implemented by supabase.
 // This module uses Supabase for authentication and handles errors appropriately.
 export const authService = {
 
 
-    // async registerUser(email, password, username, firstName, lastName) {
-    //     const { data, error } = await supabase.auth.signUp({
-    //         email,
-    //         password,
-    //         options: {
-    //             data: {
-    //                 username,
-    //                 first_name: firstName,
-    //                 last_name: lastName,
-    //             }
-    //         }
-    //     }); 
-
-    //     if (error) {
-    //         console.error('Registration error:', error);
-    //         throw error;
-    //     }
-
-    //     const {data: userData, error: userError} = await supabase
-    //         .from('Users')
-    //         .insert(
-    //             {
-    //                 id: data.user.id, // Use the ID from the auth response
-    //                 created_at: new Date().toISOString(), // Set the created_at field to the current date
-    //                 updated_at: new Date().toISOString(), // Set the updated_at field to the current
-    //                 first_name: firstName.toString(),
-    //                 last_name: lastName.toString(),
-    //                 email: email.toString(),
-    //                 username: username.toString(),
-    //                 // Set the updated_at field to the current date
-    //             }
-    //         )
-    //         .select();
-
-        
-    //     if (userError) {
-    //         console.error('Full insertion error:', {
-    //             message: userError.message,
-    //             details: userError.details,
-    //             hint: userError.hint,
-    //             code: userError.code
-    //         });
-    //         throw userError;
-    //     }
-
-    //     return userData;
-    // },
-
     async loginWithPassword(email, password) {
-        const {data: authData, error: authError} = await supabase.auth.signInWithPassword(
-            {
-                email,
-                password
-            }
-        );
+        console.log("Got into the loginWithPassword function");
+        console.log("Attempting signInWithPassword for:", email);
+        console.log("Right before supabase sign in ");
 
-        if (authError) throw authError;
-        return await ensureUserRecord(authData.user);
+        const {data, error} = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        })
+
+        console.log("After supabase sign in");
+
+        if (error) {
+            console.error('Supabase / proxy returned error during signInWithPassword:', error);
+            throw error;
+        }
+
+        if (!data || !data.user) {
+            console.error('signInWithPassword did not return a user object', { data });
+            throw new Error('No user returned from signInWithPassword');
+        }
+
+        console.log('User from sign-in:', data.user);
+        return await authService.ensureUserRecord(data.user);
+        
     },
 
     async signInWithGoogle() {
         const {data: authData, error: authError } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/auth/callback` // redirect flow instead of popup (avoid cross-origin)
+                redirectTo: `${window.location.origin}/profile` // redirect flow instead of popup (avoid cross-origin)
             }
         });
         
         if (authError) throw authError;
+        return await authService.ensureUserRecord(authData.user);
 
        
     },
     
     async ensureUserRecord(authUser) {
         const { data: user, error } = await supabase
-            .from("users")
+            .from("app_users")
             .select("*")
             .eq("id", authUser.id)
             .single();
@@ -97,7 +66,7 @@ export const authService = {
         // if it was through google, automatically create user data for them.
         if (authUser.app_metadata.provider === "google") {
             const {data: newUser, error: insertError} = await supabase
-                .from('users')
+                .from('app_users')
                 .insert([{
                     id: authUser.id,
                     email: authUser.email,

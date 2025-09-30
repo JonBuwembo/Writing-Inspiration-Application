@@ -13,31 +13,24 @@ import supabase from '../../config/supabaseClient.js';
  * Allows users to add new projects and delete existing ones.
  * Projects are managed in local component state.
  */
-const MyProjectsPage = ({projects, navigate, setProjects, archivedProjects, handleUnarchiving, isPopopupOpen, currentProject, handleArchiving, handleClosingPopup, handleEditClick, handleFormSubmit}) => {
+const MyProjectsPage = ({projects, testUserID, navigate, setProjects, addProject, archivedProjects, handleUnarchiving, isPopopupOpen, currentProject, handleArchiving, handleClosingPopup, handleEditClick, handleFormSubmit}) => {
 
   
 
-    const addProject = async () => {
-        // ID is length of list of projects so far.
-        const newId = uuidv4();
-        const projectLength = projects.length;
-
-        const {data, error} = await supabase 
-            .from('projects')
-            .insert([{id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description', archived_at: new Date().toISOString(), user_id: "(MUST BE AUTHENTICATED)" }])
-            .select();
-
-            if (error) {
-                console.error('Error adding Projects:', error.message);
-            } else {
-                setProjects([...projects, { id: newId, name: `Untitled Project ${projectLength}`, description: 'Add Description' }]);
-            }
-        
-    };
-
-    const deleteProject = (id) => {
+    const deleteProject = async (id) => {
         // Filter out the project with the given id
         // and update the state.
+        console.log("You clicked to add a project")
+        const {data, error} = await supabase
+            .from('projects')
+            .delete()
+            .eq('id', id)
+            .then(({ error }) => {
+                if (error) {
+                    console.error('Error deleting project:', error.message);
+                }
+            });
+        
         setProjects(projects.filter(project => project.id !== id));
     }
 
@@ -53,6 +46,8 @@ const MyProjectsPage = ({projects, navigate, setProjects, archivedProjects, hand
                 <p className='instructive-text'> Select any project to view details and unlock AI-powered insights tailored to your work. </p>
 
                 <div className="project-list-container">
+                    {/* Want projects from supabase to show up here.  */}
+
                     {projects.map(project => (
                         <div key={project.id} className="project-card">
                         {/* Project Content - Clickable Area */}

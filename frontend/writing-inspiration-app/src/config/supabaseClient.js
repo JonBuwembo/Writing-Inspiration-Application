@@ -1,11 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Debug: Check available environment variables
-console.log('Environment variables:', {
-  VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-  VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY
-});
-
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY; // Note the consistent naming
 
@@ -27,7 +21,8 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
   // third argument for options
   auth: {
     persistSession: true, // Ensure session persistence
-    autoRefreshToken: true // Automatically refresh tokens
+    autoRefreshToken: true, // Automatically refresh tokens
+    detectSessionInUrl: true
   }
 });
 
@@ -36,4 +31,4 @@ supabase.auth.getSession()
   .then(({ data }) => console.log('Supabase connected:', data.session ? 'Authenticated' : 'No active session'))
   .catch(err => console.error('Supabase connection failed:', err));
 
-export default supabase
+export default supabase;

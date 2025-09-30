@@ -9,55 +9,55 @@ import Sidebar from './Sidebar.jsx'
 import TopNav from './TopNav.jsx'
 import MainContent from './MainContent.jsx'
 import supabase from '../config/supabaseClient.js'
-
+import { useAuth } from '../auth/authProvider.jsx';
+import { v4 as uuidv4 } from 'uuid';
 function ProfilePage() {
-    //let [newEmails, setCount] = useState(0)
+  // let [newEmails, setCount] = useState(0)
+  // const { user: authUser } = useAuth();
 
-    const currentUser = supabase.auth.getUser(); // get current user
+  const [user, setUser] = useState({});
+  const testUserID = "11111111-1111-1111-1111-111111111111";
 
-    const [user, setUser] = useState("");
+  useEffect(() => {
+    const fetchName = async () => {
+      // if (!authUser) return;
+     
+      const {data, error} = await supabase
+        .from('app_users')
+        .select('first_name')
+        .eq('id', testUserID)
+        .single();
 
-    useEffect(() => {
-        const fetchName = async () => {
-            const {data: {user}} = await supabase.auth.getUser();
-            if (!user) return;
+      if (error) {
+        console.error('Error fetching user/s name: ', error);
+      } else {
+        setUser(data);
+      }
+    }
 
-            const {data: userInfo, error} = await supabase
-              .from('users')
-              .select('first_name')
-              .eq('id', user.id)
-              .single()
-
-            if(error) {
-                console.error('Error fetching user/s name: ', error);
-            } else {
-                setUser(userInfo);
-            }
-        }
-
-        fetchName();
-    }, []);
+    fetchName();
+  }, []);
     
 
     // load the LocalStorage on mount for activeProjects. If no project is stored yet, then just return an empty array.
-    const [projects, setProjects] = useState(() => {
-        try{
-            const saved = localStorage.getItem('projects');
-                if (saved) {
-                    return JSON.parse(saved).map(proj => ({
-                        id: proj.id,
-                        name: proj.name,
-                        description: proj.description || 'Add Description',
-                        archived_at: new Date().toISOString(),
-                        user_id: currentUser.id
-                    }));
-                }
-                return [];
-        } catch (error) {
-            console.warn("Failed to parse any active projects from localStorage")
-            return [];
-        } 
-    }); 
+  const [projects, setProjects] = useState(() => {
+    try{
+      const saved = localStorage.getItem('projects');
+        if (saved) {
+          return JSON.parse(saved).map(proj => ({
+            id: proj.id,
+            name: proj.name,
+            description: proj.description || 'Add Description',
+            archived_at: new Date().toISOString(),
+            user_id: proj.user_id || null
+          }));
+        }
+        return [];
+    } catch (error) {
+      console.warn("Failed to parse any active projects from localStorage")
+      return [];
+    } 
+  }); 
 
     
   // load the LocalStorage on mount for archivedProjects. If no project is stored yet, then just return an empty array.
@@ -81,8 +81,31 @@ function ProfilePage() {
   useEffect(() => { localStorage.setItem('projects', JSON.stringify(projects)); }, [projects]);
   useEffect(() => { localStorage.setItem('archivedProjects', JSON.stringify(archivedProjects)); }, [archivedProjects]);
 
-  const addProject = () => {
+  const addProject = async () => {
     const newId = uuidv4();
+
+    console.log("You clicked to add a project")
+
+    await supabase.from("projects")
+      .upsert(
+        [
+          {
+              id: newId,
+              name: `Untitled Project ${projects.length}`, 
+              description: 'Add Description', 
+              archived_at: null, 
+              user_id: "11111111-1111-1111-1111-111111111111"
+          },
+        ]
+      );
+    
+    console.log("Passed adding project to supabase")
+
+    // if (error) {
+    //   console.error("Supabase insert error: ", error);
+    //   return
+    // }
+    
     setProjects([...projects, { id: newId, name: `Untitled Project ${projects.length}`, description: 'Add Description' }]);
   };
 
@@ -136,9 +159,20 @@ function ProfilePage() {
     handleClosingPopup();
   };
 
-  const handleArchiving = (aProject) => {
-    setArchivedProjects(prev => [...prev, aProject]);
-    setProjects(prev => prev.filter(p => p.id !== aProject.id));
+  const handleArchiving = async (aProject) => {
+
+    const {data, error} = await supabase 
+          .from('projects')
+          .update('archived_at', new Date().toISOString)
+          .eq('id', aProject.id)
+          .select();
+    
+    if (error) {
+      console.log("Error updating this project to archive status")
+    } else if (data && data.length > 0) {
+      setArchivedProjects(prev => [...prev, aProject]);
+      setProjects(prev => prev.filter(p => p.id !== aProject.id));
+    }
   };
 
   const handleUnarchiving = (aProject) => {
@@ -161,6 +195,7 @@ function ProfilePage() {
                 />
                 <MainContent
                     navigate={handleNavigate}
+                    testUserID={testUserID}
                     projects={projects}
                     setProjects={setProjects}
                     archivedProjects={archivedProjects}

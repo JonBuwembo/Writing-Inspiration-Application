@@ -173,6 +173,30 @@ Google login styles
   border-bottom: 1px solid #ddd;
   margin: 0 10px;
 }
+
+.google-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #ffffff;
+  color: #555555;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 12px; /* All around even padding */
+  border: 1px solid #716c6c;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  gap: 10px;
+}
+
+.google-button:hover {
+  color: #555555;
+}
+
+
 /* --------------------------------------------------
    LINKS + TEXT STYLES
 -------------------------------------------------- */

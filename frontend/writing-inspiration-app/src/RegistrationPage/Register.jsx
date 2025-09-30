@@ -6,9 +6,10 @@ import './Register.jsx'
 import './Register.css'
 import '../LoginPage/LoginPage.jsx'
 // import '../../vite.config.js'
-import supabase from '../config/supabaseClient.js';import { registerUser } from '../services/api';
+import supabase from '../config/supabaseClient.js';
 
 import { authService } from '../auth/authService.js';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
     //All fields here are required to be entered.
@@ -38,6 +39,8 @@ function Register() {
         email: false,
     })
 
+    const navigate = useNavigate();
+
     // state for form errors
     const [errors, setErrors] = useState({});
 
@@ -57,44 +60,73 @@ function Register() {
     const validateFirstName = (name) => name.trim() !== '';
     const validateLastName = (name) => name.trim() !== '';
 
-    const registerUser = async ({email, password, username, firstName, lastName}) => {
-        
+    async function registerUser({ email, password, username, firstName, lastName }) {
+        console.log("Entered registerUser function!");
         try {
-            // Access the database server
-
-            const {data: authData, error: authError} = await supabase.auth.signUp({
-                email, 
-                password, 
+            // Sign up user in Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email,
+                password
             });
 
-            if (authError) throw authError;
+            if (authError) {
+                console.error("Error during sign up:", authError);
+                alert(authError.message);
+                return { success: false, error: authError };
+            }
 
-            const userId = authData.user.id; // supabase-generated UUID 
-            
-            const {error: registerError} = await supabase.from('users').insert([
-                {
-                    id: userId,
+            if (!authData.user) {
+                console.warn("Sign up did not return a new user. Email may already be registered.");
+                alert("Email already registered. Please login.");
+                return { success: false };
+            }
+
+            console.log("Auth user created:", authData.user);
+
+            console.log("authError:", authError);
+            console.log("authData after signup:", authData);
+            console.log("user id:", authData?.user?.id);
+            console.log("user email:", authData?.user?.email);
+            console.log("username:", authData?.user?.username);
+            console.log("firstname:", authData?.user?.firstName);
+            console.log("Last name:", authData?.user.lastName)
+
+            // Insert into app_users table
+            const { data, error: insertError } = await supabase
+                .from("app_users")
+                .upsert({
+                    id: authData.user.id,       // UID
+                    email: authData.user.email,
                     username,
                     first_name: firstName,
                     last_name: lastName,
-                    email,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString(),
-                },
-            ]);
+                });
+            
+            console.log("Insert data:", data);
+            console.log("Insert error:", insertError);
 
-            if (registerError) {
-                throw registerError;
+            // Check for insert errors
+            if (insertError) {
+                console.error("Insert failed:", insertError);
+                alert("Registration failed. Please check the console for details.");
+                return { success: false, error: insertError };
             }
-        
-            console.log('User registered successfully', data);
-            return {success: true, userId}
+
+            console.log("Inserted into app_users:", data);
+
+            alert("Account created! Please Login.");
+            return { success: true, userId: authData.user.id };
+
         } catch (error) {
-            //unsuccessful registration
             console.error('Registration Failed:', error);
-            return {success: false, error};
+            alert("Unexpected error during registration.");
+            return { success: false, error };
         }
-    };
+    }
+
+
 
     const validatePassword = (password) => {
         const minimumLength = 8;
@@ -108,6 +140,7 @@ function Register() {
         return isValid;
     }
 
+    
     const validateEmail = (email) => {
 
         const isValid =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -219,14 +252,14 @@ function Register() {
         })
         
         if (Object.keys(newErrors).length === 0) {
-            
+            console.log("Register form submitted", formData);
             const result = await registerUser(formData);
+            console.log("registerUser function passed");
 
             if (result.success) {
-                alert('Account created! Please Login.');
-                window.location.href = '/login';
+                navigate('/login');
             } else {
-                console.error('Registration failed: ', result.error);
+                console.error('Registration failed: ', result.error.message);
                 alert('ERROR: Registration failed!')
             }
 

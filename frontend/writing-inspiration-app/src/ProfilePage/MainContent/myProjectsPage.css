@@ -133,8 +133,6 @@ li {
 .add-project-btn:hover {
   background-color: rgb(57, 55, 72);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-
-
   transition: translateZ(0) scale(1.02);
 }
 

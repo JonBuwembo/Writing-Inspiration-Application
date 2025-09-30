@@ -140,7 +140,7 @@ const category = useMemo(() => {
      <div className='spacing'>
            
 
-           <button onClick={resetNotes}>Reset Me (For Testing) </button>
+          <button className='reset-btn' onClick={resetNotes}>Reset Me (For Testing) </button>
 
           
           <div 
@@ -150,7 +150,6 @@ const category = useMemo(() => {
               alignItems: 'center',
               gap: '8px'
             }}
-            
             onClick={handleSearchPopup}
           > 
             <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/search--v1.png" alt="search--v1"/>
