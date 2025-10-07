@@ -33,7 +33,7 @@ function ArchivePage() {
     localStorage.removeItem('projectNotes');
     console.log('Project notes reset!');
    };
-
+   
    const createBlankNote = (section = 'unsorted') => ({
     id: `note-${Date.now()}`,
     title: '',
@@ -110,14 +110,33 @@ function ArchivePage() {
           localStorage.setItem(storageKey, JSON.stringify(storedData));
         }
 
-        console.log('Setting currentNote:', noteToSet);
-        setCurrentNote(noteToSet);
-        
-        const path = `/project/${projectID}/note/${noteToSet.id}`;
-        console.log("Navigating to new note:", path);
-        if (window.location.pathname !== path) {
-          navigate(path);
+
+        const currentPath = window.location.pathname;
+        const isSpecialPath = [
+          "ai-writing-assistant",
+          "overview",
+          "credits"
+        ].some(special => currentPath.includes(special));
+
+        if (!isSpecialPath) {
+          // set current note here to avoid being overwritten
+          console.log('Setting currentNote:', noteToSet);
+          setCurrentNote(noteToSet);
+
+          if (!currentPath.includes(`/note/`)) {
+            const path = `/project/${projectID}/note/${noteToSet.id}`;
+            console.log("Navigating to new note:", path);
+            navigate(path);
+          }
+        } else {
+          console.log('Special path detected, not setting currentNote or navigating.', currentPath);
         }
+        
+        // const path = `/project/${projectID}/note/${noteToSet.id}`;
+        // console.log("Navigating to new note:", path);
+        // if (window.location.pathname !== path) {
+        //   navigate(path);
+        // }
         setIsLoading(false);
         
       } catch (error) {

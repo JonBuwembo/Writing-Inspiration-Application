@@ -1,7 +1,7 @@
 
 .archive-content-projection-container {
     /* margin-left: 350px;   */
-    padding: 20px;
+    padding: 12px;
     background-color: white; /* Light background for the content area */
     /* Ensure that this area is to the side of the sidebar according to the styles above (no top nav) */
     
@@ -18,9 +18,8 @@
 .archive-content-projection-container::-webkit-scrollbar {
     display: none;
 }
-
-.archive-container {
-    
+.archive-content-projection-container::-webkit-scrollbar-thumb {
+    background: #d0d7de;
+    border-radius: 8px;
 }
-
 

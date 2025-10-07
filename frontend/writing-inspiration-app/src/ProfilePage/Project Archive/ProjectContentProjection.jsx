@@ -9,10 +9,11 @@ import SettingsStory from './Archive Content Projection/Settings-Story.jsx';
 import Credits from './Archive Content Projection/Credits.jsx';
 import CharacterDetail from './Archive Content Projection/Singular Components/A_Character.jsx';
 import NoteEditor from './Archive Content Projection/NoteEditor/NoteEditor.jsx';
+import AIWritingAssistant from './AIWritingAssistant.jsx';
 import { Outlet } from 'react-router-dom';
 function ProjectContentProjection() {  
 
-      const { note, testProp, onChange, onAddHashTag, isSectionNote } = useOutletContext();
+      const { notes, testProp, onChange, onAddHashTag, isSectionNote } = useOutletContext();
     
     
     return (
@@ -21,9 +22,14 @@ function ProjectContentProjection() {
             
            <div className="archive-content-projection-container">
             <Routes>
-                <Route path="unsorted/note/:noteId" element={<NoteEditor {...{ note, testProp, onChange, onAddHashTag, isSectionNote }} />} />
-                <Route path="note/:noteId" element={<NoteEditor {...{ note, testProp, onChange, onAddHashTag, isSectionNote }} />} />
-                <Route path="overview/:noteId" element={<Overview {...{ note, testProp, onChange, onAddHashTag, isSectionNote }} />} />
+                <Route path="unsorted/note/:noteId" element={<NoteEditor {...{ notes, testProp, onChange, onAddHashTag, isSectionNote }} />} />
+                <Route path="note/:noteId" element={<NoteEditor {...{ notes, testProp, onChange, onAddHashTag, isSectionNote }} />} />
+                <Route path="overview/:noteId" element={<Overview {...{ notes, testProp, onChange, onAddHashTag, isSectionNote }} />} />
+
+                <Route 
+                    path="ai-writing-assistant" 
+                    element={<AIWritingAssistant {...{ notes, testProp, onChange, onAddHashTag, isSectionNote }} />} 
+                    />
                 <Route path="credits" element={<Credits />} />
             </Routes>
             

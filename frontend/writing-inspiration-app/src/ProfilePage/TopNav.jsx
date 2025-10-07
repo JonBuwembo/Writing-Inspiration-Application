@@ -7,69 +7,39 @@ import moreStyles from './SearchPopUp.module.css'
 import { useLocation } from 'react-router-dom';
 import SearchPopUp from './SearchPopup.jsx';
 import UploadPopup from './UploadPopup.jsx';
+import { use } from 'react';
 
-const TopNav = ({user}) => {
+const TopNav = ({user, submitMedia, mediaFile, setMediaFile, popupType, setIsPopupOpen, isPopupOpen, setPopupType, isOpen, setOpen, mediaName, setMediaName, mediaDesc, setMediaDesc}) => {
 
-  // Track popup state
-  const [isOpen, setOpen] = useState(false);
-  const [popupType, setPopupType] = useState(null); // "Image" or "Video"
-  const [isPopopupOpen, setIsPopupOpen] = useState(false);
 
   // Track search state
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
 
   // Track media upload form state
-  const [mediaFile, setMediaFile] = useState(null);
-  const [mediaName, setMediaName] = useState("");
-  const [mediaDesc, sedMediaDesc] = useState("");
-
+  
   const location = useLocation(); //Get current location/link user is on.
 
+  const dropdownRef = React.useRef(null);
 
   //STORAGE KEY FOR PROJECTS IS: "projects"
   const projectStorageKey = "projects";
-
-  const [title, setTitle] = React.useState('');
-  const [description, setDescription] = React.useState('');
   
-  
-  
-  
-  const addImage = (src, title, description) => {
-      // add image to local storage
-      const images = JSON.parse(localStorage.getItem('images')) || [];
-      images.push({ src, title, description });
-      localStorage.setItem('images', JSON.stringify(images));
-  }
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    if (!mediaFile) {
-      alert("Please select a media file to upload.");
-      return;
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // Close dropdown if clicked outside
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
     }
 
-    const newMedia = {
-      file: mediaFile,
-      name: mediaName,
-      description: mediaDesc,
-      preview: URL.createObjectURL(mediaFile), // showing previews
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return() => {
+      //clean event listener
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-
-    console.log("New Media to upload: ", newMedia);
-
-    const existingMedia = JSON.parse(localStorage.getItem('media')) || [];
-    existingMedia.push(newMedia);
-    localStorage.setItem('media', JSON.stringify(existingMedia));
-    alert("Media uploaded successfully!");
-
-    setMediaFile(null);
-    setMediaName("");
-    sedMediaDesc("");
-    handleClosingPopup();
-  }
+  }, [dropdownRef]);
 
   //mock data to test Search engine:
   const mockProjects = [
@@ -199,6 +169,7 @@ const TopNav = ({user}) => {
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                       onClick={toggleDropdown}
+                      ref={dropdownRef}
                     >
                       <i className="fas fa-upload" style={{ marginRight: '8px', color: 'rgb(35, 34, 34)' }}></i>
                       <i className="fa fa-caret-down" style={{color: 'rgb(35, 34, 34)'}}></i>
@@ -207,6 +178,7 @@ const TopNav = ({user}) => {
                     {isOpen && (
                       <div
                         className="dropdown-content"
+                        
                       >
                         
                         <p> Choose Media </p>
@@ -242,7 +214,7 @@ const TopNav = ({user}) => {
 
       <div>
         <SearchPopUp
-            isOpen={isPopopupOpen}
+            isOpen={isPopupOpen}
             onClose={handleClosingPopup}
         >
           <div className={moreStyles.popupInner}> {/* Purpose: wrapper to flex layout */}
@@ -326,24 +298,34 @@ const TopNav = ({user}) => {
                 >
                     <form 
                         className="upload-form"
-                        onSubmit={handleFormSubmit}
+                        onSubmit={submitMedia}
                     >
-
 
                         {/* button right here for uploading from device */}
                         <label className="input-box-label" htmlFor="media-file"> Choose File </label>
 
-                        <input type="file" id="media-file" name="media-file"  accept="image/*,video/*" onChange={(e) =>setMediaFile(e.target.files[0])} className="input-box" />
+                        <input
+                          type="file"
+                          id="media-file"
+                          name="media-file"
+                          accept={
+                            popupType === "video"
+                              ? "video/*" : popupType === "image"
+                              ? "image/*" : "image/*,video/*"
+                          }
+                          onChange={(e) => setMediaFile(e.target.files[0])}
+                          className="input-box"
+                        />
 
                         <label className="input-box-label" htmlFor="media-name">Media Name</label>
                         <textarea className="input-box" id="media-name" name="media-name"  placeholder="Enter media name" value={mediaName} onChange={(e) => setMediaName(e.target.value)} />
 
                         <label className="textbox-label" htmlFor="media-desc">Media Description</label>
-                        <textarea className="text-box" id="media-desc" name="media-desc"  placeholder= "Enter media description" value={mediaDesc} onChange={(e) => sedMediaDesc(e.target.value)} />
+                        <textarea className="input-box" id="media-desc" name="media-desc"  placeholder= "Enter media description" value={mediaDesc} onChange={(e) => setMediaDesc(e.target.value)} />
 
                         <div className="upload-form-actions">
                             <button type="button" onClick={handleClosingPopup} className="upload-cancel-button"> Cancel </button>
-                            <button type="submit" onClick={saveToImages} className="upload-save-button"> Save Changes </button>                            
+                            <button type="submit" className="upload-save-button"> Upload </button>                            
                         </div>                        
                     </form>
                 </UploadPopup>

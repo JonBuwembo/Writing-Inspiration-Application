@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './SidebarProject.css';
 import './maincontent.css';
 import CollapsibleSection from './CollapsibleSection';
 // import NoteListItem from './NoteListItem';
 import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 
 function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
@@ -235,7 +234,7 @@ const category = useMemo(() => {
                     return (
                       <li key={note.id}>
                         <Link to={`/project/${projectID}/note/${note.id}`}>
-                          {note.title || 'Untitled Note'}
+                          {note.title || 'Untitled Not</CollapsibleSection>e'}
                         </Link>
                       </li>
                     );
@@ -308,9 +307,9 @@ const category = useMemo(() => {
             <CollapsibleSection title="Context">
               <ul className="metric-group">
                 <CollapsibleSection title={`Characters (${metrics.character})`}>
-                <li><Link to={`/projectarchive/${projectName}/characters`}>Characters <span className="metric-count">{metrics.characters}</span></Link></li>
+                <li><Link to={`/projectarchive/${projectID}/characters`}>Characters <span className="metric-count">{metrics.characters}</span></Link></li>
                 </CollapsibleSection>
-                <li><Link to={`/projectarchive/${projectName}/themes`}>Themes <span className="metric-count">{metrics.themes}</span></Link></li>
+                <li><Link to={`/projectarchive/${projectID}/themes`}>Themes <span className="metric-count">{metrics.themes}</span></Link></li>
               </ul>
             </CollapsibleSection>
           </li>
@@ -324,7 +323,7 @@ const category = useMemo(() => {
                   <li><Link to={`/projectarchive/${projectName}/structure/hero-journey`}>Hero's Journey</Link></li>
                   <li><Link to={`/projectarchive/${projectName}/structure/save-the-cat`}>Save the Cat</Link></li>
                 </CollapsibleSection>
-                <li><Link to={`/projectarchive/${projectName}/ai-writing-assistant`}>AI Writing Assistant</Link></li>
+                <li><Link to={`/project/${projectID}/ai-writing-assistant`}>AI Writing Assistant</Link></li>
                 <li><strong>Word Count:</strong> <span>0</span></li>
               </ul>
             </CollapsibleSection>

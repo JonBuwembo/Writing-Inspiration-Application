@@ -82,6 +82,7 @@
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   color: #807777;
+  flex-wrap: nowrap;
 }
 
 .top-nav * {
@@ -102,6 +103,7 @@
 
 .nav-buttons {
   margin-right: 20px;
+  flex-shrink: 0;
 }
 
 /* ===== Split Button Styling ===== */
@@ -110,6 +112,7 @@
   align-items: stretch;
   position: relative;
   font-family: 'Inter', sans-serif;
+  margin-left: 12px;
 }
 
 /* Left (Main part) Button */
@@ -121,7 +124,7 @@
   border-bottom-left-radius: 5px;
   font-size: 14px;
   font-family:inherit;
-  padding: 7px 14px;
+  padding: 8px 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -142,12 +145,35 @@
   padding: 7px 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .upload-wrapper .caret-btn:hover {
   background-color: rgb(228, 220, 220);
   transform: translateY(0);
 
+}
+
+.upload-wrapper .upload-btn,
+.upload-wrapper .caret-btn {
+  white-space: nowrap; /* keeps text/buttons on one line */
+}
+
+/* Responsive behavior */
+@media (max-width: 800px) {
+  .upload-wrapper {
+    flex-shrink: 0;          /* prevent the wrapper from shrinking */
+    width: auto;             /* don't stretch full width */
+    justify-content: flex-end;
+    margin-left: 20px;
+    position: relative;
+  }
+
+  .upload-wrapper .upload-btn,
+  .upload-wrapper .caret-btn {
+    position: relative;      /* don’t move */
+    right: auto;
+  }
 }
 
 /* Dropdown Content */
@@ -199,9 +225,10 @@
   padding: 5px 10px;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
-  width: 250px;
+  min-width: 250px;
   outline: none;
   transition: border-color 0.3s ease;
+  flex: 1;
 }
 
 .search-container input:focus {

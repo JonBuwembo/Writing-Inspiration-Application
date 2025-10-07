@@ -15,7 +15,7 @@
 }
 
 .project-text-box {
-    min-height: 85vh;
+    min-height: 92vh;
     overflow-y: auto;
    
     background-color: var(--base-clr);

@@ -33,16 +33,26 @@
   font-weight: 500;
   color: #24292f;
 
+  /*don't show scrollbar*/
   overflow-y: auto;
-  scrollbar-width: thin;
-  -ms-overflow-style: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+
   user-select: none;
 
   transition: width 0.2s ease;
 }
 
+
+
+
+.sidebar-option-container {
+  margin-bottom: 16px;
+}
+
 .sidebarArchive-container::-webkit-scrollbar {
-  width: 8px;
+  width: 0;
+  height: 0;
 }
 .sidebarArchive-container::-webkit-scrollbar-thumb {
   background: #d0d7de;
@@ -56,8 +66,9 @@
 .project-title-display {
   margin: 0 0 16px 0;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 28px;
   color: #24292f;
+  font-family: 'inter', Arial, Helvetica, sans-serif;
 }
 
 /* Links */
@@ -183,7 +194,7 @@
 
 /* Sections */
 .dashboard-section {
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
   background: #ffffff;
   border-radius: 6px;
   border: 1px solid #d0d7de;
@@ -220,6 +231,15 @@ details[open] .section-title::after {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.sidebar-options-container > .metric-group > li {
+  margin-bottom: 1.5rem; /* for only whole metric groups [navigation, context, tools] */
+}
+
+/* Remove spacing for nested lists inside collapsible sections. */
+.sidebar-options-container .metric-group .metric-group > li {
+  margin-bottom: 0; 
 }
 
 .metric-group a {

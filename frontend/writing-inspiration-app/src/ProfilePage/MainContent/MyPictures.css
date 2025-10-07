@@ -31,6 +31,7 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .image-card:hover {
@@ -66,4 +67,127 @@
 }
 
 
+.delete-image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  align-items: center;
+  background: rgba(220, 38, 38, 0.08);
+  color: #c53030;
+  border: 1px solid rgba(197, 48, 48, 0.18);
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(18, 17, 18);
+  padding: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+  transition: all 0.2s ease;
+}
+
+.delete-btn i {
+  pointer-events: none;
+  line-height: 1;
+}
+
+.image-card:hover .delete-btn {
+  display: block;
+  color: rgb(29, 25, 25);
+}
+
+.image-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.image-modal-content {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(3, 3, 3, 0.15);
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  overflow: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #415353;
+  /*make bigger*/
+  transform: scale(1.8);
+}
+.modal-img {
+  max-width: 100%;
+  max-height: 70vh;
+  display: block;
+  margin: 12px 16px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.modal-meta {
+  padding: 8px 16px 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-title {
+  margin: 8px 0 4px;
+  font-size: 1.1rem;
+}
+
+.modal-desc {
+  margin: 0 0 10px;
+  color: #444;
+}
+
+.modal-open-tab {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #525d64;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.2);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.modal-open-tab:hover {
+  color: #d5dce1;
+  /*glow box shadow*/
+  box-shadow: 0 0 5px rgba(0,0,0,.4);
+  /*button moves up a bit*/
+  transform: translateY(-2px);
+}

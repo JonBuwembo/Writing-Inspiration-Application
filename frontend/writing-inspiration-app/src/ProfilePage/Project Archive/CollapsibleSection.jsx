@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import './CollapsibleSection.css';
 
 function CollapsibleSection({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);

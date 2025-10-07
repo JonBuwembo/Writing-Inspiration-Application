@@ -14,6 +14,7 @@ import ProjectContentProjection from './ProfilePage/Project Archive/ProjectConte
 import NoteEditor from './ProfilePage/Project Archive/Archive Content Projection/NoteEditor/NoteEditor.jsx';
 import Overview from './ProfilePage/Project Archive/Archive Content Projection/Overview.jsx';
 import Credits from './ProfilePage/Project Archive/Archive Content Projection/Credits.jsx';
+import AIWritingAssistant from './ProfilePage/Project Archive/AIWritingAssistant.jsx';
 import supabase from './config/supabaseClient.js';
 // import AuthCallback from './auth/authCallback.jsx';
 import { useAuth } from './auth/authProvider.jsx';
@@ -72,6 +73,7 @@ function App() {
             <Route path="unsorted/note/:noteId" element={<NoteEditor />} />
             <Route path="note/:noteId" element={<NoteEditor />} />
             <Route path="overview/:noteId" element={<Overview />} />
+            <Route path="ai-writing-assistant" element={<AIWritingAssistant />} />
             <Route path="credits" element={<Credits />} />
           </Route>
         </Route>

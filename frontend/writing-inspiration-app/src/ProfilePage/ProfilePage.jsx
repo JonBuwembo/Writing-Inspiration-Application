@@ -15,6 +15,20 @@ function ProfilePage() {
   // let [newEmails, setCount] = useState(0)
   // const { user: authUser } = useAuth();
 
+  //Media upload form state
+  const [mediaFile, setMediaFile] = useState(null);
+  const [mediaName, setMediaName] = useState("");
+  const [mediaDesc, sedMediaDesc] = useState("");
+
+  const [isOpen, setOpen] = useState(false);
+  const [popupType, setPopupType] = useState(null); // "Image" or "Video"
+  const [isPopopupOpen, setIsPopupOpen] = useState(false);
+
+  const [currentProject, setCurrentProject] = useState(null);
+  const navigate = useNavigate();
+
+ 
+
   const [user, setUser] = useState({});
   const testUserID = "11111111-1111-1111-1111-111111111111";
 
@@ -72,10 +86,7 @@ function ProfilePage() {
   
   });
 
-  const [isPopopupOpen, setIsPopupOpen] = useState(false);
-  const [currentProject, setCurrentProject] = useState(null);
 
-  const navigate = useNavigate();
 
   // Persist to localStorage
   useEffect(() => { localStorage.setItem('projects', JSON.stringify(projects)); }, [projects]);
@@ -140,6 +151,55 @@ function ProfilePage() {
 
   };
 
+  
+  const handleClosingPopupMedia = () => {
+    setPopupType(null);
+    setIsPopupOpen(false);
+    setSearchQuery("");
+    setSearchResults([]);
+  }
+
+  const submitMedia = (e) => {
+    e.preventDefault();
+    console.log("submitMedia triggered"); 
+
+    if (!mediaFile) {
+      alert("Please select a media file to upload.");
+      return;
+    }
+
+    const isImage = mediaFile.type.startsWith('image/');
+    const isVideo = mediaFile.type.startsWith('video/');
+
+    const src = URL.createObjectURL(mediaFile);
+
+    const newMedia = {
+      src, // preview of image/video
+      title: mediaName,
+      description: mediaDesc,
+      type: isImage ? "image" : isVideo ? "video" : "other"
+    };
+
+    console.log("New Media to upload: ", newMedia);
+
+    try {
+      let existingMedia = JSON.parse(localStorage.getItem("media")) || [];
+      console.log("Parsed media:", existingMedia);
+      existingMedia.push(newMedia);
+      localStorage.setItem("media", JSON.stringify(existingMedia));
+    } catch (err) {
+      console.error("Error saving media to localStorage: ", err);
+    }
+
+    alert("Media uploaded successfully!");
+
+    setMediaFile(null);
+    setMediaName("");
+    sedMediaDesc("");
+    handleClosingPopupMedia();
+  }
+
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -180,6 +240,7 @@ function ProfilePage() {
     setArchivedProjects(prev => prev.filter(p => p.id !== aProject.id));
   };
 
+
     return (
         //might have to integrate all these linked sections as their own components.
 
@@ -192,6 +253,19 @@ function ProfilePage() {
             <div className="content-wrapper">
                 <TopNav 
                     user={user}
+                    setMediaDesc={sedMediaDesc}
+                    mediaDesc={mediaDesc}
+                    setMediaFile ={setMediaFile}
+                    mediaFile={mediaFile}
+                    setMediaName={setMediaName}
+                    mediaName={mediaName}
+                    submitMedia={submitMedia}
+                    popupType={popupType}
+                    setPopupType={setPopupType}
+                    setIsPopupOpen={setIsPopupOpen}
+                    isOpen={isOpen}
+                    setOpen={setOpen}
+                    
                 />
                 <MainContent
                     navigate={handleNavigate}
@@ -209,6 +283,15 @@ function ProfilePage() {
                     currentProject={currentProject}
                     handleOpeningPopup={handleOpeningPopup}
                     handleClosingPopup={handleClosingPopup}
+                    setMediaDesc={sedMediaDesc}
+                    mediaDesc={mediaDesc}
+                    setMediaFile ={setMediaFile}
+                    mediaFile={mediaFile}
+                    setMediaName={setMediaName}
+                    mediaName={mediaName}
+                    submitMedia={submitMedia}
+                    
+           
                 />
             </div>
 
