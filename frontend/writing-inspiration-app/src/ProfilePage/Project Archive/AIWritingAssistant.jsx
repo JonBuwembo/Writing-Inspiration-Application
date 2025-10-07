@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faComments, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faMessage, faComments, faRobot, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import './AI.css'
 
 
@@ -29,7 +29,7 @@ const AIWritingAssistant = ({ note, testProp, onChange, onAddHashTag, isSectionN
     return (
         <div className='wrapper-ai-writing-assistant'>
             <div className="icon-header">
-               <FontAwesomeIcon icon={faPaperPlane} />
+               <FontAwesomeIcon icon={faRobot} />
             </div>
 
           <h2 className="text-header">Welcome to your AI Writing Assistant</h2>
@@ -40,7 +40,11 @@ const AIWritingAssistant = ({ note, testProp, onChange, onAddHashTag, isSectionN
                 <textarea
                     className="chat-input"
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                        setMessage(e.target.value);
+                        e.target.style.height = 'auto'; 
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
+                    }}
                     placeholder="How should I improve my storyline so far..."
                 />
                 <button className="send-btn" onClick={handleSend}>

@@ -74,10 +74,12 @@
   border-radius: 6px;
   padding: 6px;
   transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .send-btn:hover {
   background-color: #f2f2f2;
+  color:#111111
 }
 
 .suggestions {
@@ -102,10 +104,13 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .suggestion-btn:hover {
-  background-color: #e8e9eb;
+  background-color: #dfe0e2;
+  color: #333;
+  transform: translateY(-1px);
 }
 
 textarea.chat-input::placeholder {
@@ -115,4 +120,17 @@ textarea.chat-input::placeholder {
 
 .chat-input {
     font-family: 'Inter', 'Open Sans', 'Roboto', sans-serif;
+    /*box grow downward*/
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    resize: none;
+    min-height: 20px;
+    max-height: 500px;
+}
+
+.chat-input::-webkit-scrollbar {
+  display: none;
 }
