@@ -26,7 +26,6 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
   }
 });
 
-
 supabase.auth.getSession()
   .then(({ data }) => console.log('Supabase connected:', data.session ? 'Authenticated' : 'No active session'))
   .catch(err => console.error('Supabase connection failed:', err));

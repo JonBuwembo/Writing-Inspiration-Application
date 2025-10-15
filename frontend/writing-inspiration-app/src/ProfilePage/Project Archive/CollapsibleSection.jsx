@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './CollapsibleSection.css';
 
-function CollapsibleSection({ title, children }) {
+function CollapsibleSection({ title, children, depth = 0 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleTitleClick = () => {
@@ -22,7 +22,10 @@ function CollapsibleSection({ title, children }) {
   // };
 
   return (
-    <li className="dashboard-section">
+    <div 
+        className="dashboard-section-collapse" 
+        style={{ marginLeft: `${depth * 1.5}rem` }}
+    >
       <div
         className="section-title"
         onClick={handleTitleClick}
@@ -30,21 +33,26 @@ function CollapsibleSection({ title, children }) {
         {title}
       </div>
 
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            className="details-content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={(e) => e.stopPropagation()} // Prevent click from closing the section.
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </li>
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              className='section-content-collapse'
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()} // Prevent click from closing the section.
+            >
+              {React.Children.map(children, (child) =>
+                React.isValidElement(child)
+                  ? React.cloneElement(child, { depth: depth + 1 })
+                  : child
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+    </div>
   );
 }
 

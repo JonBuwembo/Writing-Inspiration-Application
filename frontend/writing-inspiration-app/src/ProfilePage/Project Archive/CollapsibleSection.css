@@ -1,1 +1,21 @@
+.hanging-indent {
+  
+        margin-left: 1.5em; /* margin to push the rest of the lines */
+}
 
+.dashboard-section-collapse {
+   --indent: calc(var(--depth, 0) * 1.5rem);
+   margin-left: var(--indent);
+   /* border-style: solid; */
+   /* border-width: 1px;
+   border-color: grey;
+   border-radius: 5px;
+   padding: 5px 2px;  */
+}
+
+/*details content doesn't inherit dashbord-section-collapse. how to do this*/
+
+.section-content-collapse {
+   display: block;
+   border-style: none !important;
+}

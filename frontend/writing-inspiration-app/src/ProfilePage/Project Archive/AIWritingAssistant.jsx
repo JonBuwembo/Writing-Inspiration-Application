@@ -2,12 +2,16 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage, faComments, faRobot, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import OpenAI from "openai";
 import './AI.css'
+
+import axios from 'axios';
 
 
 const AIWritingAssistant = ({ note, testProp, onChange, onAddHashTag, isSectionNote }) => {  
 
-    const [message, setMessage] = React.useState("");
+    const [messages, setMessages] = React.useState("");
+   
 
     const suggestions = [
         "What is the best way to start a story?",
@@ -17,13 +21,27 @@ const AIWritingAssistant = ({ note, testProp, onChange, onAddHashTag, isSectionN
     ];
 
     const handleSend = () => {
-        if(message.trim()) {
-            sendMessageToAI(message);
-            setMessage("");
+        if(messages.trim()) {
+            sendMessageToAI(messages);
+            setMessages("");
         }
     }
-    const sendMessageToAI = async (userMessage) => {
-        console.log("Sending message to AI:", userMessage);
+
+    const sendMessageToAI = async (userInput) => {
+        if (userInput.trim()) {
+            const newMessage = [...messages, { user: true, text: userInput }];
+            setMessages(newMessage);
+
+            try {
+            const response = await axios.post('http://localhost:5000/api/gpt', { messages: userInput });
+            const botReply = response.data.reply;
+            setMessages([...newMessage, { user: false, text: botReply }]);
+            } catch (error) {
+            setMessages([...newMessage, { user: false, text: 'Sorry, something went wrong.' }]);
+            }
+
+            setMessages('');
+        }
     }
 
     return (
@@ -33,15 +51,15 @@ const AIWritingAssistant = ({ note, testProp, onChange, onAddHashTag, isSectionN
             </div>
 
           <h2 className="text-header">Welcome to your AI Writing Assistant</h2>
-          <p className="text-body">Here you can interact with the AI to help you with your writing. Ask questions and get suggestions!</p>
+          <p className="text-body-ai">Here you can interact with the AI to help you with your writing. Ask questions and get suggestions!</p>
 
           <div className='chat-container'>
             <div className="chat-input-wrapper"> 
                 <textarea
                     className="chat-input"
-                    value={message}
+                    value={messages}
                     onChange={(e) => {
-                        setMessage(e.target.value);
+                        setMessages(e.target.value);
                         e.target.style.height = 'auto'; 
                         e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
                     }}

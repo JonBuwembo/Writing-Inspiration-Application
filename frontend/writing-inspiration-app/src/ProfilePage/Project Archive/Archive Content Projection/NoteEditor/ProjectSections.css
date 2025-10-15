@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Intel+One+Mono:ital,wght@0,300..700;1,300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
 :root {
     --line-clr: #c3aaaa;
@@ -47,14 +48,14 @@
 .title-text-area {
     font-size: 34px;
     font-weight: 800;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', 'Outfit',sans-serif;
     border: none;
     margin-bottom: 1em;
 }
 
 .text-body {
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', 'Poppins', sans-serif;
     position: relative;
 }
 

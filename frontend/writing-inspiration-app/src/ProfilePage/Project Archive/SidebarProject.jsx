@@ -7,6 +7,7 @@ import CollapsibleSection from './CollapsibleSection';
 // import NoteListItem from './NoteListItem';
 import { useMemo } from 'react';
 
+
 function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
   const sidebarReference = useRef(null);
@@ -35,6 +36,8 @@ function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote,
     setSelected(option);
     setIsOpen(false);
   };
+
+  const DRAGCOLUMNS 
 
  
 
@@ -324,12 +327,14 @@ const category = useMemo(() => {
                   <li><Link to={`/projectarchive/${projectName}/structure/save-the-cat`}>Save the Cat</Link></li>
                 </CollapsibleSection>
                 <li><Link to={`/project/${projectID}/ai-writing-assistant`}>AI Writing Assistant</Link></li>
-                <li><strong>Word Count:</strong> <span>0</span></li>
+                
               </ul>
             </CollapsibleSection>
           </li>
 
+       
           <li><Link to={`/projectarchive/${projectName}/credits`}>Credits</Link></li>
+          <li className='word-count'><strong>Word Count:</strong> <span>0</span></li>
         </ul>
       </div>
 
