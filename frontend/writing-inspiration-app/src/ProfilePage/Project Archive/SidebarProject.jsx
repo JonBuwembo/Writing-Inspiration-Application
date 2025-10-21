@@ -6,7 +6,7 @@ import './maincontent.css';
 import CollapsibleSection from './CollapsibleSection';
 // import NoteListItem from './NoteListItem';
 import { useMemo } from 'react';
-
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 
 function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote, hardcodedHashTags, notes, onAddHashTag }) {
   const [isResizing, setIsResizing] = useState(false);
@@ -36,8 +36,6 @@ function SidebarProject({ sidebarWidth, resetNotes, setSidebarWidth, addNewNote,
     setSelected(option);
     setIsOpen(false);
   };
-
-  const DRAGCOLUMNS 
 
  
 
@@ -217,6 +215,7 @@ const category = useMemo(() => {
       </button>
 
       <div className="sidebar-options-container">
+     
         <ul className="metric-group">
           <li>
             <CollapsibleSection title="Navigation">
@@ -225,86 +224,102 @@ const category = useMemo(() => {
                 <li><Link to={`/project/${projectName}/timeline/`}>Timeline</Link></li>
                 <li><Link to={`/project/${projectName}/summary/`}>Summary</Link></li>
 
-                <CollapsibleSection title={`Sections (${metrics.section})`}>
-                  {/* <li><Link to={`/project/${projectName}/section1`}>Section 1</Link></li>
-                  <li><Link to={`/project/${projectName}/section2`}>Section 2</Link></li> */}
-
-                  {/* Testing */}
-                  {category.section?.map(note => {
-                    console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
-                    
-
-                    return (
-                      <li key={note.id}>
-                        <Link to={`/project/${projectID}/note/${note.id}`}>
-                          {note.title || 'Untitled Not</CollapsibleSection>e'}
-                        </Link>
-                      </li>
-                    );
-                    
-                    
-                  })}
-
-                  {/* <li>
-                    <button 
-                      className="add-subcontent-btn" 
-                      onClick={() => addNewNote()}
-                    >
-                    + Add Section Note
-                    </button>
-                  </li> */}
-
-
-
-                  
-
-                </CollapsibleSection>
-                <CollapsibleSection title={`Orphan Notes (${metrics.orphanNote})`}>
-                  {/* <li><Link to={`/project/${projectName}/orphan-note1`}>Orphan Note 1</Link></li>
-                  <li><Link to={`/project/${projectName}/orphan-note2`}>Orphan Note 2</Link></li> */}
-
-                   {category.orphannotes.map(note => {
-                    console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
-                    
-
-                    return (
-                      <li key={note.id}>
-                        
-                        <Link to={`/project/${projectID}/note/${note.id}`}>
-                          {note.title || 'Untitled Note'}
-                        </Link>
-                      </li>
-                    );
-                    
-                    
-                  })}
-
-                  
-
-                </CollapsibleSection>
-                <CollapsibleSection title={`Plot Threads (${metrics.plotThread})`}>
-                  <li><Link to={`/project/${projectName}/plot-thread1`}>Plot Thread 1</Link></li>
-                  <li><Link to={`/project/${projectName}/plot-thread2`}>Plot Thread 2</Link></li>
-
-                      {category.plotthreads.map(note => {
-                        console.log("Linking to:", `/project/${projectID}/note/${note.id}`);
-                        
-
-                        return (
-                          <li key={note.id}>
-                            <Link to={`/project/${projectID}/note/${note.id}`}>
-                              {note.title || 'Untitled Note'}
-                            </Link>
-                          </li>
-                        );
+                <DragDropContext onDragEnd={() => {
+                  console.log("Drag drop event occurred");
+                }}>
                       
-                      
-                      })}
-                  
-                </CollapsibleSection>
+                   <Droppable droppableId="sections" type="NOTES">
+                      {(provided) => (
+                        <CollapsibleSection
+                          title={`Sections (${metrics.section})`}
+                          ref={provided.innerRef}
+                          droppableProps={provided.droppableProps}
+                        >
+                          <ul className="metric-group">
+                            {category.section?.map((note, index) => (
+                              <Draggable key={note.id} draggableId={`${note.id}`} index={index}>
+                                {(draggableProvided) => (
+                                  <li
+                                    ref={draggableProvided.innerRef}
+                                    {...draggableProvided.draggableProps}
+                                    {...draggableProvided.dragHandleProps}
+                                  >
+                                    <Link to={`/project/${projectID}/note/${note.id}`}>
+                                      {note.title || 'Untitled Note'}
+                                    </Link>
+                                  </li>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </ul>
+                        </CollapsibleSection>
+                      )}
+                    </Droppable>
+
+                  <Droppable droppableId="orphannotes" type="NOTES">
+                      {(provided) => (
+                        <CollapsibleSection
+                          title={`Orphan Notes (${metrics.orphanNote})`}
+                          ref={provided.innerRef}
+                          droppableProps={provided.droppableProps}
+                        >
+                          <ul className="metric-group">
+                            {category.orphannotes?.map((note, index) => (
+                              <Draggable key={note.id} draggableId={`orphan-${note.id}`} index={index}>
+                                {(draggableProvided) => (
+                                  <li
+                                    ref={draggableProvided.innerRef}
+                                    {...draggableProvided.draggableProps}
+                                    {...draggableProvided.dragHandleProps}
+                                  >
+                                    <Link to={`/project/${projectID}/note/${note.id}`}>
+                                      {note.title || 'Untitled Note'}
+                                    </Link>
+                                  </li>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </ul>
+                        </CollapsibleSection>
+                      )}
+                    </Droppable>
+
+                    <Droppable droppableId="plotthreads" type="NOTES">
+                      {(provided) => (
+                        <CollapsibleSection
+                          title={`Plot Threads (${metrics.plotThread})`}
+                          ref={provided.innerRef}
+                          droppableProps={provided.droppableProps}
+                        >
+                          <ul className="metric-group">
+                            {category.plotthreads?.map((note, index) => (
+                              <Draggable key={note.id} draggableId={`plot-${note.id}`} index={index}>
+                                {(draggableProvided) => (
+                                  <li
+                                    ref={draggableProvided.innerRef}
+                                    {...draggableProvided.draggableProps}
+                                    {...draggableProvided.dragHandleProps}
+                                  >
+                                    <Link to={`/project/${projectID}/note/${note.id}`}>
+                                      {note.title || 'Untitled Note'}
+                                    </Link>
+                                  </li>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </ul>
+                        </CollapsibleSection>
+                      )}
+                    </Droppable>  
+
+                </DragDropContext>
               </ul>
-            </CollapsibleSection>
+            </CollapsibleSection> 
           </li>
+        
 
           <li>
             <CollapsibleSection title="Context">
@@ -330,12 +345,14 @@ const category = useMemo(() => {
                 
               </ul>
             </CollapsibleSection>
+           
           </li>
-
+           
        
           <li><Link to={`/projectarchive/${projectName}/credits`}>Credits</Link></li>
           <li className='word-count'><strong>Word Count:</strong> <span>0</span></li>
         </ul>
+       
       </div>
 
       <div

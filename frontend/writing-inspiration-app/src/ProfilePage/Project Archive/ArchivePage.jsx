@@ -7,34 +7,29 @@ import ProjectContentProjection from './ProjectContentProjection.jsx';
 import './maincontent.css';
 import ProjectTextArea from './Archive Content Projection/NoteEditor/ProjectTextArea.jsx';
 import NoteEditor from './Archive Content Projection/NoteEditor/NoteEditor.jsx';
-//import {userContext} from '../Auth/UserContext';
 
 //--------------------------------------------------------------------
 // PURPOSE: Page of a project that the user is going to work in.
 //--------------------------------------------------------------------
-
-
-
 // This page will be used to fetch the project data from the server or local storage to display specific information about the project.
-// console.log("ArchivePage is using NoteEditor component:", NoteEditor);
  
 function ArchivePage() {
 
+  const {projectID, noteId} = useParams(); //paramater in the URL
+  const [sidebarWidth, setSidebarWidth] = useState(350);
+  const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
+  const [notes, setNotes] = useState([]);
+  const [currentNote, setCurrentNote] = useState(null);
+  const [saveStatus, setSaveStatus] = useState('saved');
+  const [isLoading, setIsLoading] = useState(true);
 
-   const {projectID, noteId} = useParams(); //paramater in the URL
-   const [sidebarWidth, setSidebarWidth] = useState(350);
-   const [autoSaveTimeout, setAutoSaveTimeout] = useState(null);
-   const [notes, setNotes] = useState([]);
-   const [currentNote, setCurrentNote] = useState(null);
-   const [saveStatus, setSaveStatus] = useState('saved');
-  
-   // Testing function
-   const resetNotes = () => {
+  // Testing function
+  const resetNotes = () => {
     localStorage.removeItem('projectNotes');
     console.log('Project notes reset!');
    };
-   
-   const createBlankNote = (section = 'unsorted') => ({
+
+  const createBlankNote = (section = 'unsorted') => ({
     id: `note-${Date.now()}`,
     title: '',
     content: '',
@@ -44,28 +39,6 @@ function ArchivePage() {
     lastEdited: new Date().toISOString()
   })
 
-  
- 
-
-  // useEffect(() => {
-  //   // Test: Add three notes and check if they were added
-  //   const testNotes = [
-  //     createBlankNote('test1'),
-  //     createBlankNote('test2'),
-  //     createBlankNote('test3')
-  //   ];
-  //   setNotes(testNotes);
-
-  //   // Test if notes were added
-  //   if (testNotes.length === 3) {
-  //     console.log('Test Passed: 3 notes added:', testNotes);
-  //   } else {
-  //     console.error('Test Failed: Notes not added correctly');
-  //   }
-  // }, []);
-
-  // console.log("ArchivePage is using NoteEditor:", NoteEditor);
-  // TODO: change for authentication, (currently not yet user specific)
   const storageKey = 'projectNotes';
   const navigate = useNavigate();
 
@@ -78,40 +51,44 @@ function ArchivePage() {
     {tag: "#characters"},
   ]
 
-  // Get user-specific notes key
-  // const getUserNotesKey = () => {
-  //   return currentUser ? `projectNotes_${currentUser.id}` : 'projectNotes_anonymous';
-  // };
-
-  // Check if there are any existing notes in localStorage
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Consolidated loading effect
+  // useEffect to track the changes of projectID, noteId, navigate. If any of these
+  // dependencies change, useEffect updates the displayed note and redirects to the correct URL.
   useEffect(() => {
+    if (!projectID || !storageKey) return;
+
     const loadNotes = () => {
       try {
         const storedNotes = JSON.parse(localStorage.getItem(storageKey)) || {};
         const projectNotes = storedNotes[projectID] || [];
         setNotes(projectNotes);
 
-        let noteToSet;
-        if (noteId) {
-          noteToSet = projectNotes.find(n => n.id === noteId);
+        // decode noteId url parameter if there is.
+        const requestedNoteId = noteId ? decodeURIComponent(noteId) : null;
 
-        } else if (projectNotes.length > 0) {
-          noteToSet = [...projectNotes].sort((a, b) => 
-            new Date(b.lastEdited) - new Date(a.lastEdited))[0];
+        // try to find the requested note using decoded id.
+        // If the id exists, find its note otherwise return null.
+        let noteToSet = requestedNoteId ? projectNotes.find(n => n.id === requestedNoteId) || null : null;
 
-        } else {
-          noteToSet = createBlankNote();
-          setNotes([noteToSet]); // Ensure at least one note exists
-          const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-          storedData[projectID] = [noteToSet];
-          localStorage.setItem(storageKey, JSON.stringify(storedData));
+        // If the request note isn't found, then pick the latest or create a new note.
+        if (!noteId) {
+          if (projectNotes.length > 0) {
+            noteToSet = [...projectNotes].sort((a, b) => 
+              new Date(b.lastEdited) - new Date(a.lastEdited))[0];
+          } else {
+            noteToSet = createBlankNote();
+            storedNotes[projectID] = [noteToSet];
+            localStorage.setItem(storageKey, JSON.stringify(storedData));
+            console.log("I'm in the block that sets noteToSet")
+          }
         }
-
+      
+        // update states from local projectNotes
+        setNotes(projectNotes);
+        setCurrentNote(noteToSet);
 
         const currentPath = window.location.pathname;
+        
+        // These are special notes that cannot be reassigned
         const isSpecialPath = [
           "ai-writing-assistant",
           "overview",
@@ -119,24 +96,13 @@ function ArchivePage() {
         ].some(special => currentPath.includes(special));
 
         if (!isSpecialPath) {
-          // set current note here to avoid being overwritten
-          console.log('Setting currentNote:', noteToSet);
-          setCurrentNote(noteToSet);
-
+          // navigate only if the path doesn't already include the note id. Meaning if we are not on that note, then navigate to it.
           if (!currentPath.includes(`/note/`)) {
-            const path = `/project/${projectID}/note/${noteToSet.id}`;
-            console.log("Navigating to new note:", path);
+            const path = `/project/${encodedURIComponent(projectID)}/note/${encodedURIcomponent(noteToSet.id)}`;
             navigate(path);
           }
-        } else {
-          console.log('Special path detected, not setting currentNote or navigating.', currentPath);
-        }
+        } 
         
-        // const path = `/project/${projectID}/note/${noteToSet.id}`;
-        // console.log("Navigating to new note:", path);
-        // if (window.location.pathname !== path) {
-        //   navigate(path);
-        // }
         setIsLoading(false);
         
       } catch (error) {
@@ -155,41 +121,29 @@ function ArchivePage() {
     const newNote = createBlankNote();
     const storedData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-    // update current note state
-    // This will update the current note to the new note created.
     setCurrentNote(newNote);
-    // setSaveStatus('unsaved');
-
     
     storedData[projectID] = [newNote, ...(storedData[projectID] || [])]; // Add new note to existing notes
     localStorage.setItem(storageKey, JSON.stringify(storedData));
     setNotes(prevNotes => [...prevNotes, newNote]);
-    console.log("I've added a new note 'AddNewNote()' ran.");
 
     // Navigate to the new note's URL
-
-  
-
-    // 4. Navigate to new note
     const encodedProjectID = encodeURIComponent(projectID);
     //const encodedSection = encodeURIComponent(newNote.section);
     const encodedNoteId = encodeURIComponent(newNote.id);
-
     const path = `/project/${encodedProjectID}/note/${encodedNoteId}`;
-
     // Navigate to the newly created note's URL
     navigate(path);
 
   }
   
 
-
   //Autosaving feature.
   useEffect(()=>{
     if (saveStatus !== 'unsaved' || !currentNote) return;
 
     // if in a saving state, automatically save content after 2 seconds of no typing.
-    const timer = setTimeout(()=>{
+    const timer = setTimeout(()=> {
       handleNoteSave();
     }, 2000);
 
@@ -198,8 +152,6 @@ function ArchivePage() {
 
 
   const handleNoteSave = () => {
-    // WHEN AUTHENTICATION IMPLEMENTED:
-    // const userNotesKey = getUserNotesKey();
 
     // Early exit if there's no note to save.
     if(!currentNote) return;
@@ -352,7 +304,6 @@ function ArchivePage() {
     // if not a valid hashtag, return early
     if (!isValidHashTag(trimmedHashTag)) return;
 
-    
     // Add to the list of hashtags in that note.
     setCurrentNote(prevNote => {
       if (!prevNote) return prevNote;
